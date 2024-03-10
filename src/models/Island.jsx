@@ -12,7 +12,7 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import islandScene from "../assets/3d/island.glb";
-const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
+const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
   const islandRef = useRef();
   const { gl, viewport } = useThree();
   const { nodes, materials } = useGLTF(islandScene);
@@ -69,13 +69,13 @@ const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
 
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     lastX.current = clientX;
-  }
+  };
 
   const handleTouchEnd = (e) => {
     e.stopPropagation();
     e.preventDefault();
     setIsRotating(false);
-  }
+  };
 
   const handleTouchMove = (e) => {
     e.stopPropagation();
@@ -89,7 +89,21 @@ const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
       lastX.current = clientX;
       rotationSpeed.current = delta * 0.01 * Math.PI;
     }
-  }
+  };
+  // Handle mouse wheel event for rotation
+  const handleWheel = (event) => {
+    const delta = event.deltaY;
+
+    // Control the sensitivity and max rotation speed
+    const rotationAmount = Math.min(Math.max(delta * 0.1, -0.2), 0.1);
+
+    setIsRotating(true);
+
+    islandRef.current.rotation.y += rotationAmount;
+    // Clear any existing timeout
+    clearTimeout(islandRef.current.rotationEndTimeout);
+    setTimeout(() => setIsRotating(false), 150);
+  };
 
   useFrame(() => {
     if (!isRotating) {
@@ -123,6 +137,7 @@ const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
       }
     }
   });
+
   useEffect(() => {
     const canvas = gl.domElement;
     document.addEventListener("pointerdown", handlePointerDown);
@@ -133,6 +148,7 @@ const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
     canvas.addEventListener("touchstart", handleTouchStart);
     canvas.addEventListener("touchend", handleTouchEnd);
     canvas.addEventListener("touchmove", handleTouchMove);
+    canvas.addEventListener("wheel", handleWheel);
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("pointerup", handlePointerUp);
@@ -142,6 +158,7 @@ const Island = ({ isRotating, setIsRotating,setCurrentStage, ...props }) => {
       canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("touchend", handleTouchEnd);
       canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.addEventListener("wheel", handleWheel);
     };
   }, [gl, handlePointerDown, handlePointerUp, handlePointerMove]);
   return (
