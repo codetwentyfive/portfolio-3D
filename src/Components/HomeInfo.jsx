@@ -34,9 +34,9 @@ const renderContent = {
   ),
   4: (
     <InfoBox
-      text="Let's use our god-given talent of creation and make more dumpling!"
-      link="/contact"
-      btnText="Let's talk"
+      text="Let's cook some huushur next time we see each other snootle!"
+      link="https://www.youtube.com/watch?v=l8W98L94gw8"
+      btnText="Hairtai shu ❤️"
     />
   ),
 };
