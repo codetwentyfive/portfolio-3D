@@ -1,12 +1,12 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState } from "react";
-import Loader from "../Components/Loader";
+import Loader from "../components/Loader";
 
 import Island from "../models/Island";
 import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
-import HomeInfo from "../Components/HomeInfo";
+import HomeInfo from "../components/HomeInfo";
 
 const Home = () => {
   const [currentStage, setCurrentStage] = useState(1);
@@ -71,8 +71,8 @@ const Home = () => {
         />
         <Plane
           isRotating={isRotating}
-          planeScale={planeScale}
-          PlanePosition={planePosition}
+          scale={planeScale}
+          position={planePosition}
           rotation={[0, 20, 0]}
         />
       </Canvas>
