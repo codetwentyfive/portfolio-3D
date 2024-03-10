@@ -7,12 +7,13 @@ Source: https://sketchfab.com/3d-models/foxs-islands-163b68e09fcc47618450150be77
 Title: Fox's islands
 */
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, isValidElement } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import islandScene from "../assets/3d/island.glb";
-const Island = ({isRotating, setIsRotating, ...props}) => {
+import { last } from "lodash";
+const Island = ({ isRotating, setIsRotating, ...props }) => {
   const islandRef = useRef();
   const { gl, viewport } = useThree();
   const { nodes, materials } = useGLTF(islandScene);
@@ -34,6 +35,7 @@ const Island = ({isRotating, setIsRotating, ...props}) => {
     e.stopPropagation();
     e.preventDefault();
     setIsRotating(false);
+
   };
   const handlePointerMove = (e) => {
     e.stopPropagation();
@@ -43,7 +45,8 @@ const Island = ({isRotating, setIsRotating, ...props}) => {
       const delta = (clientX - lastX.current) / viewport.width;
       islandRef.current.rotation.y += delta * 0.01 * Math.PI;
       lastX.current = clientX;
-      rotationSpeed, (current = delta * 0.01 * Math.PI);
+      let current = delta * 0.01 * Math.PI; // Define and initialize current variable
+      rotationSpeed.current = current; // Assign current value to rotationSpeed
     }
   };
   const handleKeyDown = (e) => {
@@ -74,8 +77,6 @@ const Island = ({isRotating, setIsRotating, ...props}) => {
 
       const normalizedRotation =
         ((rotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-
-     
     }
   });
   useEffect(() => {
