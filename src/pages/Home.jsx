@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import Loader from "../components/Loader";
 
 import Island from "../models/Island";
@@ -7,10 +7,30 @@ import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
+import dream from "../assets/dream.mp3";
+import { soundoff, soundon } from "../assets/icons";
 
 const Home = () => {
+  const audioRef = useRef(new Audio(dream));
+  audioRef.current.volume = 0.4;
+  audioRef.current.loop = true;
   const [currentStage, setCurrentStage] = useState(1);
   const [isRotating, setIsRotating] = useState(false);
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [isMusicInfoVisible, setIsMusicInfoVisible] = useState(false);
+
+  const toggleMusicInfo = () => {
+    setIsMusicInfoVisible(!isMusicInfoVisible);
+  };
+
+  useEffect(() => {
+    if (isPlayingMusic) {
+      audioRef.current.play();
+    }
+    return () => {
+      audioRef.current.pause();
+    };
+  }, [isPlayingMusic]);
 
   const adjustPlaneForScreenSize = () => {
     let screenScale, screenPosition;
@@ -76,6 +96,29 @@ const Home = () => {
           rotation={[0, 20, 0]}
         />
       </Canvas>
+      <div className="flex flex-row gap-6 justify-center items-center absolute bottom-2 left-2">
+        <img
+          src={!isPlayingMusic ? soundoff : soundon}
+          className="w-10 h-10 cursor-pointer object-contain"
+          onClick={() => {
+            setIsPlayingMusic(!isPlayingMusic);
+
+            if (isPlayingMusic(true)) {
+              toggleMusicInfo;
+            }
+          }}
+        />
+        <div
+          className={`music-info ${
+            isPlayingMusic ? "visible" : ""
+          } py-1 px-2 rounded-lg`}
+        >
+          <p>
+            Title: <span className="font-semibold">dream.mp3</span> <br />
+            Artist: Chingis Enkhbaatar
+          </p>
+        </div>
+      </div>
     </section>
   );
 };
