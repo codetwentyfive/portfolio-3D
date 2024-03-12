@@ -171,7 +171,7 @@ export const projects = [
     name: "Altan Mountain",
     description:
       "Created a working version of an e-commerce store, with a modern approach towards product displays that pop out the screen and are interactive as well as a theme switcher ",
-    link: "https://shopping-carti.vercel.app/",
+    link: "https://github.com/codetwentyfive/shopping-cart",
   },
   {
     iconUrl: weather,
@@ -179,7 +179,7 @@ export const projects = [
     name: "Weather App",
     description:
       "Designed and built a weather app, which not only displays the wanted weather information, but also fetches the users current location and automatically displays the current weather, using OpenCage Data API. ",
-    link: "https://chingis-weather-app.vercel.app/",
+    link: "https://github.com/codetwentyfive/Weather-App",
   },
   {
     iconUrl: sketch,
