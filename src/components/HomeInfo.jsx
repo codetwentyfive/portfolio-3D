@@ -13,7 +13,7 @@ const InfoBox = ({ text, link, btnText }) => (
 const renderContent = {
   1: (
     <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
-      Hi, I'am <span className="font-semibold">Chingis Enkhbaatar</span> 👋
+      Hi, I'm <span className="font-semibold">Chingis Enkhbaatar</span> 👋
       <br />
       A Full Stack Developer located in <br />
       Karlsruhe, Germany.
@@ -21,16 +21,22 @@ const renderContent = {
   ),
   2: (
     <InfoBox
-      text="A digital nomad in the truest sense,
-       who loves all things creative."
+      text={
+        <>A digital nomad in the truest sense 🐎, <br /> who loves all things creative 🎨</>
+      }
       link="/about"
       btnText="Learn More"
     />
   ),
   3: (
     <InfoBox
-      text="I've worked on many projects and picked up many skills along the way.
-      My motto is to be +1% better everyday 📚"
+      text={
+        <>
+          I've worked on many projects and picked up many skills along the way
+          <br />
+          My motto is to be +1% better everyday 📚
+        </>
+      }
       link="/projects"
       btnText="Visit my portfolio"
     />
@@ -41,7 +47,7 @@ const renderContent = {
         <>
           Let's build together!
           <br />
-          I'am just a few keystrokes away!
+          I'm just a few keystrokes away! 🚀
         </>
       }
       link="/contact"
