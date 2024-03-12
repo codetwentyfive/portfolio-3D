@@ -15,7 +15,7 @@ const renderContent = {
     <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
       Hi, I'am <span className="font-semibold">Chingis Enkhbaatar</span> 👋
       <br />
-      Aspiring Full Stack Developer located in <br />
+      A Full Stack Developer located in <br />
       Karlsruhe, Germany.
     </h1>
   ),
