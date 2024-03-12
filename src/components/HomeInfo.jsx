@@ -14,27 +14,36 @@ const renderContent = {
   1: (
     <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
       Hi, I'am <span className="font-semibold">Chingis Enkhbaatar</span> 👋
-      <br />A Full Stack Developer located in <br />
+      <br />
+      Aspiring Full Stack Developer located in <br />
       Karlsruhe, Germany.
     </h1>
   ),
   2: (
     <InfoBox
-      text="Worked on many dumplings and picked up many cooking sklls along the way"
+      text="A digital nomad in the truest sense,
+       who loves all things creative."
       link="/about"
       btnText="Learn More"
     />
   ),
   3: (
     <InfoBox
-      text="Worked on many projects and rediscovered my passion for dumplings!"
+      text="I've worked on many projects and picked up many skills along the way.
+      My motto is to be +1% better everyday 📚"
       link="/projects"
       btnText="Visit my portfolio"
     />
   ),
   4: (
     <InfoBox
-      text={<>Let's build together!<br/>I'am just a few keystrokes away!</>}
+      text={
+        <>
+          Let's build together!
+          <br />
+          I'am just a few keystrokes away!
+        </>
+      }
       link="/contact"
       btnText="Let's talk"
     />
