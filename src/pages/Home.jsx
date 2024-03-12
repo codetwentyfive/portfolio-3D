@@ -96,7 +96,7 @@ const Home = () => {
           rotation={[0, 20, 0]}
         />
       </Canvas>
-      <div className="flex flex-row gap-6 justify-center items-center absolute h-15 md:bottom-2 md:left-2 bottom-12 left-8">
+      <div className="flex flex-row gap-6 justify-center items-center absolute h-15 md:bottom-2 md:left-2 bottom-16 left-8">
         <img
           src={!isPlayingMusic ? soundoff : soundon}
           className="w-10 h-10 cursor-pointer object-contain"
