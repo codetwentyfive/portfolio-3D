@@ -159,7 +159,7 @@ export const socialLinks = [
 export const projects = [
   {
     iconUrl: puzzle,
-    theme: "btn-back-red",
+    theme: "btn-back-pink",
     name: "Yu-Gi-Oh Memory Game",
     description:
       "A game made with react, and python to fetch the card images from the Yu-Gi-Oh! API, currated a collection of the most iconic and also funniest cards!",
@@ -182,19 +182,19 @@ export const projects = [
     link: "https://github.com/codetwentyfive/Weather-App",
   },
   {
-    iconUrl: sketch,
-    theme: "btn-back-pink",
-    name: "Etch-A-Sketch",
-    description:
-      "Build a canvas modeled after the nostalgic child-toy, with an adjustable canvas size,editing tools,as well as a save function i was very proud of back when i figured it out ",
-    link: "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
-  },
-  {
     iconUrl: cv,
-    theme: "btn-back-black",
+    theme: "btn-back-yellow",
     name: "CV-App",
     description:
       "Developed a web application for making inputing CVs more appealing,instantly see the changes to the CV as you type them.",
     link: "https://github.com/codetwentyfive/cv-application",
+  },
+  {
+    iconUrl: sketch,
+    theme: "btn-back-red",
+    name: "Etch-A-Sketch",
+    description:
+      "Build a canvas modeled after the nostalgic child-toy, with an adjustable canvas size,editing tools,as well as a save function i was very proud of back when i figured it out ",
+    link: "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
   },
 ];
