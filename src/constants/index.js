@@ -13,8 +13,10 @@ import {
   pricewise,
   react,
   sass,
+  cv,
   snapgram,
   summiz,
+  weather,
   tailwindcss,
   threads,
   passau,
@@ -22,7 +24,10 @@ import {
   python,
   odin,
   caretaker,
+  mountain,
   lmu,
+  sketch,
+  puzzle,
 } from "../assets/icons";
 
 export const skills = [
@@ -108,7 +113,12 @@ export const experiences = [
     icon: odin,
     iconBg: "grey",
     date: "February 2020 - now",
-    points: ["Learned about how to design and maintain a website from creation to deployment","Learned Javascript fundamentals","React frameworks","Node.js"],
+    points: [
+      "Learned about how to design and maintain a website from creation to deployment",
+      "Learned Javascript fundamentals",
+      "React frameworks",
+      "Node.js",
+    ],
   },
   {
     title: "Student",
@@ -148,51 +158,43 @@ export const socialLinks = [
 
 export const projects = [
   {
-    iconUrl: pricewise,
+    iconUrl: puzzle,
     theme: "btn-back-red",
-    name: "Amazon Price Tracker",
+    name: "Yu-Gi-Oh Memory Game",
     description:
-      "Developed a web application that tracks and notifies users of price changes for products on Amazon, helping users find the best deals.",
-    link: "https://github.com/adrianhajdin/pricewise",
+      "A game made with react, and python to fetch the card images from the Yu-Gi-Oh! API, currated a collection of the most iconic and also funniest cards!",
+    link: "https://github.com/codetwentyfive/memory-card",
   },
   {
-    iconUrl: threads,
+    iconUrl: mountain,
     theme: "btn-back-green",
-    name: "Full Stack Threads Clone",
+    name: "Altan Mountain",
     description:
-      'Created a full-stack replica of the popular discussion platform "Threads," enabling users to post and engage in threaded conversations.',
-    link: "https://github.com/adrianhajdin/threads",
+      "Created a working version of an e-commerce store, with a modern approach towards product displays that pop out the screen and are interactive as well as a theme switcher ",
+    link: "https://shopping-carti.vercel.app/",
   },
   {
-    iconUrl: car,
+    iconUrl: weather,
     theme: "btn-back-blue",
-    name: "Car Finding App",
+    name: "Weather App",
     description:
-      "Designed and built a mobile app for finding and comparing cars on the market, streamlining the car-buying process.",
-    link: "https://github.com/adrianhajdin/project_next13_car_showcase",
+      "Designed and built a weather app, which not only displays the wanted weather information, but also fetches the users current location and automatically displays the current weather, using OpenCage Data API. ",
+    link: "https://chingis-weather-app.vercel.app/",
   },
   {
-    iconUrl: snapgram,
+    iconUrl: sketch,
     theme: "btn-back-pink",
-    name: "Full Stack Instagram Clone",
+    name: "Etch-A-Sketch",
     description:
-      "Built a complete clone of Instagram, allowing users to share photos and connect with friends in a familiar social media environment.",
-    link: "https://github.com/adrianhajdin/social_media_app",
+      "Build a canvas modeled after the nostalgic child-toy, with an adjustable canvas size,editing tools,as well as a save function i was very proud of back when i figured it out ",
+    link: "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
   },
   {
-    iconUrl: estate,
+    iconUrl: cv,
     theme: "btn-back-black",
-    name: "Real-Estate Application",
+    name: "CV-App",
     description:
-      "Developed a web application for real estate listings, facilitating property searches and connecting buyers with sellers.",
-    link: "https://github.com/adrianhajdin/projects_realestate",
-  },
-  {
-    iconUrl: summiz,
-    theme: "btn-back-yellow",
-    name: "AI Summarizer Application",
-    description:
-      "App that leverages AI to automatically generate concise & informative summaries from lengthy text content, or blogs.",
-    link: "https://github.com/adrianhajdin/project_ai_summarizer",
+      "Developed a web application for making inputing CVs more appealing,instantly see the changes to the CV as you type them.",
+    link: "https://github.com/codetwentyfive/cv-application",
   },
 ];

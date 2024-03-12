@@ -31,11 +31,17 @@ import caretaker from "./caretaker.png";
 import passau from "./passau.svg";
 import lmu from "./lmu.svg";
 import odin from "./odin.svg";
+import puzzle from "./puzzle-compressed.png";
+import sketch from "./sketch.svg";
+import mountain from "./mountain.svg";
+import weather from "./weather.svg";
+import cv from "./cv.svg";
 
 export {
   css,
   express,
   git,
+  sketch,
   github,
   html,
   javascript,
@@ -45,6 +51,7 @@ export {
   mui,
   nextjs,
   nodejs,
+  mountain,
   react,
   redux,
   sass,
@@ -52,6 +59,7 @@ export {
   typescript,
   linkedin,
   twitter,
+  cv,
   car,
   estate,
   pricewise,
@@ -60,6 +68,8 @@ export {
   threads,
   odin,
   arrow,
+  weather,
+  puzzle,
   contact,
   soundon,
   lmu,
