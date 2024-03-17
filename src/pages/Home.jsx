@@ -9,6 +9,7 @@ import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
 import dream from "../assets/dream.mp3";
 import { soundoff, soundon } from "../assets/icons";
+import { OrbitControls } from "@react-three/drei";
 
 const Home = () => {
   const audioRef = useRef(new Audio(dream));
@@ -70,7 +71,7 @@ const Home = () => {
         camera={{ near: 0.1, far: 1000 }}
       >
         <Suspense fallback={<Loader />}></Suspense>
-        <directionalLight position={[1, 1, 1]} intensity={2} />
+        <directionalLight position={[1, 1, 1]} intensity={1.2} />
         <ambientLight intensity={0.1} />
         <pointLight />
         <spotLight />
