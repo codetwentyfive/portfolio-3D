@@ -36,6 +36,7 @@ import sketch from "./sketch.svg";
 import mountain from "./mountain.svg";
 import weather from "./weather.svg";
 import cv from "./cv.svg";
+import cvdownload from "./cv-download.png"
 
 export {
   css,
@@ -44,6 +45,7 @@ export {
   sketch,
   github,
   html,
+  cvdownload,
   javascript,
   mongodb,
   caretaker,
