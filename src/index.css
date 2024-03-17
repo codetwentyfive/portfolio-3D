@@ -38,7 +38,7 @@ body:has(.card[data-color="green"]:hover) {
     @apply bg-gradient-to-r from-[#00c6ff] to-[#0072ff] bg-clip-text text-transparent;
   }
   .gradient_text {
-    @apply bg-gradient-to-r from-[#ff00f2] to-[#002fff] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#d505ff] to-[#002fff] bg-clip-text text-transparent;
   }
 
   .input {
@@ -50,7 +50,7 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .btn {
-    @apply text-white bg-gradient-to-r from-[#00c6ff] to-[#0072ff] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
+    @apply text-white bg-gradient-to-r from-[#d505ff] to-[#002fff] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
   }
 
   .header {
@@ -89,6 +89,7 @@ body:has(.card[data-color="green"]:hover) {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
 
 .logo {
   border-radius: 8.889px;
@@ -192,7 +193,7 @@ body:has(.card[data-color="green"]:hover) {
 
 /* Neo Brutalism */
 .neo-brutalism-blue {
-  background: #2b77e7;
+  background:#062eff;
   position: relative;
   border-radius: 20px;
   border: none;
@@ -200,34 +201,62 @@ body:has(.card[data-color="green"]:hover) {
 }
 
 .neo-brutalism-blue:hover {
-  animation: shadowAppear 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; 
+  animation: shadowAppear 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; 
 }
 
 .neo-brutalism-blue:not(:hover) {
-  animation: shadowDisappear 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; 
+  animation: shadowDisappear 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; 
 }
 
 @keyframes shadowAppear {
   0% {
     box-shadow: 0 0 transparent;
   }
-  50% {
-    box-shadow: 0 0 0 transparent;
+  25%{
+    box-shadow: 1vmin 1vmin #ffd505;
   }
+  50% {
+    box-shadow:  1vmin 1vmin #ffd505, -1vmin -1vmin #ffd505,;
+  }
+ 
   100% {
-    box-shadow: 1vmin 1vmin #fa01f260, 2vmin 2vmin #062eff; 
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
   }
 }
 
 @keyframes shadowDisappear {
   0% {
-    box-shadow: 1vmin 1vmin #fa01f260, 2vmin 2vmin #062eff; 
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
+
+  }
+  10%{
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
+
+  }
+  20% {
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
+
+  }
+ 
+  40% {
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
   }
   50% {
-    box-shadow: 0 0 0 transparent;
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff;
+  }
+  70%{
+    box-shadow:  1vmin 1vmin #ffd505, 2vmin 2vmin #062eff;
+
+  }
+  80% {
+    
+    box-shadow: 1vmin 1vmin #ffd505;
+
   }
   100% {
     box-shadow: 0 0 transparent;
+
+
   }
 }
 
