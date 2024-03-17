@@ -100,6 +100,7 @@ const Home = () => {
       <div className="flex flex-row gap-6 justify-center items-center absolute h-15 md:bottom-2 md:left-2 bottom-16 left-8">
         <img
           src={!isPlayingMusic ? soundoff : soundon}
+          alt="musicplayer"
           className="w-10 h-10 cursor-pointer object-contain"
           onClick={() => {
             setIsPlayingMusic(!isPlayingMusic);
