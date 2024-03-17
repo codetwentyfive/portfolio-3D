@@ -92,20 +92,6 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
       rotationSpeed.current = delta * 0.01 * Math.PI;
     }
   };
-  // Handle mouse wheel event for rotation
-  const handleWheel = (event) => {
-    const delta = event.deltaY;
-
-    // Control the sensitivity and max rotation speed
-    const rotationAmount = Math.min(Math.max(delta * 0.1, -0.2), 0.1);
-
-    setIsRotating(true);
-
-    islandRef.current.rotation.y += rotationAmount;
-    // Clear any existing timeout
-    clearTimeout(islandRef.current.rotationEndTimeout);
-    setTimeout(() => setIsRotating(false), 150);
-  };
 
   useFrame(() => {
     if (!isRotating) {
@@ -150,7 +136,6 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     canvas.addEventListener("touchstart", handleTouchStart);
     canvas.addEventListener("touchend", handleTouchEnd);
     canvas.addEventListener("touchmove", handleTouchMove);
-    canvas.addEventListener("wheel", handleWheel);
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("pointerup", handlePointerUp);
@@ -160,9 +145,8 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
       canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("touchend", handleTouchEnd);
       canvas.removeEventListener("touchmove", handleTouchMove);
-      canvas.addEventListener("wheel", handleWheel);
     };
-  }, [gl, handlePointerDown, handlePointerUp, handlePointerMove]);
+  }, [gl, handlePointerDown, handlePointerUp, handlePointerMove,handleTouchStart,handleTouchMove,handleTouchEnd]);
   return (
     <a.group ref={islandRef} {...props}>
       <mesh
