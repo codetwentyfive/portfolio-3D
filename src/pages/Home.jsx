@@ -116,7 +116,7 @@ const Home = () => {
           } py-1 px-2 rounded-lg`}
         >
           <p>
-            Title: <span className="font-semibold">dream.mp3</span> <br />
+            Title: <span className="font-semibold text-yellow-200 ">dream.mp3</span> <br />
             Artist: Chingis Enkhbaatar
           </p>
         </div>
