@@ -193,15 +193,54 @@ body:has(.card[data-color="green"]:hover) {
 .neo-brutalism-blue {
   background: #2b77e7;
   position: relative;
-  border-radius: 10px;
-  border: #2b77e7;
-  box-shadow: 0.6vmin 0.6vmin #336cc1, 1vmin 1vmin #0092db, 1vmin 1vmin #0092db,
-    0.65vmin 1vmin #0092db, 1vmin 0.65vmin #0092db;
+  border-radius: 20px;
+  border: none;
+  box-shadow: none; 
+
+  /* Animation */
+  animation: shadowAppear 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; 
+}
+
+@keyframes shadowAppear {
+  0% {
+    box-shadow: 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 0 transparent;
+  }
+  100% {
+    box-shadow: 1vmin 1vmin #fa01f260, 2vmin 2vmin #062eff; 
+  }
+}
+
+
+
+
+
+.exclamation-mark {
+  transform:  scale(0);
+  transition: transform 0.3s ease;
+}
+.neo-btn:hover .exclamation-mark {
+  transform:  scale(1); 
+}
+.arrow {
+  transition: transform 0.3s ease;
+}
+.neo-btn:hover .arrow {
+  display: none;
+  
 }
 
 .neo-brutalism-white {
   background: #fff;
   border: #fff;
-  box-shadow: 0.6vmin 0.6vmin #fff, 1vmin 1vmin #d2e4ff, 1vmin 1vmin #d2e4ff,
-    0.65vmin 1vmin #d2e4ff, 1vmin 0.65vmin #d2e4ff;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.neo-brutalism-white:hover {
+  border-style: dashed;
+  border-color: #e4e7e4;
+  background-color: #594df5;
+  color:white;
 }
