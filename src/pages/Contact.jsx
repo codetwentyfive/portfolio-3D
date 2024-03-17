@@ -109,22 +109,20 @@ const Contact = () => {
     closeModal();
   };
 
-
   return (
     <section className="relative flex lg:flex-row flex-col max-container h-[100vh]">
       {alert.show && <Alert {...alert} />}
-    
+
       <div className="flex-1 min-w-[50%] flex flex-col">
         <div className="flex flex-col justify-center items-center">
-        <h1 className="head-text">Get in Touch </h1>
-       <div className="flex flex-row">
-        <p className="font-semibold "> Download CV here: </p>
-        <img src={cvdownload} className="w-8 h-8 hover:cursor-pointer" onClick={handleDownloadClick} alt="Download CV"/>
-        
-        </div> 
+        <h1 className="head-text ">
+        Leave a <span className="gradient_text">message!</span>{" "}
+          </h1>
+
         </div>
+      
         <form
-          className="w-full flex flex-col gap-7 mt-14"
+          className="w-full flex flex-col gap-7 mt-14 "
           onSubmit={handleSubmit}
         >
           <label className="text-black-500 font-semibold">
@@ -178,6 +176,18 @@ const Contact = () => {
             {isLoading ? "Sending..." : "Send Message"}
           </button>
         </form>
+        <div className="mt-4 px-2 btn flex flex-row  hover:cursor-pointer justify-center items-center"
+          onClick={handleDownloadClick}>
+              <p className=" "> Download CV </p>
+            {/* <div className=" ">
+              <img
+                src={cvdownload}
+                className="h-8 text-cyan-50"
+                onClick={handleDownloadClick}
+                alt="Download CV"
+              />
+            </div> */}
+          </div>
       </div>
       <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
         <Canvas camera={{ position: [0, 0, 5], fov: 75, near: 0.1, far: 1000 }}>
@@ -194,8 +204,6 @@ const Contact = () => {
         </Canvas>
       </div>
 
-      
-   
       {showModal && (
         <div className="modal ">
           <div className="modal-content info-box">
