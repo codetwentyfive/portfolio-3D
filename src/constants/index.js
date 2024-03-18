@@ -121,20 +121,20 @@ export const experiences = [
     ],
   },
   {
-    title: "Student",
-    company_name: "University of Passau -Cultural Business Studies",
+    title: "Student - Cultural Business Studies",
+    company_name: "University of Passau ",
     icon: passau,
     iconBg: "#fbc98a",
     date: "February 2016 - September 2019",
-    points: [""],
+    points: [],
   },
   {
-    title: "Student",
-    company_name: "Ludwig-Maximilians-Universität -Jurisprudence",
+    title: "Student - Jurisprudence",
+    company_name: "Ludwig-Maximilians-Universität",
     icon: lmu,
     iconBg: "#00883a",
     date: "February 2013 - September 2016",
-    points: [""],
+    points: [],
   },
 ];
 
