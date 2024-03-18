@@ -108,7 +108,7 @@ export const experiences = [
     ],
   },
   {
-    title: "Student",
+    title: "Student - Foundations,Full Stack Javascript",
     company_name: "The Odin Project & co.",
     icon: odin,
     iconBg: "#d44b56",
