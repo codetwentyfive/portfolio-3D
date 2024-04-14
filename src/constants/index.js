@@ -170,7 +170,7 @@ export const projects = [
     theme: "btn-back-green",
     name: "Altan Mountain",
     description:
-      "Created a working version of an e-commerce store, with a modern approach towards product displays that pop out the screen and are interactive as well as a theme switcher ",
+      "A mockup of an e-commerce store, with a modern approach towards product displays, which pop out of the screen and are interactive as well as a theme switcher ",
     link: "https://github.com/codetwentyfive/shopping-cart",
   },
   {
@@ -186,7 +186,7 @@ export const projects = [
     theme: "btn-back-yellow",
     name: "CV-App",
     description:
-      "Developed a web application for making inputing CVs more appealing,instantly see the changes to the CV as you type them.",
+      "Developed a web application for making inputing CVs more appealing, instantly see the changes to the CV as you type them.",
     link: "https://github.com/codetwentyfive/cv-application",
   },
   {
