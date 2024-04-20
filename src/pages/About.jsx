@@ -5,24 +5,28 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="max-container">
       <h1 className="head-text">
-        Hello, I am{" "}
+      {t('greeting_about')}{" "}
+
         <span className="gradient_text font-semibold drop-shadow">Chingis</span>
       </h1>
 
       <div className="mt-5 flex flex-col gap-3 text-slate-500">
         <p>
-          Full Stack Developer based in Germany, with years of experience
-          building and learning
+        {t('short_intro')}
+
         </p>
       </div>
 
       <div className="py-10 flex flex-col">
-        <h3 className="subhead-text">My Skills</h3>
+        <h3 className="subhead-text">{t('my_skills')}</h3>
 
         <div className="mt-16 flex flex-wrap gap-12 justify-center items-center  ">
           {skills.map((skill) => (
@@ -41,22 +45,14 @@ const About = () => {
       </div>
 
       <div className="py-16">
-        <h3 className="subhead-text">Timeline</h3>
-        <div className="mt-5 flex flex-col gap-3 text-slate-500">
+        <div className="flex flex-col gap-3 text-slate-500">
           <p>
-            With a self-taught background, <br />I bring practical knowledge and
-            expertise directly from the field. <br />
-            Fascinated by technology since childhood,
-            <br /> which lead to my passion for web development.
-            <br />
-            Ready to make a meaningful impact!
-            <br />
-            I'm eager to collaborate on projects that push boundaries and drive
-            progress.
+          {t('timeline_description')}
           </p>
         </div>
+        <h3 className="mt-12 subhead-text">{t('timeline')}</h3>
 
-        <div className="mt-12 flex">
+        <div className="flex">
           <VerticalTimeline>
             {experiences.map((experience, index) => (
               <VerticalTimelineElement
