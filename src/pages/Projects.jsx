@@ -2,28 +2,26 @@ import { arrow } from "../assets/icons";
 import { projects } from "../constants/index";
 import { Link } from "react-router-dom";
 import CTA from "../components/CTA";
+import { useTranslation } from "react-i18next";
 
 const Projects = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="max-container">
       <h1 className="head-text">
-        My{" "}
+        {t("project_header1")}{" "}
         <span className="gradient_text font-semibold drop-shadow">
-          Projects
+          {t("project_header2")}
         </span>
       </h1>
 
       <div className="mt-5 flex flex-col gap-3 text-slate-500">
         <p>
-          I'm thrilled to share a few of the projects I've worked on so far.{" "}
-          <br />
-          Each one showcases my dedication to learning and problem-solving,
-          <br /> often with a unique twist to go beyond expectations, as I find
-          it accelerates my learning process.
-          <br />
-          Feel free to explore the codebase of each project.
-          <br />
-          Let's dive into the world of technology together!
+          {t("projects_text1")} <br />
+          {t("projects_text2")} <br />
+          {t("projects_text3")} <br />
+          {t("projects_text4")}
         </p>
       </div>
       <div className="flex flex-wrap my-20 gap-16">
