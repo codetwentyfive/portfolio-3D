@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import useAlert from "../hooks/useAlert";
 import Alert from "../components/Alert";
 import { cvdownload } from "../assets/icons";
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -15,6 +16,8 @@ const Contact = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
+
+  const { t } = useTranslation();
 
   const { alert, showAlert, hideAlert } = useAlert();
 
@@ -44,7 +47,7 @@ const Contact = () => {
         setIsLoading(false);
         showAlert({
           show: true,
-          text: "Message send successfully!",
+          text: t('contact_success_message'),
           type: "success",
         });
         setForm({ name: "", email: "", message: "" });
@@ -61,7 +64,7 @@ const Contact = () => {
         console.log(error);
         showAlert({
           show: true,
-          text: "I didn't receive your message",
+          text: t('contact_error_message'),
           type: "danger",
         });
       });
@@ -115,10 +118,10 @@ const Contact = () => {
 
       <div className="flex-1 min-w-[50%] flex flex-col">
         <div className="flex flex-col justify-center items-center">
-        <h1 className="head-text ">
-        Leave a <span className="gradient_text">message!</span>{" "}
+          <h1 className="head-text ">
+            {t('contact_heading')}
+            <span className="gradient_text">{t('contact_heading_span')}</span>
           </h1>
-
         </div>
       
         <form
@@ -126,12 +129,12 @@ const Contact = () => {
           onSubmit={handleSubmit}
         >
           <label className="text-black-500 font-semibold">
-            Name
+            {t('contact_name_label')}
             <input
               type="text"
               name="name"
               className="input"
-              placeholder="Peterson Findus"
+              placeholder={t('contact_name_placeholder')}
               required
               value={form.name}
               onChange={handleChange}
@@ -140,12 +143,12 @@ const Contact = () => {
             />
           </label>
           <label className="text-black-500 font-semibold">
-            E-Mail
+            {t('contact_email_label')}
             <input
               type="email"
               name="email"
               className="input"
-              placeholder="petersonfindus@catmail.com"
+              placeholder={t('contact_email_placeholder')}
               required
               value={form.email}
               onChange={handleChange}
@@ -154,12 +157,12 @@ const Contact = () => {
             />
           </label>
           <label className="text-black-500 font-semibold">
-            Your Message
+            {t('contact_message_label')}
             <textarea
               name="message"
               rows="4"
               className="textarea"
-              placeholder="Write your thoughts here..."
+              placeholder={t('contact_message_placeholder')}
               value={form.message}
               onChange={handleChange}
               onFocus={handleFocus}
@@ -173,12 +176,12 @@ const Contact = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
           >
-            {isLoading ? "Sending..." : "Send Message"}
+            {isLoading ? t('contact_sending') : t('contact_send_button')}
           </button>
         </form>
         <div className="mt-4 px-2 btn flex flex-row  hover:cursor-pointer justify-center items-center"
           onClick={handleDownloadClick}>
-              <p className=" "> Download CV </p>
+            <p className=" ">{t('contact_download_button')}</p>
             {/* <div className=" ">
               <img
                 src={cvdownload}
@@ -208,25 +211,25 @@ const Contact = () => {
         <div className="modal ">
           <div className="modal-content info-box">
             <h2 className="font-medium sm:text-xl text-center">
-              Select CV Language:
+              {t('contact_select_language')}
             </h2>
             <button
               onClick={() => handleLanguageSelect("german")}
               className={selectedLanguage === "german" ? "selected" : ""}
             >
-              - German 🇩🇪
+              - {t('contact_german')} 🇩🇪
             </button>
             <button
               onClick={() => handleLanguageSelect("english")}
               className={selectedLanguage === "english" ? "selected" : ""}
             >
-              - English 🇬🇧
+              - {t('contact_english')} 🇬🇧
             </button>
             <button
               className="border-dotted border-black bg-white neo-btn"
               onClick={handleDownload}
             >
-              Confirm
+              {t('contact_confirm')}
             </button>
           </div>
         </div>
