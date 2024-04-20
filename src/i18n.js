@@ -7,8 +7,8 @@ import translationDE from '../translations/de.json';
 i18n
   .use(initReactI18next) 
   .init({
-    lng: 'en', 
-    fallbackLng: 'en', 
+    lng: 'de', 
+    fallbackLng: 'de', 
     resources: {
       en: {
         translation: translationEN, 
