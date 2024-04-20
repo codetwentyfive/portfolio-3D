@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
+  const { t } = useTranslation();
+
   return (
     <header className="header">
       <NavLink
@@ -16,7 +20,7 @@ const Navbar = () => {
             isActive ? "gradient_text font-bold" : "text-black"
           }
         >
-          About
+        {t('about')}
         </NavLink>
         <NavLink
           to="/Projects"
@@ -24,8 +28,10 @@ const Navbar = () => {
             isActive ? "gradient_text font-bold" : "text-black"
           }
         >
-          Projects
+        {t('projects')}
+          
         </NavLink>
+        <LanguageSwitcher/>
       </nav>
     </header>
   );
