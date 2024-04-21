@@ -5,7 +5,7 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const About = () => {
   const { t } = useTranslation();
@@ -13,20 +13,16 @@ const About = () => {
   return (
     <section className="max-container">
       <h1 className="head-text">
-      {t('greeting_about')}{" "}
-
+        {t("greeting_about")}{" "}
         <span className="gradient_text font-semibold drop-shadow">Chingis</span>
       </h1>
 
       <div className="mt-5 flex flex-col gap-3 text-slate-500">
-        <p>
-        {t('short_intro')}
-
-        </p>
+        <p>{t("short_intro")}</p>
       </div>
 
       <div className="py-10 flex flex-col">
-        <h3 className="subhead-text">{t('my_skills')}</h3>
+        <h3 className="subhead-text">{t("my_skills")}</h3>
 
         <div className="mt-16 flex flex-wrap gap-12 justify-center items-center  ">
           {skills.map((skill) => (
@@ -46,11 +42,11 @@ const About = () => {
 
       <div className="py-16">
         <div className="flex flex-col gap-3 text-slate-500">
-          <p>
-          {t('timeline_description')}
-          </p>
+          <p>{t("timeline_description1")}</p>
+          <p>{t("timeline_description2")}</p>
+          <p>{t("timeline_description3")}</p>
         </div>
-        <h3 className="mt-12 subhead-text">{t('timeline')}</h3>
+        <h3 className="mt-12 subhead-text">{t("timeline")}</h3>
 
         <div className="flex">
           <VerticalTimeline>
@@ -58,7 +54,7 @@ const About = () => {
               <VerticalTimelineElement
                 key={experience.company_name}
                 date={experience.date}
-                iconStyle={{  }}
+                iconStyle={{}}
                 icon={
                   <div className="flex  justify-center items-center w-full h-full">
                     <img
@@ -73,8 +69,7 @@ const About = () => {
                   borderStyle: "solid",
                   borderBottomColor: experience.iconBg,
                   boxShadow: "none",
-                  borderRadius:"30px"
-
+                  borderRadius: "30px",
                 }}
               >
                 <div>
