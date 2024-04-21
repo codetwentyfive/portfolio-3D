@@ -20,7 +20,7 @@ const HomeInfo = ({ currentStage }) => {
   const renderContent = {
     1: (
       <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
-        {t('hi_message')}, <span className="font-semibold">{t('name')}</span> 👋
+        {t('hi_message')} <span className="font-semibold">{t('name')}</span> 👋
         <br />
         {t('location')}
       </h1>
