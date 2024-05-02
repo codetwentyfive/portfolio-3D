@@ -103,8 +103,8 @@ export const experiences = [
       de: "Betreuer",
     },
     company_name: {
-      en: "Home",
-      de: "Zuhause",
+      en: "Familiy",
+      de: "Familie",
     },
     icon: caretaker,
     iconBg: "#2a3988",
@@ -114,8 +114,8 @@ export const experiences = [
     },
     points: [
       {
-        en: "Taking care of my father who suffers from broken spine injuries and needs help with everyday tasks",
-        de: "Pflege meines Vaters, der an gebrochenen Wirbeln leidet und Hilfe bei alltäglichen Aufgaben benötigt",
+        en: "Taking care of my father, who suffers from broken spine injuries, and assisting with both everyday tasks and managerial responsibilities.",
+        de: "Betreuung meines Vaters, der an gebrochenen Wirbeln leidet und Hilfe sowohl bei alltäglichen als auch bei organisatorischen Aufgaben benötigt.",
       },
     ],
   },
@@ -126,7 +126,7 @@ export const experiences = [
     },
     company_name: {
       en: "The Odin Project & co.",
-      de: "Das Odin-Projekt & Co.",
+      de: "The Odin-Projekt & Co.",
     },
     icon: odin,
     iconBg: "#d44b56",
