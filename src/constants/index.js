@@ -137,7 +137,7 @@ export const experiences = [
     points: [
       {
         en: "Learned about how to design and maintain a website from creation to deployment",
-        de: "Gelernt, wie man eine Website von der Erstellung bis zum Release entwirft und wartet",
+        de: "Gelernt, wie man eine Website von der Erstellung bis zum Release entwirft und pflegt",
       },
       {
         en: "Learned Javascript fundamentals",
