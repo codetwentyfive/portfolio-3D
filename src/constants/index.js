@@ -98,42 +98,93 @@ export const skills = [
 
 export const experiences = [
   {
-    title: "Caretaker",
-    company_name: "Home",
+    title: {
+      en: "Caretaker",
+      de: "Betreuer",
+    },
+    company_name: {
+      en: "Home",
+      de: "Zuhause",
+    },
     icon: caretaker,
     iconBg: "#2a3988",
-    date: "September 2022 - now",
+    date: {
+      en: "September 2022 - now",
+      de: "September 2022 - heute",
+    },
     points: [
-      "Taking care of my father who suffers from broken spine injuries and needs help with everyday tasks",
+      {
+        en: "Taking care of my father who suffers from broken spine injuries and needs help with everyday tasks",
+        de: "Pflege meines Vaters, der an gebrochenen Wirbeln leidet und Hilfe bei alltäglichen Aufgaben benötigt",
+      },
     ],
   },
   {
-    title: "Student - Foundations,Full Stack Javascript",
-    company_name: "The Odin Project & co.",
+    title: {
+      en: "Student - Foundations, Full Stack Javascript",
+      de: "Student - Grundlagen, Full Stack JavaScript",
+    },
+    company_name: {
+      en: "The Odin Project & co.",
+      de: "Das Odin-Projekt & Co.",
+    },
     icon: odin,
     iconBg: "#d44b56",
-    date: "February 2020 - now",
+    date: {
+      en: "February 2020 - now",
+      de: "Februar 2020 - heute",
+    },
     points: [
-      "Learned about how to design and maintain a website from creation to deployment",
-      "Learned Javascript fundamentals",
-      "React frameworks",
-      "Node.js",
+      {
+        en: "Learned about how to design and maintain a website from creation to deployment",
+        de: "Gelernt, wie man eine Website von der Erstellung bis zum Release entwirft und wartet",
+      },
+      {
+        en: "Learned Javascript fundamentals",
+        de: "Grundlagen von JavaScript gelernt",
+      },
+      {
+        en: "React frameworks",
+        de: "React-Frameworks",
+      },
+      {
+        en: "Node.js",
+        de: "Node.js",
+      },
     ],
   },
   {
-    title: "Student - Cultural Business Studies",
-    company_name: "University of Passau ",
+    title: {
+      en: "Student - Cultural Business Studies",
+      de: "Student - Kulturwirtschaftswissenschaften",
+    },
+    company_name: {
+      en: "University of Passau",
+      de: "Universität Passau",
+    },
     icon: passau,
     iconBg: "#fbc98a",
-    date: "February 2016 - September 2019",
+    date: {
+      en: "February 2016 - September 2019",
+      de: "Februar 2016 - September 2019",
+    },
     points: [],
   },
   {
-    title: "Student - Jurisprudence",
-    company_name: "Ludwig-Maximilians-Universität",
+    title: {
+      en: "Student - Jurisprudence",
+      de: "Student - Rechtswissenschaften",
+    },
+    company_name: {
+      en: "Ludwig-Maximilians-Universität",
+      de: "Ludwig-Maximilians-Universität",
+    },
     icon: lmu,
     iconBg: "#00883a",
-    date: "February 2013 - September 2016",
+    date: {
+      en: "February 2013 - September 2016",
+      de: "Februar 2013 - September 2016",
+    },
     points: [],
   },
 ];
