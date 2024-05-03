@@ -226,7 +226,7 @@ body:has(.card[data-color="green"]:hover) {
 
 @keyframes shadowDisappear {
   0% {
-    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff, -2vmin -2vmin #d505ff; 
+    box-shadow: 1vmin 1vmin #ffd505, 3vmin 3vmin #062eff; 
 
   }
   10%{
