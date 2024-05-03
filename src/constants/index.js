@@ -156,7 +156,7 @@ export const experiences = [
   {
     title: {
       en: "Student - Cultural Business Studies",
-      de: "Student - Kulturwirtschaftswissenschaften",
+      de: "Student - Kulturwirtschaft",
     },
     company_name: {
       en: "University of Passau",
