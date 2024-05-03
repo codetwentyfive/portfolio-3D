@@ -115,7 +115,7 @@ export const experiences = [
     points: [
       {
         en: "Taking care of my father, who suffers from broken spine injuries, and assisting with both everyday tasks and managerial responsibilities.",
-        de: "Betreuung meines Vaters, der an gebrochenen Wirbeln leidet und Hilfe sowohl bei alltäglichen als auch bei organisatorischen Aufgaben benötigt.",
+        de: "Betreuung meines Vaters ,der pflegebedürftig geworden ist und sowohl bei alltäglichen als auch bei organisatorischen Aufgaben, Unterstüzung und Hilfe benötigt.",
       },
     ],
   },
