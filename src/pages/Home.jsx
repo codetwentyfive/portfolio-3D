@@ -117,7 +117,7 @@ const Home = () => {
         >
           <p>
             Title: <span className="font-semibold text-yellow-200 ">dream.mp3</span> <br />
-            Artist: Chingis Enkhbaatar
+            Artist: Chingis
           </p>
         </div>
       </div>
