@@ -1,11 +1,11 @@
-import { arrow } from "../assets/icons";
+import { arrow, github } from "../assets/icons";
 import { projects } from "../constants/index";
 import { Link } from "react-router-dom";
 import CTA from "../components/CTA";
 import { useTranslation } from "react-i18next";
 
 const Projects = () => {
-  const { t ,i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Function to get project description based on language
   const getProjectDescription = (project) => {
@@ -46,21 +46,42 @@ const Projects = () => {
               <h4 className="text-2xl font-poppins font-semibold">
                 {project.name}
               </h4>
-              <p className="mt-2 text-slate-500">{getProjectDescription(project)}</p>
-              <div className="mt-5 flex items-center gap-2 font-poppins">
-                <Link
-                  to={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-blue-600"
-                >
-                  Live Link
-                </Link>
-                <img
-                  src={arrow}
-                  alt="arrow"
-                  className="w-4 h-4 object-contain"
-                />
+              <p className="mt-2 text-slate-500">
+                {getProjectDescription(project)}
+              </p>
+              <div className="flex flex-row justify-between">
+                <div className="mt-5 flex items-center gap-2 font-poppins">
+                  <Link
+                    to={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-blue-600"
+                  >
+                    Live Link
+                  </Link>
+
+                  <img
+                    src={arrow}
+                    alt="arrow"
+                    className="w-4 h-4 object-contain"
+                  />
+                </div>
+                <div className="mt-5 flex items-center gap-2 font-poppins">
+                  <Link
+                    to={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-blue-600"
+                  >
+                    Github
+                  </Link>
+
+                  <img
+                    src={github}
+                    alt="arrow"
+                    className="w-4 h-4 object-contain"
+                  />
+                </div>
               </div>
             </div>
           </div>
