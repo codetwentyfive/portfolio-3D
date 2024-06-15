@@ -37,6 +37,8 @@ import mountain from "./mountain.svg";
 import weather from "./weather.svg";
 import cv from "./cv.svg";
 import cvdownload from "./cv-download.png"
+import php from "./php.svg";
+import mysql from "./mysql.svg";
 
 export {
   css,
@@ -78,4 +80,7 @@ export {
   passau,
   python,
   soundoff,
+  php,
+  mysql,
+
 };
