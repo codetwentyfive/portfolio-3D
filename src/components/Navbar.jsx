@@ -37,7 +37,7 @@ const Navbar = () => {
             isActive ? "gradient_text font-bold" : "text-black"
           }
         >
-        {t('Kontakt')}
+        {t('contact')}
           
         </NavLink>
         <LanguageSwitcher/>
