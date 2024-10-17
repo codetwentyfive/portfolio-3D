@@ -31,6 +31,15 @@ const Navbar = () => {
         {t('projects')}
           
         </NavLink>
+        <NavLink
+          to="/Contact"
+          className={({ isActive }) =>
+            isActive ? "gradient_text font-bold" : "text-black"
+          }
+        >
+        {t('Kontakt')}
+          
+        </NavLink>
         <LanguageSwitcher/>
       </nav>
     </header>
