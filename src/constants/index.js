@@ -2,6 +2,7 @@ import {
   car,
   contact,
   css,
+  cleaning,
   estate,
   git,
   github,
@@ -117,7 +118,6 @@ export const skills = [
     name: "MySQL",
     type: "Backend",
   },
-
 ];
 
 export const experiences = [
@@ -233,6 +233,17 @@ export const socialLinks = [
 
 export const projects = [
   {
+    iconUrl: cleaning,
+    theme: "btn-back-blue",
+    name: "Potera Reinigung",
+    descriptions: {
+      en: "A freelance project for a cleaning company based in Germany. The website showcases their services, client testimonials, and contact information and is made with NextJS, TailwindCSS and nodemailer for the contact form.",
+      de: "Ein freiberufliches Projekt für ein Reinigungsunternehmen mit Sitz in Deutschland. Die Website zeigt ihre Dienstleistungen, Kundenbewertungen und Kontaktinformationen und ist mit NextJS, TailwindCSS und nodemailer für das Kontaktformular erstellt worden.",
+    },
+    link: "https://poterareinigung.de/",
+    github: "https://github.com/codetwentyfive/potera",
+  },
+  {
     iconUrl: puzzle,
     theme: "btn-back-pink",
     name: "Yu-Gi-Oh! Card Memory",
@@ -285,6 +296,7 @@ export const projects = [
       de: "Eine Leinwand, die dem nostalgischen Kinderspielzeug nachempfunden ist, mit einer verstellbaren Leinwandgröße, diversen Malwerkzeugen sowie einer Speicherfunktion, auf die ich sehr stolz war, als ich sie zum erste Mal zum laufen bekommen habe.",
     },
     link: "https://codetwentyfive.github.io/Etch-A-Sketch/",
-    github: "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
+    github:
+      "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
   },
 ];
