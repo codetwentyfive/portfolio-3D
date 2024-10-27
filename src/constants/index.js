@@ -31,6 +31,7 @@ import {
   sketch,
   puzzle,
   express,
+  strangeseeds,
   php,
   mysql,
 } from "../assets/icons";
@@ -233,9 +234,26 @@ export const socialLinks = [
 
 export const projects = [
   {
+    iconUrl: strangeseeds,
+    theme: "btn-back-red",
+    name: {
+      en: "The Strange Seeds",
+      de: "The Strange Seeds"
+    },
+    descriptions: {
+      en: "A dynamic band website built with Next.js 14 and TypeScript, featuring real-time gig listings, music integration with Spotify and YouTube embeds, and structured data for SEO. The site includes an interactive image carousel, responsive design, and integration with social media platforms. Key features include automatic gig date formatting, dynamic routing, and a press kit download section.",
+      de: "Eine dynamische Band-Website, entwickelt mit Next.js 14 und TypeScript, mit Echtzeit-Konzertauflistungen, Musik-Integration über Spotify und YouTube-Einbettungen sowie strukturierten Daten für SEO. Die Website enthält eine interaktive Bildergalerie, responsives Design und Integration mit Social-Media-Plattformen. Zu den Hauptfunktionen gehören automatische Konzertdatum-Formatierung, dynamisches Routing und einen Pressekit-Download-Bereich."
+    },
+    link: "https://thestrangeseeds.com",
+    github: "https://github.com/codetwentyfive/strange-seeds",
+  },
+  {
     iconUrl: cleaning,
     theme: "btn-back-blue",
-    name: "Potera Reinigung",
+    name: {
+      en: "Potera Cleaning",
+      de: "Potera Reinigung"
+    },
     descriptions: {
       en: "A freelance project for a cleaning company based in Germany. The website showcases their services, client testimonials, and contact information and is made with NextJS, TailwindCSS and nodemailer for the contact form.",
       de: "Ein freiberufliches Projekt für ein Reinigungsunternehmen mit Sitz in Deutschland. Die Website zeigt ihre Dienstleistungen, Kundenbewertungen und Kontaktinformationen und ist mit NextJS, TailwindCSS und nodemailer für das Kontaktformular erstellt worden.",
@@ -246,7 +264,10 @@ export const projects = [
   {
     iconUrl: puzzle,
     theme: "btn-back-pink",
-    name: "Yu-Gi-Oh! Card Memory",
+    name: {
+      en: "Yu-Gi-Oh! Memory",
+      de: "Yu-Gi-Oh! Memory"
+    },
     descriptions: {
       en: "A game made with react, and python to fetch the card images from the Yu-Gi-Oh! API, currated a collection of the most iconic and also funniest cards!",
       de: "Ein Spiel programmiert mit React und Python, um die Kartengrafiken aus der Yu-Gi-Oh! API abzurufen. Ich habe eine Sammlung der ikonischsten und lustigsten Karten aus dem Yu-Gi-Oh! Universum für dieses Spiel zusammengestellt!",
@@ -257,7 +278,10 @@ export const projects = [
   {
     iconUrl: mountain,
     theme: "btn-back-green",
-    name: "Altan Mountain",
+    name: {
+      en: "Altan Mountain",
+      de: "Altan Berg"
+    },
     descriptions: {
       en: "A mockup of an e-commerce store, with a modern approach towards product displays, which pop out of the screen and are interactive as well as a theme switcher.",
       de: "Ein Prototype E-Commerce-Shop mit einem modernen Ansatz zur Produktanzeige, bei dem die Produkte aus dem Bildschirm hervorstechen und interaktiv sind, sowie einem Designwechsler welcher sich dem bevorzugten Beleuchtungsverhältnissen des Benutzers anpasst.",
@@ -268,7 +292,10 @@ export const projects = [
   {
     iconUrl: weather,
     theme: "btn-back-blue",
-    name: "Weather App",
+    name: {
+      en: "Weather App",
+      de: "Wetter App"
+    },
     descriptions: {
       en: "Designed and built a weather app, which not only displays the wanted weather information, but also fetches the users current location and automatically displays the current weather, using OpenCage Data API. ",
       de: "Eine Wetter-App, die nicht nur die gewünschten Wetterinformationen am gesuchten Ort anzeigt, sondern auch den aktuellen Standort des Benutzers abruft und automatisch das aktuelle Wetter anzeigt, mit der Verwendung der OpenCage Data API. ",
@@ -279,7 +306,10 @@ export const projects = [
   {
     iconUrl: cv,
     theme: "btn-back-yellow",
-    name: "CV-App",
+    name: {
+      en: "CV App",
+      de: "Lebenslauf-App"
+    },
     descriptions: {
       en: "Developed a web application for making inputing CVs more appealing, instantly see the changes to the CV as you type them.",
       de: "Eine Webanwendung, um das Eingeben von Lebensläufen ansprechender zu gestalten. Sie sehen sofort die Änderungen am Lebenslauf, während Sie sie eingeben.",
@@ -290,7 +320,10 @@ export const projects = [
   {
     iconUrl: sketch,
     theme: "btn-back-red",
-    name: "Etch-A-Sketch",
+    name: {
+      en: "Etch-A-Sketch",
+      de: "Etch-A-Sketch"
+    },
     descriptions: {
       en: "Build a canvas modeled after the nostalgic child-toy, with an adjustable canvas size,editing tools,as well as a save function i was very proud of back when i figured it out ",
       de: "Eine Leinwand, die dem nostalgischen Kinderspielzeug nachempfunden ist, mit einer verstellbaren Leinwandgröße, diversen Malwerkzeugen sowie einer Speicherfunktion, auf die ich sehr stolz war, als ich sie zum erste Mal zum laufen bekommen habe.",
@@ -299,4 +332,5 @@ export const projects = [
     github:
       "https://github.com/codetwentyfive/Etch-A-Sketch?tab=readme-ov-file",
   },
+
 ];

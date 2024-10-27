@@ -40,6 +40,7 @@ import cvdownload from "./cv-download.png"
 import php from "./php.svg";
 import mysql from "./mysql.svg";
 import cleaning from "./cleaning.png";
+import strangeseeds from "./strangeseeds.png";
 
 export {
   css,
@@ -84,5 +85,5 @@ export {
   soundoff,
   php,
   mysql,
-
+  strangeseeds,
 };
