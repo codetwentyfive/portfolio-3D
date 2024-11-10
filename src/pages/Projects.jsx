@@ -12,6 +12,15 @@ const Projects = () => {
     const lang = i18n.language; // Get current language
     return project.descriptions[lang] || project.descriptions["en"]; // Fallback to English if translation not available for the selected language
   };
+
+  // Function to get project name based on language
+  const getProjectName = (project) => {
+    const lang = i18n.language;
+    return typeof project.name === 'object' 
+      ? (project.name[lang] || project.name["en"])
+      : project.name;
+  };
+
   return (
     <section className="max-container">
       <h1 className="head-text">
@@ -31,7 +40,7 @@ const Projects = () => {
       </div>
       <div className="flex flex-wrap my-20 gap-16">
         {projects.map((project) => (
-          <div className="lg:w-[400px] w-full" key={project.name}>
+          <div className="lg:w-[400px] w-full" key={getProjectName(project)}>
             <div className="block-container w-12 h-12">
               <div className={`btn-back rounded-xl ${project.theme}`} />
               <div className="btn-front rounded-xl flex justify-center items-center">
@@ -44,7 +53,7 @@ const Projects = () => {
             </div>
             <div className="mt-5 flex flex-col">
               <h4 className="text-2xl font-poppins font-semibold">
-                {project.name}
+                {getProjectName(project)}
               </h4>
               <p className="mt-2 text-slate-500">
                 {getProjectDescription(project)}

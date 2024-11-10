@@ -39,6 +39,8 @@ import cv from "./cv.svg";
 import cvdownload from "./cv-download.png"
 import php from "./php.svg";
 import mysql from "./mysql.svg";
+import cleaning from "./cleaning.png";
+import strangeseeds from "./strangeseeds.png";
 
 export {
   css,
@@ -74,6 +76,7 @@ export {
   arrow,
   weather,
   puzzle,
+  cleaning,
   contact,
   soundon,
   lmu,
@@ -82,5 +85,5 @@ export {
   soundoff,
   php,
   mysql,
-
+  strangeseeds,
 };
