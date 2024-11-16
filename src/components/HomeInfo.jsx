@@ -7,13 +7,14 @@ const InfoBox = ({ text, link, btnText }) => (
   <div className="info-box">
     <p className="font-medium sm:text-xl text-center">{text}</p>
     <Link to={link} className="neo-brutalism-white neo-btn">
-      {btnText}
-      <img
-        src={arrow}
-        className="w-4 h-4 object-contain arrow"
-        alt="Arrow icon"
-      />
-      <p className="exclamation-mark">!</p>
+      <div className="flex items-center justify-center gap-2">
+        <span>{btnText}</span>
+        <img
+          src={arrow}
+          className="w-4 h-4 object-contain"
+          alt="Arrow icon"
+        />
+      </div>
     </Link>
   </div>
 );
@@ -53,13 +54,12 @@ const HomeInfo = ({ currentStage }) => {
       <InfoBox
         text={
           <>
-            {t("lets_build_together1")}
-            <br />
+            {t("lets_build_together1")} <br />
             {t("lets_build_together2")}
           </>
         }
         link="/contact"
-        btnText={t("lets_talk")}
+        btnText={t("lets_talk") + "!"}
       />
     ),
   };
