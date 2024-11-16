@@ -112,8 +112,27 @@ const Contact = () => {
     closeModal();
   };
 
+  const adjustFoxForScreenSize = () => {
+    let screenScale, screenPosition;
+    
+    if (window.innerWidth < 768) {
+      screenScale = [0.4, 0.4, 0.4];
+      screenPosition = [0.5, 0.5, 0];
+    } else if (window.innerWidth < 1024) {
+      screenScale = [0.5, 0.5, 0.5];
+      screenPosition = [0.5, 0.35, 0];
+    } else {
+      screenScale = [0.6, 0.6, 0.6];
+      screenPosition = [0.5, 0.2, 0];
+    }
+    
+    return [screenScale, screenPosition];
+  };
+
+  const [foxScale, foxPosition] = adjustFoxForScreenSize();
+
   return (
-    <section className="relative flex lg:flex-row flex-col max-container h-[100%]">
+    <section className="relative flex lg:flex-row flex-col max-container min-h-screen">
       {alert.show && <Alert {...alert} />}
 
       <div className="flex-1 min-w-[50%] flex flex-col">
@@ -192,16 +211,24 @@ const Contact = () => {
             </div> */}
           </div>
       </div>
-      <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
-        <Canvas camera={{ position: [0, 0, 5], fov: 75, near: 0.1, far: 1000 }}>
+      <div className="lg:w-1/2 w-full lg:h-[640px] md:h-[550px] h-[350px]">
+        <Canvas
+          camera={{ 
+            position: [0, 0, 5],
+            fov: 75, 
+            near: 0.1, 
+            far: 1000
+          }}
+          className="w-full h-full"
+        >
           <directionalLight intensity={2.5} position={[0, 0, 1]} />
           <ambientLight intensity={0.2} />
           <Suspense fallback={<Loader />}>
             <Fox
               currentAnimation={currentAnimation}
-              position={[0.5, 0.35, 0]}
-              rotation={[12.7, -0.6, 0]}
-              scale={[0.5, 0.5, 0.5]}
+              position={foxPosition}
+              rotation={[12.6, -0.6, 0]}
+              scale={foxScale}
             />
           </Suspense>
         </Canvas>
