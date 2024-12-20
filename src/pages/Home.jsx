@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useEffect, useRef } from "react";
 import Loader from "../components/Loader";
-
+import { LoadingScreen } from "../components/LoadingScreen";
 import Island from "../models/Island";
 import Sky from "../models/Sky";
 import Bird from "../models/Bird";
@@ -9,9 +9,17 @@ import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
 import dream from "../assets/dream.mp3";
 import { soundoff, soundon } from "../assets/icons";
-import { OrbitControls } from "@react-three/drei";
+import { useModelLoader } from "../hooks/useModelLoader";
 
 const Home = () => {
+  const modelPaths = [
+    '../assets/3d/island.glb',
+    '../assets/3d/sky.glb',
+    '../assets/3d/bird.glb',
+    '../assets/3d/plane.glb'
+  ];
+  
+  const isLoading = useModelLoader(modelPaths);
   const audioRef = useRef(new Audio(dream));
   audioRef.current.volume = 0.4;
   audioRef.current.loop = true;
@@ -33,6 +41,11 @@ const Home = () => {
     };
   }, [isPlayingMusic]);
 
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  
   const adjustPlaneForScreenSize = () => {
     let screenScale, screenPosition;
     if (window.innerWidth < 768) {
