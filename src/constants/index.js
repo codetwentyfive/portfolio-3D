@@ -124,8 +124,80 @@ export const skills = [
 export const experiences = [
   {
     title: {
+      en: "Full Stack Developer - Freelance",
+      de: "Full Stack Entwickler - Freiberuflich",
+    },
+    company_name: {
+      en: "The Strange Seeds",
+      de: "The Strange Seeds",
+    },
+    icon: strangeseeds,
+    iconBg: "#E31937",
+    date: {
+      en: "September 2023 - now",
+      de: "September 2023 - heute",
+    },
+    points: [
+      {
+        en: "Development of a dynamic band website using Next.js 14 and TypeScript",
+        de: "Entwicklung einer dynamischen Band-Website mit Next.js 14 und TypeScript",
+      },
+      {
+        en: "Integration of real-time concert listings and music streaming services",
+        de: "Integration von Echtzeit-Konzertauflistungen und Musik-Streaming-Diensten",
+      },
+      {
+        en: "Implementation of SEO optimizations and structured data",
+        de: "Implementierung von SEO-Optimierungen und strukturierten Daten",
+      },
+      {
+        en: "Creation of an interactive image gallery and press kit section",
+        de: "Erstellung einer interaktiven Bildergalerie und eines Pressekit-Bereichs",
+      },
+      {
+        en: "Development of responsive design with social media integration",
+        de: "Entwicklung eines responsiven Designs mit Social-Media-Integration",
+      },
+    ],
+  },
+  {
+    title: {
+      en: "Full Stack Developer - Freelance",
+      de: "Full Stack Entwickler - Freiberuflich",
+    },
+    company_name: {
+      en: "Potera Cleaning",
+      de: "Potera Reinigung",
+    },
+    icon: cleaning,
+    iconBg: "#accbe1",
+    date: {
+      en: "June 2023 - now",
+      de: "Juni 2023 - heute",
+    },
+    points: [
+      {
+        en: "Development of a modern website for a cleaning company with responsive design and interactive elements",
+        de: "Entwicklung einer modernen Website für eine Reinigungsfirma mit responsivem Design und interaktiven Elementen",
+      },
+      {
+        en: "Implementation of a secure contact form for efficient processing of customer inquiries",
+        de: "Implementierung eines sicheren Kontaktformulars zur effizienten Verarbeitung von Kundenanfragen",
+      },
+      {
+        en: "Application of SEO strategies to increase search engine visibility",
+        de: "Anwendung von SEO-Strategien zur Steigerung der Sichtbarkeit in Suchmaschinen",
+      },
+      {
+        en: "Optimization of website performance through efficient code structure and resource utilization",
+        de: "Optimierung der Website-Performance durch effiziente Code-Struktur und Ressourcennutzung",
+      },
+    ],
+  },
+  {
+    title: {
       en: "Caretaker",
-      de: "Betreuer",
+      de: "Angehörigenpflege",
     },
     company_name: {
       en: "Familiy",
@@ -140,7 +212,7 @@ export const experiences = [
     points: [
       {
         en: "Taking care of my father, who suffers from broken spine injuries, and assisting with both everyday tasks and managerial responsibilities.",
-        de: "Betreuung meines Vaters ,der pflegebedürftig geworden ist und sowohl bei alltäglichen als auch bei organisatorischen Aufgaben, Unterstüzung und Hilfe benötigt.",
+        de: "Verwaltung der täglichen Angelegenheiten und des Wohlergehens meines pflegebedürftigen Vaters",
       },
     ],
   },
