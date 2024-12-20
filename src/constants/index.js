@@ -134,8 +134,8 @@ export const experiences = [
     icon: strangeseeds,
     iconBg: "#E31937",
     date: {
-      en: "September 2023 - now",
-      de: "September 2023 - heute",
+      en: "September 2024 - now",
+      de: "September 2024 - heute",
     },
     points: [
       {
@@ -172,8 +172,8 @@ export const experiences = [
     icon: cleaning,
     iconBg: "#accbe1",
     date: {
-      en: "June 2023 - now",
-      de: "Juni 2023 - heute",
+      en: "June 2024 - now",
+      de: "Juni 2024 - heute",
     },
     points: [
       {
