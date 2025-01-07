@@ -105,9 +105,9 @@ const Contact = () => {
 
   const handleDownload = () => {
     if (selectedLanguage === "german") {
-      window.open("/Chingis Enkhbaatar-CV_German.pdf", "_blank");
+      window.open("/Chingis Zwecker-CV_German.pdf", "_blank");
     } else if (selectedLanguage === "english") {
-      window.open("/Chingis Enkhbaatar-CV_English.pdf", "_blank");
+      window.open("/Chingis Zwecker-CV_English.pdf", "_blank");
     }
     closeModal();
   };
