@@ -7,7 +7,7 @@ import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
-import dream from "../assets/dream.mp3";
+import dream from "../assets/dream.ogg";
 import { soundoff, soundon } from "../assets/icons";
 import { useModelLoader } from "../hooks/useModelLoader";
 
@@ -129,7 +129,7 @@ const Home = () => {
           } py-1 px-2 rounded-lg`}
         >
           <p>
-            Title: <span className="font-semibold text-yellow-200 ">dream.mp3</span> <br />
+            Title: <span className="font-semibold text-yellow-200 ">dream.ogg</span> <br />
             Artist: Chingis
           </p>
         </div>

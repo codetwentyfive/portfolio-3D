@@ -1,46 +1,61 @@
-import React, { useRef, useEffect } from "react";
-import birdScene from "../assets/3d/bird.glb";
+import { useRef, useEffect } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import birdScene from "../assets/3d/bird.glb";
+
 const Bird = () => {
   const birdRef = useRef();
-  //grab the animations using useGLTF
-  const { scene, animations } = useGLTF(birdScene);
-  //useAnimations defined as actions used
+  
+  const { scene, animations } = useGLTF(birdScene, true, {
+    draco: true,
+    keepMeshes: true
+  });
+  
   const { actions } = useAnimations(animations, birdRef);
 
   useEffect(() => {
-    actions["Take 001"].play();
-  }, []);
+    if (actions["Take 001"]) {
+      actions["Take 001"].play();
+    }
+
+    return () => {
+      // Cleanup animations
+      Object.values(actions).forEach(action => action?.stop());
+    };
+  }, [actions]);
+
   useFrame(({ clock, camera }) => {
-    //update the y postition to simulate the bird flying in a sin wave
+    if (!birdRef.current) return;
+
+    // Flying motion
     birdRef.current.position.y = Math.sin(clock.elapsedTime) * 0.2 + 2;
-    //check if bird has reached the end of the screen
+
+    // Direction changes
     if (birdRef.current.position.x > camera.position.x + 10) {
-      //change direction  to backwards and rotate the bird 180 degrees on the y-axis
       birdRef.current.rotation.y = Math.PI;
-      //if it hasnt reached the end of the screen->
-      //move it forwards
     } else if (birdRef.current.position.x < camera.position.x - 10) {
       birdRef.current.rotation.y = 0;
     }
-    //update x,y positions based opn the direction
+
+    // Movement
+    const moveSpeed = 0.01;
     if (birdRef.current.rotation.y === 0) {
-      //moving forward
-      birdRef.current.position.x += 0.01;
-      birdRef.current.position.z -= 0.01;
+      birdRef.current.position.x += moveSpeed;
+      birdRef.current.position.z -= moveSpeed;
     } else {
-      //moving backwards
-      birdRef.current.position.x -= 0.01;
-      birdRef.current.position.z += 0.01;
+      birdRef.current.position.x -= moveSpeed;
+      birdRef.current.position.z += moveSpeed;
     }
   });
 
   return (
-    <mesh position={[-5, 2, 1]} scale={[0.003, 0.003, 0.003]} ref={birdRef}>
+    <mesh ref={birdRef} position={[-5, 2, 1]} scale={[0.003, 0.003, 0.003]}>
       <primitive object={scene} />
     </mesh>
   );
 };
 
 export default Bird;
+
+// Preload the model
+useGLTF.preload(birdScene);
