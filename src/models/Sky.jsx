@@ -9,23 +9,23 @@ const Sky = ({ isRotating }) => {
   const [isHighQualityLoaded, setIsHighQualityLoaded] = useState(false);
   
   // Load low-res version immediately
-  const { scene: lowResScene } = useGLTF(skyScene, true, {
-    draco: true,
-    keepMeshes: true
-  });
-
+  const { scene: lowResScene } = useGLTF(skyScene);
+  
   // Load high-res version in the background
   useEffect(() => {
     let mounted = true;
 
     const loadHighQuality = async () => {
       try {
-        const { scene: highResScene } = await useGLTF(skySceneHQ, true, {
-          draco: true,
-          keepMeshes: true
+        const { scene: highResScene } = await new Promise((resolve, reject) => {
+          useGLTF.load(skySceneHQ, 
+            (gltf) => resolve(gltf),
+            undefined,
+            (error) => reject(error)
+          );
         });
 
-        if (mounted) {
+        if (mounted && skyRef.current && highResScene.children[0]) {
           // Replace the scene's material and textures
           skyRef.current.children[0].material = highResScene.children[0].material;
           setIsHighQualityLoaded(true);
@@ -45,7 +45,7 @@ const Sky = ({ isRotating }) => {
   }, []);
 
   useFrame((_, delta) => {
-    if (isRotating) {
+    if (isRotating && skyRef.current) {
       skyRef.current.rotation.y += 0.1 * delta;
     }
   });
@@ -59,6 +59,5 @@ const Sky = ({ isRotating }) => {
 
 export default Sky;
 
-// Preload both versions
+// Preload low-res version
 useGLTF.preload(skyScene);
-useGLTF.preload(skySceneHQ);

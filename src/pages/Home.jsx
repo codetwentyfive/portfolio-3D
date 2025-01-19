@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useEffect, useRef } from "react";
+import { useGLTF } from "@react-three/drei";
 import Loader from "../components/Loader";
 import { LoadingScreen } from "../components/LoadingScreen";
 import Island from "../models/Island";
@@ -8,22 +9,46 @@ import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
 import { soundoff, soundon } from "../assets/icons";
-import { useModelLoader } from "../hooks/useModelLoader";
+import islandScene from "../assets/3d/island.glb";
+import skyScene from "../assets/3d/sky.glb";
+import birdScene from "../assets/3d/bird.glb";
+import planeScene from "../assets/3d/plane.glb";
 
 const Home = () => {
-  const modelPaths = [
-    '../assets/3d/island.glb',
-    '../assets/3d/sky.glb',
-    '../assets/3d/bird.glb',
-    '../assets/3d/plane.glb'
-  ];
-  
-  const isLoading = useModelLoader(modelPaths);
+  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef(null);
   const [currentStage, setCurrentStage] = useState(1);
   const [isRotating, setIsRotating] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [isMusicInfoVisible, setIsMusicInfoVisible] = useState(false);
+
+  // Preload all models
+  useEffect(() => {
+    const loadModels = async () => {
+      const modelPaths = [islandScene, skyScene, birdScene, planeScene];
+      
+      try {
+        await Promise.all(
+          modelPaths.map(path => 
+            new Promise((resolve, reject) => {
+              useGLTF.load(
+                path, 
+                (gltf) => resolve(gltf),
+                undefined,
+                (error) => reject(error)
+              );
+            })
+          )
+        );
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error loading models:', error);
+        setIsLoading(false);
+      }
+    };
+
+    loadModels();
+  }, []);
 
   // Lazy load audio
   useEffect(() => {
@@ -172,3 +197,9 @@ const Home = () => {
 };
 
 export default Home;
+
+// Preload all models
+useGLTF.preload(islandScene);
+useGLTF.preload(skyScene);
+useGLTF.preload(birdScene);
+useGLTF.preload(planeScene);
