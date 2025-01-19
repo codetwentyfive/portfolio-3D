@@ -7,19 +7,24 @@ export function useModelLoader(modelPaths) {
 
   useEffect(() => {
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    // Using the official Three.js CDN for Draco decoder
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+    dracoLoader.setDecoderConfig({ type: 'js' }); // Explicitly set decoder type
     
     const loadModels = async () => {
       try {
-        // Configure GLTF loader with Draco compression
-        useGLTF.preload(modelPaths[0], true, {
-          draco: dracoLoader,
-        });
-
         // Load all models concurrently with Draco compression
         await Promise.all(modelPaths.map(path => 
-          useGLTF.preload(path, true, {
-            draco: dracoLoader,
+          new Promise((resolve, reject) => {
+            try {
+              const model = useGLTF.preload(path, true, {
+                draco: dracoLoader,
+              });
+              resolve(model);
+            } catch (error) {
+              console.error(`Error loading model ${path}:`, error);
+              reject(error);
+            }
           })
         ));
         
