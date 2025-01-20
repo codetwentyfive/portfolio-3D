@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import Loader from "../components/Loader";
 import { LoadingScreen } from "../components/LoadingScreen";
@@ -8,7 +8,6 @@ import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
-import { soundoff, soundon } from "../assets/icons";
 import islandScene from "../assets/3d/island.glb";
 import skyScene from "../assets/3d/sky.glb";
 import birdScene from "../assets/3d/bird.glb";
@@ -16,11 +15,8 @@ import planeScene from "../assets/3d/plane.glb";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const audioRef = useRef(null);
   const [currentStage, setCurrentStage] = useState(1);
   const [isRotating, setIsRotating] = useState(false);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
-  const [isMusicInfoVisible, setIsMusicInfoVisible] = useState(false);
 
   // Preload all models
   useEffect(() => {
@@ -49,64 +45,6 @@ const Home = () => {
 
     loadModels();
   }, []);
-
-  // Lazy load audio
-  useEffect(() => {
-    const audio = new Audio();
-    audio.volume = 0.4;
-    audio.loop = true;
-    
-    // Load audio file only when needed
-    const loadAudio = () => {
-      if (!audioRef.current) {
-        import('../assets/dream.ogg').then((module) => {
-          audio.src = module.default;
-          audioRef.current = audio;
-        });
-      }
-    };
-
-    // Load audio on first user interaction
-    const handleFirstInteraction = () => {
-      loadAudio();
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-    };
-
-    window.addEventListener('click', handleFirstInteraction);
-    window.addEventListener('touchstart', handleFirstInteraction);
-
-    return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      if (isPlayingMusic) {
-        audioRef.current.play().catch(() => setIsPlayingMusic(false));
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [isPlayingMusic]);
-
-  const toggleMusicInfo = () => {
-    setIsMusicInfoVisible(!isMusicInfoVisible);
-  };
-
-  const toggleMusic = () => {
-    if (!audioRef.current?.src) return; // Don't toggle if audio isn't loaded
-    setIsPlayingMusic(!isPlayingMusic);
-    if (isPlayingMusic) {
-      toggleMusicInfo();
-    }
-  };
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -174,24 +112,6 @@ const Home = () => {
           />
         </Suspense>
       </Canvas>
-      <div className="flex flex-row gap-6 justify-center items-center absolute h-15 md:bottom-2 md:left-2 bottom-16 left-8">
-        <img
-          src={!isPlayingMusic ? soundoff : soundon}
-          alt="musicplayer"
-          className="w-10 h-10 cursor-pointer object-contain"
-          onClick={toggleMusic}
-        />
-        <div
-          className={`music-info ${
-            isPlayingMusic ? "visible" : ""
-          } py-1 px-2 rounded-lg`}
-        >
-          <p>
-            Title: <span className="font-semibold text-yellow-200">dream.ogg</span> <br />
-            Artist: Chingis
-          </p>
-        </div>
-      </div>
     </section>
   );
 };
