@@ -34,11 +34,16 @@ body:has(.card[data-color="green"]:hover) {
     @apply font-semibold sm:text-3xl text-xl relative font-poppins;
   }
 
-  .blue-gradient_text {
-    @apply bg-gradient-to-r from-[#00c6ff] to-[#0072ff] bg-clip-text text-transparent;
+  .animated-gradient-text {
+    @apply bg-gradient-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
   }
+
+  .blue-gradient_text {
+    @apply bg-gradient-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
+  }
+
   .gradient_text {
-    @apply bg-gradient-to-r from-[#d505ff] to-[#002fff] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#d505ff] via-[#002fff] to-[#d505ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
   }
 
   .input {
@@ -50,7 +55,7 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .btn {
-    @apply text-white bg-gradient-to-r from-[#d505ff] to-[#002fff] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
+    @apply text-white bg-gradient-to-r from-[#d505ff] via-[#002fff] to-[#d505ff] bg-[length:200%_auto] animate-gradient focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
   }
 
   .header {
@@ -65,8 +70,42 @@ body:has(.card[data-color="green"]:hover) {
     @apply flex flex-wrap gap-7 items-center justify-between;
   }
 
+  .animated-gradient-bg {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      #00c6ff 0%,
+      #0072ff 25%,
+      #d505ff 50%,
+      #002fff 75%,
+      #00c6ff 100%
+    );
+    background-size: 400% 400%;
+    animation: gradient 8s ease infinite;
+    border-radius: 20px;
+  }
+
+  .animated-gradient-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    opacity: 0.95;
+  }
+
   .info-box {
-    @apply mx-5 relative flex text-white flex-col gap-3 max-w-2xl neo-brutalism-blue pt-4 pb-12 px-8 z-30;
+    @apply mx-5 relative flex text-white flex-col gap-3 max-w-2xl pt-4 pb-12 px-8 z-30;
+    background: linear-gradient(
+      135deg,
+      #00c6ff 0%,
+      #0072ff 25%,
+      #d505ff 50%,
+      #002fff 75%,
+      #00c6ff 100%
+    );
+    background-size: 400% 400%;
+    animation: gradient 8s ease infinite;
+    border-radius: 20px;
   }
 
   .neo-btn {
@@ -79,6 +118,18 @@ body:has(.card[data-color="green"]:hover) {
 
   .cta-text {
     @apply text-black-500 font-extrabold flex-1 text-3xl max-md:text-center;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
