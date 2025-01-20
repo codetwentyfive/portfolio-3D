@@ -5,7 +5,7 @@ const AudioPlayer = () => {
   const { isPlayingMusic, isMusicInfoVisible, toggleMusic } = useAudio();
 
   return (
-    <div className="flex flex-row gap-6 justify-center items-center fixed h-15 md:bottom-2 md:left-2 bottom-16 left-8 z-50">
+    <div className="flex flex-row-reverse gap-6 justify-center items-center fixed h-15 bottom-8 right-8 sm:right-16 z-50">
       <img
         src={!isPlayingMusic ? soundoff : soundon}
         alt="musicplayer"

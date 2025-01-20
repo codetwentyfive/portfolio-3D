@@ -45,5 +45,6 @@
   "contact_english": "Englisch",
   "contact_confirm": "Bestätigen",
   "contact_success_message": "Nachricht erfolgreich gesendet!",
-  "contact_error_message": "Ich habe Ihre Nachricht nicht erhalten"
+  "contact_error_message": "Ich habe Ihre Nachricht nicht erhalten",
+  "hint_drag_rotate": "Zum Drehen einfach ziehen ✨"
 }

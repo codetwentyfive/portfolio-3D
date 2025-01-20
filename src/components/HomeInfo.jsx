@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 import { arrow } from "../assets/icons";
 import { useTranslation } from "react-i18next";
 
-const HintBox = () => (
-  <div className="fixed bottom-8 left-1/2 -translate-x-1/2 animate-fade-in">
-    <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-gray-100/20 animate-float">
-      <p className="text-sm text-gray-700 flex items-center gap-2">
-        <span className="text-blue-500">✨</span>
-        <span className="font-medium">Drag to rotate & explore</span>
-      </p>
+const HintBox = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 animate-fade-in">
+      <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-gray-100/20 animate-float">
+        <p className="text-sm text-gray-700 flex items-center gap-2">
+          <span className="text-blue-500">✨</span>
+          <span className="font-medium">{t("hint_drag_rotate")}</span>
+        </p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const InfoBox = ({ text, link, btnText }) => (
   <div className="info-box">

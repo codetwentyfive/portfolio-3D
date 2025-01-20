@@ -45,5 +45,6 @@
   "contact_english": "English",
   "contact_confirm": "Confirm",
   "contact_success_message": "Message sent successfully!",
-  "contact_error_message": "I didn't receive your message"
+  "contact_error_message": "I didn't receive your message",
+  "hint_drag_rotate": "Drag to rotate & explore"
 }
