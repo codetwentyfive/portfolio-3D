@@ -34,6 +34,7 @@ import {
   strangeseeds,
   php,
   mysql,
+  logo,
 } from "../assets/icons";
 
 export const skills = [
@@ -305,6 +306,20 @@ export const socialLinks = [
 ];
 
 export const projects = [
+  {
+    iconUrl: logo,
+    theme: "btn-back-purple",
+    name: {
+      en: "3D Portfolio",
+      de: "3D Portfolio"
+    },
+    descriptions: {
+      en: "An immersive 3D portfolio website built with React Three Fiber, featuring interactive 3D models, animations, and a dynamic island environment. Includes multilingual support (EN/DE), custom 3D model optimization, background music controls, and responsive design. The project showcases modern web technologies including React, Three.js, Framer Motion, and i18next for internationalization.",
+      de: "Eine immersive 3D-Portfolio-Website, entwickelt mit React Three Fiber, mit interaktiven 3D-Modellen, Animationen und einer dynamischen Inselumgebung. Enthält mehrsprachige Unterstützung (EN/DE), 3D-Modell-Optimierung, Hintergrundmusik-Steuerung und responsives Design. Das Projekt demonstriert moderne Webtechnologien wie React, Three.js, Framer Motion und i18next für Internationalisierung."
+    },
+    link: "https://chingis.dev/",
+    github: "https://github.com/codetwentyfive/portfolio-3D",
+  },
   {
     iconUrl: strangeseeds,
     theme: "btn-back-red",

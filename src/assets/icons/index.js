@@ -41,6 +41,7 @@ import php from "./php.svg";
 import mysql from "./mysql.svg";
 import cleaning from "./cleaning.png";
 import strangeseeds from "./strangeseeds.png";
+import logo from "../favicon.png";
 
 export {
   css,
@@ -86,4 +87,5 @@ export {
   php,
   mysql,
   strangeseeds,
+  logo,
 };
