@@ -35,6 +35,9 @@ import {
   php,
   mysql,
   logo,
+  docker,
+  prisma,
+  postgresql,
 } from "../assets/icons";
 
 export const skills = [
@@ -118,7 +121,22 @@ export const skills = [
   {
     imageUrl: mysql,
     name: "MySQL",
-    type: "Backend",
+    type: "Database",
+  },
+  {
+    imageUrl: docker,
+    name: "Docker",
+    type: "DevOps",
+  },
+  {
+    imageUrl: prisma,
+    name: "Prisma",
+    type: "ORM",
+  },
+  {
+    imageUrl: postgresql,
+    name: "PostgreSQL",
+    type: "Database",
   },
 ];
 
@@ -306,6 +324,23 @@ export const socialLinks = [
 ];
 
 export const projects = [
+  {
+    iconUrl: mountain,
+    theme: "btn-back-green",
+    name: {
+      en: "HumTerra",
+      de: "HumTerra"
+    },
+    status: {
+      en: "Under Development",
+      de: "In Entwicklung"
+    },
+    descriptions: {
+      en: "A sophisticated e-commerce platform leveraging Next.js 14 App Router and TypeScript, featuring server-side rendering and advanced state management. Highlights include dynamic product filtering with SWR for real-time updates, Prisma ORM integration, NextAuth.js authentication, and a custom dark mode implementation. Built with a Server Components (RSC) first approach, the platform showcases modern React patterns, custom animations, and responsive design using Shadcn UI and Tailwind CSS. Notable features include an artisan spotlight system, interactive product galleries, and exceptional performance with perfect Lighthouse scores (100) in Performance, Best Practices, and SEO.",
+      de: "Eine fortschrittliche E-Commerce-Plattform, die Next.js 14 App Router und TypeScript nutzt, mit Server-Side Rendering und fortgeschrittenem State-Management. Zu den Highlights gehören dynamische Produktfilterung mit SWR für Echtzeit-Updates, Prisma ORM-Integration, NextAuth.js-Authentifizierung und eine maßgeschneiderte Dark-Mode-Implementierung. Entwickelt mit einem Server Components (RSC)-First-Ansatz, präsentiert die Plattform moderne React-Patterns, individuelle Animationen und responsives Design mit Shadcn UI und Tailwind CSS. Besondere Funktionen umfassen ein Handwerker-Präsentationssystem, interaktive Produktgalerien und herausragende Performance mit perfekten Lighthouse-Bewertungen (100) in Performance, Best Practices und SEO."
+    },
+    link: "https://humterra.vercel.app",
+  },
   {
     iconUrl: logo,
     theme: "btn-back-purple",

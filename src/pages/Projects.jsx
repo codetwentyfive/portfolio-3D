@@ -21,6 +21,13 @@ const Projects = () => {
       : project.name;
   };
 
+  // Function to get project status based on language
+  const getProjectStatus = (project) => {
+    if (!project.status) return null;
+    const lang = i18n.language;
+    return project.status[lang] || project.status["en"];
+  };
+
   return (
     <section className="max-container">
       <h1 className="head-text">
@@ -75,22 +82,30 @@ const Projects = () => {
                     className="w-4 h-4 object-contain"
                   />
                 </div>
-                <div className="mt-5 flex items-center gap-2 font-poppins">
-                  <Link
-                    to={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-blue-600"
-                  >
-                    Github
-                  </Link>
+                {getProjectStatus(project) ? (
+                  <div className="mt-5 flex items-center gap-2 font-poppins">
+                    <span className="font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full text-sm">
+                      {getProjectStatus(project)}
+                    </span>
+                  </div>
+                ) : project.github && (
+                  <div className="mt-5 flex items-center gap-2 font-poppins">
+                    <Link
+                      to={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-blue-600"
+                    >
+                      Github
+                    </Link>
 
-                  <img
-                    src={github}
-                    alt="arrow"
-                    className="w-4 h-4 object-contain"
-                  />
-                </div>
+                    <img
+                      src={github}
+                      alt="arrow"
+                      className="w-4 h-4 object-contain"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

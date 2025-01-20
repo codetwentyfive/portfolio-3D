@@ -42,6 +42,9 @@ import mysql from "./mysql.svg";
 import cleaning from "./cleaning.png";
 import strangeseeds from "./strangeseeds.png";
 import logo from "../favicon.png";
+import docker from './docker.svg';
+import prisma from './prisma.svg';
+import postgresql from './postgresql.svg';
 
 export {
   css,
@@ -88,4 +91,7 @@ export {
   mysql,
   strangeseeds,
   logo,
+  docker,
+  prisma,
+  postgresql,
 };

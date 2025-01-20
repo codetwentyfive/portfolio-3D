@@ -31,7 +31,7 @@ const About = () => {
 
         <div className="mt-16 flex flex-wrap gap-12 justify-center items-center">
           {skills.map((skill) => (
-            <div className="block-container w-20 h-20" key={skill.name}>
+            <div className="group relative block-container w-20 h-20" key={skill.name}>
               <div className="btn-back rounded-xl" />
               <div className="btn-front rounded-xl flex justify-center items-center">
                 <img
@@ -39,6 +39,13 @@ const About = () => {
                   alt={skill.name}
                   className="w-1/2 h-1/2 object-contain"
                 />
+              </div>
+              {/* Tooltip */}
+              <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 
+                             bg-black/80 text-white px-2 py-1 rounded-md text-sm
+                             opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                             whitespace-nowrap pointer-events-none">
+                {skill.name}
               </div>
             </div>
           ))}
