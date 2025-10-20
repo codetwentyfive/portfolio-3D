@@ -43,7 +43,7 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .gradient_text {
-    @apply bg-gradient-to-r from-[#d505ff] via-[#002fff] to-[#d505ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
+    @apply bg-gradient-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
   }
 
   .input {
@@ -55,7 +55,7 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .btn {
-    @apply text-white bg-gradient-to-r from-[#d505ff] via-[#002fff] to-[#d505ff] bg-[length:200%_auto] animate-gradient focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
+    @apply text-white bg-gradient-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-[length:200%_auto] animate-gradient focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center;
   }
 
   .header {
@@ -74,11 +74,11 @@ body:has(.card[data-color="green"]:hover) {
     @apply relative overflow-hidden;
     background: linear-gradient(
       135deg,
-      #00c6ff 0%,
-      #0072ff 25%,
-      #d505ff 50%,
-      #002fff 75%,
-      #00c6ff 100%
+      #0b4a7d 0%,
+      #3e7a5e 25%,
+      #e65c00 50%,
+      #a14a34 75%,
+      #3e7a5e 100%
     );
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
@@ -97,11 +97,11 @@ body:has(.card[data-color="green"]:hover) {
     @apply mx-5 relative flex text-white flex-col gap-3 max-w-2xl pt-4 pb-12 px-8 z-30;
     background: linear-gradient(
       135deg,
-      #00c6ff 0%,
-      #0072ff 25%,
-      #d505ff 50%,
-      #002fff 75%,
-      #00c6ff 100%
+      #0b4a7d 0%,
+      #3e7a5e 25%,
+      #e65c00 50%,
+      #a14a34 75%,
+      #3e7a5e 100%
     );
     background-size: 400% 400%;
     animation: gradient 12s ease infinite;
