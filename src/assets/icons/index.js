@@ -36,7 +36,6 @@ import sketch from "./sketch.svg";
 import mountain from "./mountain.svg";
 import weather from "./weather.svg";
 import cv from "./cv.svg";
-import cvdownload from "./cv-download.png"
 import php from "./php.svg";
 import mysql from "./mysql.svg";
 import cleaning from "./cleaning.png";
@@ -53,7 +52,6 @@ export {
   sketch,
   github,
   html,
-  cvdownload,
   javascript,
   mongodb,
   caretaker,

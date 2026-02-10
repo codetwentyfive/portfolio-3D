@@ -39,11 +39,6 @@
   "contact_message_placeholder": "Schreiben Sie hier Ihre Nachricht...",
   "contact_sending": "Senden...",
   "contact_send_button": "Nachricht senden",
-  "contact_download_button": "Lebenslauf herunterladen",
-  "contact_select_language": "Wählen Sie die Sprache des Lebenslaufs:",
-  "contact_german": "Deutsch",
-  "contact_english": "Englisch",
-  "contact_confirm": "Bestätigen",
   "contact_success_message": "Nachricht erfolgreich gesendet!",
   "contact_error_message": "Ich habe Ihre Nachricht nicht erhalten",
   "hint_drag_rotate": "Zum Drehen einfach ziehen ✨"

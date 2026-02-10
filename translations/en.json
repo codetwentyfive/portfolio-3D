@@ -39,11 +39,6 @@
   "contact_message_placeholder": "Write your message here...",
   "contact_sending": "Sending...",
   "contact_send_button": "Send Message",
-  "contact_download_button": "Download CV",
-  "contact_select_language": "Select CV Language:",
-  "contact_german": "German",
-  "contact_english": "English",
-  "contact_confirm": "Confirm",
   "contact_success_message": "Message sent successfully!",
   "contact_error_message": "I didn't receive your message",
   "hint_drag_rotate": "Drag to rotate & explore"
