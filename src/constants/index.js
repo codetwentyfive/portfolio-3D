@@ -45,6 +45,7 @@ import {
   localai,
   linux,
   nginx,
+  openclaw,
 } from "../assets/icons";
 
 export const skills = [
@@ -171,6 +172,11 @@ export const skills = [
   {
     imageUrl: localai,
     name: "Local AI / LLMs",
+    type: "AI",
+  },
+  {
+    imageUrl: openclaw,
+    name: "OpenClaw",
     type: "AI",
   },
 ];

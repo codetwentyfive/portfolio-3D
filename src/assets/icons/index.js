@@ -51,6 +51,7 @@ import openai from './openai.svg';
 import localai from './localai.svg';
 import linux from './linux.svg';
 import nginx from './nginx.svg';
+import openclaw from './openclaw.svg';
 
 export {
   css,
@@ -106,4 +107,5 @@ export {
   localai,
   linux,
   nginx,
+  openclaw,
 };
