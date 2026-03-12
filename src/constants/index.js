@@ -38,20 +38,16 @@ import {
   docker,
   prisma,
   postgresql,
+  bewirken,
+  claude,
+  cursor,
+  openai,
+  localai,
+  linux,
+  nginx,
 } from "../assets/icons";
 
 export const skills = [
-  {
-    imageUrl: css,
-    name: "CSS",
-    type: "Frontend",
-  },
-
-  {
-    imageUrl: html,
-    name: "HTML",
-    type: "Frontend",
-  },
   {
     imageUrl: javascript,
     name: "JavaScript",
@@ -65,7 +61,7 @@ export const skills = [
   {
     imageUrl: python,
     name: "Python",
-    type: "Frontend",
+    type: "Backend",
   },
   {
     imageUrl: react,
@@ -78,9 +74,9 @@ export const skills = [
     type: "Frontend",
   },
   {
-    imageUrl: git,
-    name: "Git",
-    type: "Version Control",
+    imageUrl: nodejs,
+    name: "Node.js",
+    type: "Backend",
   },
   {
     imageUrl: tailwindcss,
@@ -88,25 +84,19 @@ export const skills = [
     type: "Frontend",
   },
   {
-    imageUrl: sass,
-    name: "Sass",
+    imageUrl: html,
+    name: "HTML",
     type: "Frontend",
   },
   {
-    imageUrl: github,
-    name: "GitHub",
-    type: "Version Control",
+    imageUrl: css,
+    name: "CSS",
+    type: "Frontend",
   },
   {
-    imageUrl: mongodb,
-    name: "MongoDB",
-    type: "Database",
-  },
-
-  {
-    imageUrl: nodejs,
-    name: "Node.js",
-    type: "Backend",
+    imageUrl: sass,
+    name: "Sass",
+    type: "Frontend",
   },
   {
     imageUrl: express,
@@ -119,14 +109,19 @@ export const skills = [
     type: "Backend",
   },
   {
+    imageUrl: postgresql,
+    name: "PostgreSQL",
+    type: "Database",
+  },
+  {
     imageUrl: mysql,
     name: "MySQL",
     type: "Database",
   },
   {
-    imageUrl: docker,
-    name: "Docker",
-    type: "DevOps",
+    imageUrl: mongodb,
+    name: "MongoDB",
+    type: "Database",
   },
   {
     imageUrl: prisma,
@@ -134,13 +129,91 @@ export const skills = [
     type: "ORM",
   },
   {
-    imageUrl: postgresql,
-    name: "PostgreSQL",
-    type: "Database",
+    imageUrl: docker,
+    name: "Docker",
+    type: "DevOps",
+  },
+  {
+    imageUrl: linux,
+    name: "Linux",
+    type: "DevOps",
+  },
+  {
+    imageUrl: nginx,
+    name: "Nginx",
+    type: "DevOps",
+  },
+  {
+    imageUrl: git,
+    name: "Git",
+    type: "Version Control",
+  },
+  {
+    imageUrl: github,
+    name: "GitHub",
+    type: "Version Control",
+  },
+  {
+    imageUrl: claude,
+    name: "Claude",
+    type: "AI",
+  },
+  {
+    imageUrl: cursor,
+    name: "Cursor",
+    type: "AI",
+  },
+  {
+    imageUrl: openai,
+    name: "OpenAI Codex",
+    type: "AI",
+  },
+  {
+    imageUrl: localai,
+    name: "Local AI / LLMs",
+    type: "AI",
   },
 ];
 
 export const experiences = [
+  {
+    title: {
+      en: "Full Stack Developer",
+      de: "Full Stack Entwickler",
+    },
+    company_name: {
+      en: "beWirken",
+      de: "beWirken",
+    },
+    icon: bewirken,
+    iconBg: "#1a7f37",
+    date: {
+      en: "February 2025 - now",
+      de: "Februar 2025 - heute",
+    },
+    points: [
+      {
+        en: "Development and programming for werkbank projects at beWirken",
+        de: "Programmierung in werkbank-Aufträgen für beWirken",
+      },
+      {
+        en: "Regular updates and maintenance of beWirken's IT infrastructure",
+        de: "Regelmäßige Updates & Pflege der IT-Infrastruktur von beWirken",
+      },
+      {
+        en: "Consulting and sparring on IT infrastructure improvements and IT security",
+        de: "Beratung & Sparring zu Pflegemaßnahmen & Verbesserungen der IT-Infrastruktur & IT-Sicherheit",
+      },
+      {
+        en: "Sparring and consulting for the media production team on external client projects",
+        de: "Sparring & Beratung für das Medienproduktionsteam für Kund*innenprojekte im Außen",
+      },
+      {
+        en: "AI strategy development and implementation at beWirken",
+        de: "KI Sparring, Strategie & Umsetzung bei beWirken",
+      },
+    ],
+  },
   {
     title: {
       en: "Full Stack Developer - Freelance",

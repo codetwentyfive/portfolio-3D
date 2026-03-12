@@ -44,6 +44,13 @@ import logo from "../favicon.png";
 import docker from './docker.svg';
 import prisma from './prisma.svg';
 import postgresql from './postgresql.svg';
+import bewirken from './bewirken logo.svg';
+import claude from './claude.svg';
+import cursor from './cursor.svg';
+import openai from './openai.svg';
+import localai from './localai.svg';
+import linux from './linux.svg';
+import nginx from './nginx.svg';
 
 export {
   css,
@@ -92,4 +99,11 @@ export {
   docker,
   prisma,
   postgresql,
+  bewirken,
+  claude,
+  cursor,
+  openai,
+  localai,
+  linux,
+  nginx,
 };
