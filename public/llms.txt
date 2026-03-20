@@ -1,0 +1,83 @@
+# Chingis Zwecker E. — Full Stack Developer
+
+> Full Stack Developer based in Karlsruhe, Germany. Building scalable web applications with modern technologies.
+
+## Identity
+
+- Name: Chingis Zwecker E.
+- Role: Full Stack Developer
+- Location: Karlsruhe, Baden-Württemberg, Germany
+- Website: https://chingis.dev
+- Email: chingiszwecker@gmail.com
+- GitHub: https://github.com/codetwentyfive
+- LinkedIn: https://www.linkedin.com/in/chingis-enkhbaatar/
+- Languages spoken: English, German, Mongolian
+
+## Detailed Profile
+
+See: https://chingis.dev/llms-full.txt
+
+## Technical Skills
+
+### Frontend
+JavaScript, TypeScript, React, Next.js 14 (App Router), Tailwind CSS, HTML5, CSS3, Sass, Three.js / React Three Fiber, Framer Motion
+
+### Backend
+Node.js, Express.js, Python, PHP
+
+### Databases & ORMs
+PostgreSQL, MongoDB, MySQL, Prisma ORM
+
+### DevOps & Infrastructure
+Docker, Linux, Nginx, Vercel, Git, GitHub
+
+### AI & Tooling
+Claude, Cursor, OpenAI Codex, Local AI / LLMs, OpenClaw (self-hosted AI agent gateway)
+
+## Current Position
+
+Full Stack Developer at beWirken (February 2025 – present)
+- Development and programming for werkbank projects
+- IT infrastructure maintenance and security consulting
+- AI strategy development and implementation
+- Media production consulting for client projects
+
+## Freelance Work
+
+### The Strange Seeds (September 2024 – present)
+Dynamic band website built with Next.js 14 and TypeScript. Real-time concert listings, music streaming integration, structured data for SEO.
+
+### Potera Cleaning (June 2024 – present)
+Modern website for a German cleaning company. Contact forms, SEO strategies, performance optimization.
+
+## Selected Projects
+
+### chingis.shop
+E-commerce platform with Next.js 14 App Router, TypeScript, Prisma ORM, NextAuth.js. Server Components first approach. Perfect Lighthouse scores (100).
+URL: https://chingis.shop
+
+### 3D Portfolio (this site)
+Interactive 3D portfolio with React Three Fiber, bilingual (EN/DE), draggable 3D island environment.
+URL: https://chingis.dev
+
+### The Strange Seeds
+Band website with Next.js 14, TypeScript, real-time gig listings, Spotify/YouTube integration.
+URL: https://thestrangeseeds.com
+
+### Potera Cleaning
+Cleaning company website with Next.js, Tailwind CSS, nodemailer contact form.
+URL: https://poterareinigung.de
+
+## Education
+
+- University of Passau — Cultural Business Studies (2016–2019)
+- Ludwig-Maximilians-Universität München — Jurisprudence (2013–2016)
+- The Odin Project — Full Stack JavaScript (2020–present, self-taught)
+
+## Services Offered
+
+- Custom web application development (React, Next.js, TypeScript, Node.js)
+- E-commerce platform development
+- AI strategy consulting and implementation
+- Website performance optimization and SEO
+- IT infrastructure consulting and security

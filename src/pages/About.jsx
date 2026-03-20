@@ -5,6 +5,7 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
+import SEO from "../components/SEO";
 import { useTranslation } from "react-i18next";
 
 const About = () => {
@@ -17,6 +18,7 @@ const About = () => {
 
   return (
     <section className="max-container">
+      <SEO page="about" />
       <h1 className="head-text">
         {t("greeting_about")}{" "}
         <span className="gradient_text font-semibold drop-shadow">Chingis</span>

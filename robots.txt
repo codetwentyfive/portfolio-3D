@@ -1,6 +1,38 @@
-User-agent: Googlebot
-Disallow: /nogooglebot/
+# https://chingis.dev
 
 User-agent: *
 Allow: /
+Disallow: /nogooglebot/
 
+# Sitemap
+Sitemap: https://chingis.dev/sitemap.xml
+
+# AI Crawler Access
+# llms.txt provides structured profile data for AI systems
+# See: https://chingis.dev/llms.txt
+# Full profile: https://chingis.dev/llms-full.txt
+
+# Allow AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /

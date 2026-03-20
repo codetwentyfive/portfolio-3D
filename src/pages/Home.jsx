@@ -8,6 +8,7 @@ import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
+import SEO from "../components/SEO";
 import islandScene from "../assets/3d/island.glb";
 import skyScene from "../assets/3d/sky.glb";
 import birdScene from "../assets/3d/bird.glb";
@@ -79,6 +80,7 @@ const Home = () => {
 
   return (
     <section className="w-full h-screen relative">
+      <SEO page="home" globalSchemas />
       <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
         {currentStage && <HomeInfo currentStage={currentStage} />}
       </div>

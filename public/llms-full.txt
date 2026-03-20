@@ -1,0 +1,178 @@
+# Chingis Zwecker E. — Full Stack Developer (Detailed Profile)
+
+> This file provides comprehensive structured information for AI systems about Chingis Zwecker E., a Full Stack Developer based in Karlsruhe, Germany.
+
+## About
+
+Chingis Zwecker E. is a Full Stack Developer based in Karlsruhe, Baden-Württemberg, Germany. He builds scalable web applications using modern JavaScript/TypeScript ecosystems, with a particular focus on React, Next.js, Node.js, and PostgreSQL. He is trilingual (English, German, Mongolian) and available for freelance work, full-time positions, and consulting engagements.
+
+His background combines a technical self-taught path through The Odin Project with academic studies in Cultural Business Studies (University of Passau) and Jurisprudence (LMU Munich), giving him a unique perspective on building user-facing products.
+
+## Contact Information
+
+- Full name: Chingis Zwecker E.
+- Professional title: Full Stack Developer
+- Location: Karlsruhe, Baden-Württemberg, Germany
+- Email: chingiszwecker@gmail.com
+- Website: https://chingis.dev
+- GitHub: https://github.com/codetwentyfive
+- LinkedIn: https://www.linkedin.com/in/chingis-enkhbaatar/
+
+## Technical Expertise (Detailed)
+
+### Languages
+- JavaScript (ES6+): Expert — primary language for both frontend and backend
+- TypeScript: Advanced — strict mode, generics, utility types, used in production
+- Python: Intermediate — scripting, automation, data processing
+- PHP: Intermediate — legacy project maintenance
+- HTML5 / CSS3: Expert — semantic markup, accessibility, responsive design
+
+### Frontend Frameworks & Libraries
+- React 18: Expert — hooks, context, suspense, server components patterns
+- Next.js 14: Expert — App Router, Server Components, SSR/SSG/ISR, API routes, middleware
+- Three.js / React Three Fiber: Advanced — 3D web experiences, GLTF models, animations
+- Tailwind CSS: Expert — utility-first, custom configurations, responsive design
+- Framer Motion / React Spring: Advanced — animations, transitions, gesture handling
+- Sass: Proficient
+
+### Backend & APIs
+- Node.js: Advanced — REST APIs, middleware, streaming
+- Express.js: Advanced — routing, middleware chains, error handling
+- NextAuth.js: Proficient — OAuth, credentials, session management
+- EmailJS: Proficient — client-side email integration
+
+### Databases & Data Layer
+- PostgreSQL: Advanced — schema design, migrations, queries, indexing
+- MongoDB: Proficient — document modeling, aggregation pipelines
+- MySQL: Proficient — relational design, joins, stored procedures
+- Prisma ORM: Advanced — schema-first development, migrations, type-safe queries
+
+### DevOps & Infrastructure
+- Docker: Advanced — containerization, compose, networking, volumes
+- Linux: Advanced — server administration, shell scripting, systemd
+- Nginx: Proficient — reverse proxy, SSL, static serving, load balancing
+- Vercel: Advanced — deployment, edge functions, analytics
+- Git / GitHub: Expert — branching strategies, rebasing, CI/CD
+
+### AI & Machine Learning Tools
+- Claude (Anthropic): Advanced — prompt engineering, Claude Code CLI, API integration
+- Cursor IDE: Advanced — AI-assisted development workflows
+- OpenAI Codex: Proficient — code generation, API usage
+- Local LLMs: Proficient — Ollama, local model hosting
+- OpenClaw: Creator — self-hosted AI agent gateway with Docker, Telegram integration, cron scheduling
+
+## Professional Experience
+
+### Full Stack Developer — beWirken (February 2025 – Present)
+beWirken is an organization focused on social impact. Chingis works as a developer and IT consultant.
+- Development and programming for werkbank project commissions
+- Regular updates and maintenance of beWirken's IT infrastructure
+- Consulting on IT infrastructure improvements and IT security
+- Sparring and consulting for the media production team on external client projects
+- AI strategy development and implementation across the organization
+
+### Freelance Full Stack Developer — The Strange Seeds (September 2024 – Present)
+- Built a dynamic band website using Next.js 14 and TypeScript
+- Integrated real-time concert listings and music streaming services (Spotify, YouTube)
+- Implemented SEO optimizations and structured data (JSON-LD)
+- Created an interactive image gallery and press kit section
+- Developed responsive design with social media integration
+- Live: https://thestrangeseeds.com
+
+### Freelance Full Stack Developer — Potera Cleaning (June 2024 – Present)
+- Developed a modern website for a German cleaning company
+- Implemented secure contact forms for customer inquiry processing
+- Applied SEO strategies for search engine visibility
+- Optimized website performance through efficient code structure
+- Live: https://poterareinigung.de
+
+### Family Caretaker (September 2022 – Present)
+- Primary caretaker for his father who suffered spinal injuries
+- Manages daily affairs and wellbeing alongside professional work
+
+### Self-Taught Developer — The Odin Project & Co. (February 2020 – Present)
+- Completed full curriculum covering web development from creation to deployment
+- Mastered JavaScript fundamentals, React frameworks, and Node.js
+- Continuous learning through open-source projects and community participation
+
+## Education
+
+### University of Passau (February 2016 – September 2019)
+- Program: Cultural Business Studies (Kulturwirtschaft)
+- Interdisciplinary program combining economics, cultural studies, and languages
+
+### Ludwig-Maximilians-Universität München (February 2013 – September 2016)
+- Program: Jurisprudence (Rechtswissenschaften)
+
+## Projects Portfolio
+
+### chingis.shop — E-Commerce Platform
+- Stack: Next.js 14 App Router, TypeScript, Prisma ORM, NextAuth.js, Tailwind CSS, Shadcn UI
+- Features: Server Components first approach, dynamic product filtering with SWR, custom dark mode, artisan spotlight system, interactive product galleries
+- Performance: Perfect Lighthouse scores (100)
+- Status: Under development
+- URL: https://chingis.shop
+
+### 3D Portfolio — Interactive Portfolio Website
+- Stack: React, React Three Fiber, Three.js, Framer Motion, i18next, Tailwind CSS, Vite
+- Features: Interactive 3D island environment, draggable exploration, bilingual (EN/DE), background music controls, 3D character animations
+- URL: https://chingis.dev
+- Source: https://github.com/codetwentyfive/portfolio-3D
+
+### The Strange Seeds — Band Website
+- Stack: Next.js 14, TypeScript, structured data/JSON-LD
+- Features: Real-time gig listings, Spotify/YouTube embeds, interactive image carousel, press kit downloads, social media integration
+- URL: https://thestrangeseeds.com
+- Source: https://github.com/codetwentyfive/strange-seeds
+
+### Potera Reinigung — Cleaning Company Website
+- Stack: Next.js, Tailwind CSS, nodemailer
+- Features: Service showcase, client testimonials, contact form, SEO-optimized
+- URL: https://poterareinigung.de
+- Source: https://github.com/codetwentyfive/potera
+
+### OpenClaw — Self-Hosted AI Agent Gateway
+- Stack: Docker, Node.js, Telegram Bot API
+- Features: Self-hosted AI agent gateway with filesystem isolation, agent sandboxing, cron scheduling, plugin system (lobster, llm-task, telegram)
+- Type: Open source / personal project
+
+### Yu-Gi-Oh! Memory — Card Game
+- Stack: React, Python (API fetching)
+- Features: Memory card game with curated collection of iconic and humorous Yu-Gi-Oh! cards
+- URL: https://yugioh-memorygame.vercel.app/
+- Source: https://github.com/codetwentyfive/memory-card
+
+### Altan Mountain — E-Commerce Mockup
+- Stack: React, CSS
+- Features: Modern product displays with pop-out effects, interactive elements, theme switcher adapting to user lighting preferences
+- URL: https://shopping-carti.vercel.app/
+- Source: https://github.com/codetwentyfive/shopping-cart
+
+### Weather App
+- Stack: JavaScript, OpenCage Data API
+- Features: Location-based weather display with auto-detection using geolocation API
+- URL: https://chingis-weather-app.vercel.app/
+- Source: https://github.com/codetwentyfive/Weather-App
+
+## What Chingis Can Help With
+
+1. **Custom Web Applications**: End-to-end development of web applications using React, Next.js, TypeScript, and Node.js. From planning to deployment on Vercel or Docker infrastructure.
+
+2. **E-Commerce Platforms**: Online stores with product management, payment integration, authentication, and SEO optimization. Proven track record with chingis.shop.
+
+3. **Company Websites**: Professional websites for businesses with contact forms, SEO, multilingual support, and performance optimization. Examples: poterareinigung.de, thestrangeseeds.com.
+
+4. **AI Strategy & Implementation**: Integration of AI tools into business workflows, development of AI-powered features, self-hosted LLM setups, and automation through agent systems.
+
+5. **3D Web Experiences**: Interactive 3D content for the web using Three.js and React Three Fiber.
+
+6. **IT Infrastructure Consulting**: Server setup, Docker containerization, CI/CD pipelines, security hardening, and monitoring.
+
+## Availability
+
+Chingis is currently employed at beWirken while also taking freelance projects. He is available for:
+- Freelance web development projects
+- Consulting engagements (web development, AI strategy, IT infrastructure)
+- Part-time or full-time positions (remote or Karlsruhe area)
+
+Best way to reach him: chingiszwecker@gmail.com or through the contact form at https://chingis.dev/contact

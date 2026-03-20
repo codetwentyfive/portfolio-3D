@@ -5,6 +5,7 @@ import Fox from "../models/Fox";
 import Loader from "../components/Loader";
 import useAlert from "../hooks/useAlert";
 import Alert from "../components/Alert";
+import SEO from "../components/SEO";
 import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
@@ -95,6 +96,7 @@ const Contact = () => {
 
   return (
     <section className="relative flex lg:flex-row flex-col max-container min-h-screen">
+      <SEO page="contact" />
       {alert.show && <Alert {...alert} />}
 
       <div className="flex-1 min-w-[50%] flex flex-col">

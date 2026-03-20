@@ -2,6 +2,7 @@ import { arrow, github } from "../assets/icons";
 import { projects } from "../constants/index";
 import { Link } from "react-router-dom";
 import CTA from "../components/CTA";
+import SEO from "../components/SEO";
 import { useTranslation } from "react-i18next";
 
 const Projects = () => {
@@ -30,6 +31,7 @@ const Projects = () => {
 
   return (
     <section className="max-container">
+      <SEO page="projects" />
       <h1 className="head-text">
         {t("project_header1")}{" "}
         <span className="gradient_text font-semibold drop-shadow">
