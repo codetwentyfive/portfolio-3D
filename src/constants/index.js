@@ -398,7 +398,7 @@ export const socialLinks = [
   {
     name: "LinkedIn",
     iconUrl: linkedin,
-    link: "https://www.linkedin.com/in/chingis-enkhbaatar/",
+    link: "https://www.linkedin.com/in/chingis-zwecker/",
   },
 ];
 

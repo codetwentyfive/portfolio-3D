@@ -22,7 +22,7 @@ export const personSchema = {
   email: "chingiszwecker@gmail.com",
   sameAs: [
     "https://github.com/codetwentyfive",
-    "https://www.linkedin.com/in/chingis-enkhbaatar/",
+    "https://www.linkedin.com/in/chingis-zwecker/",
   ],
   knowsAbout: [
     "Web Development",
