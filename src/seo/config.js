@@ -11,53 +11,53 @@ export const seoConfig = {
     home: {
       path: "/",
       en: {
-        title: "Chingis Zwecker E. | Full Stack Developer | Karlsruhe, Germany",
+        title: "Chingis Zwecker E. | AI Engineer · Developer · IT Architect",
         description:
-          "Full Stack Developer based in Karlsruhe, Germany. Building scalable web applications with React, Next.js, TypeScript, Node.js, and PostgreSQL. Interactive 3D portfolio.",
+          "I build, fix, and modernize — web apps, e-commerce, payment systems, legacy codebases, native apps, hosting, WordPress, and AI workflows. Based in Karlsruhe, shipping solutions across the full stack and beyond.",
       },
       de: {
-        title: "Chingis Zwecker E. | Full Stack Entwickler | Karlsruhe, Deutschland",
+        title: "Chingis Zwecker E. | KI-Engineer · Entwickler · IT-Architekt",
         description:
-          "Full Stack Entwickler aus Karlsruhe, Deutschland. Entwicklung skalierbarer Webanwendungen mit React, Next.js, TypeScript, Node.js und PostgreSQL. Interaktives 3D-Portfolio.",
+          "Ich baue, repariere und modernisiere — Webanwendungen, E-Commerce, Zahlungssysteme, Legacy-Systeme, native Apps, Hosting, WordPress und KI-Workflows. Aus Karlsruhe, Loesungen ueber den gesamten Stack hinaus.",
       },
     },
     about: {
       path: "/about",
       en: {
-        title: "About Chingis Zwecker E. | Skills & Experience | Full Stack Developer",
+        title: "About | Chingis Zwecker E. — What I Bring to the Table",
         description:
-          "Full Stack Developer with expertise in JavaScript, TypeScript, React, Next.js, Node.js, Python, PostgreSQL, Docker, and AI tooling. Experience at beWirken, freelance projects, and self-taught through The Odin Project.",
+          "Developer who ships across domains — modern frontends, robust backends, legacy rescue, infrastructure, AI integration, and project management. The kind of person you call when it needs to work, not just look good on a whiteboard.",
       },
       de: {
-        title: "Ueber Chingis Zwecker E. | Skills & Erfahrung | Full Stack Entwickler",
+        title: "Ueber mich | Chingis Zwecker E. — Was ich mitbringe",
         description:
-          "Full Stack Entwickler mit Expertise in JavaScript, TypeScript, React, Next.js, Node.js, Python, PostgreSQL, Docker und KI-Tools. Erfahrung bei beWirken, freiberufliche Projekte und autodidaktisch durch The Odin Project.",
+          "Entwickler, der ueber Domaenen hinweg liefert — moderne Frontends, robuste Backends, Legacy-Rettung, Infrastruktur, KI-Integration und Projektmanagement. Der, den man ruft, wenn es funktionieren soll — nicht nur auf dem Whiteboard gut aussehen.",
       },
     },
     projects: {
       path: "/projects",
       en: {
-        title: "Projects by Chingis Zwecker E. | Web Development Portfolio",
+        title: "Projects | Chingis Zwecker E. — Real Work, Real Results",
         description:
-          "Portfolio of web development projects including e-commerce platforms, band websites, cleaning company sites, 3D portfolios, and interactive web apps. Built with Next.js, React, TypeScript, and Tailwind CSS.",
+          "E-commerce platforms, company websites, interactive 3D experiences, AI agent systems, and more. Each project solves a real problem — from first concept to production deploy.",
       },
       de: {
-        title: "Projekte von Chingis Zwecker E. | Webentwicklung Portfolio",
+        title: "Projekte | Chingis Zwecker E. — Echte Arbeit, echte Ergebnisse",
         description:
-          "Portfolio von Webentwicklungsprojekten, darunter E-Commerce-Plattformen, Band-Websites, Reinigungsunternehmen-Websites, 3D-Portfolios und interaktive Web-Apps. Entwickelt mit Next.js, React, TypeScript und Tailwind CSS.",
+          "E-Commerce-Plattformen, Firmenwebsites, interaktive 3D-Erlebnisse, KI-Agentensysteme und mehr. Jedes Projekt loest ein echtes Problem — vom ersten Konzept bis zum Produktiv-Deploy.",
       },
     },
     contact: {
       path: "/contact",
       en: {
-        title: "Contact Chingis Zwecker E. | Hire a Full Stack Developer",
+        title: "Contact | Chingis Zwecker E. — Let's Talk About Your Project",
         description:
-          "Get in touch with Chingis Zwecker E., a Full Stack Developer based in Karlsruhe, Germany. Available for freelance projects, full-time roles, and consulting in web development and AI strategy.",
+          "Have a project in mind? I'm taking on new clients for freelance and consulting — web development, legacy modernization, AI strategy, and IT architecture. Based in Karlsruhe, working remotely worldwide.",
       },
       de: {
-        title: "Kontakt Chingis Zwecker E. | Full Stack Entwickler beauftragen",
+        title: "Kontakt | Chingis Zwecker E. — Sprechen wir ueber Ihr Projekt",
         description:
-          "Kontaktieren Sie Chingis Zwecker E., einen Full Stack Entwickler aus Karlsruhe, Deutschland. Verfuegbar fuer freiberufliche Projekte, Festanstellungen und Beratung in Webentwicklung und KI-Strategie.",
+          "Ein Projekt im Kopf? Ich nehme neue Kunden fuer Freelance und Beratung an — Webentwicklung, Legacy-Modernisierung, KI-Strategie und IT-Architektur. Aus Karlsruhe, weltweit remote verfuegbar.",
       },
     },
   },
