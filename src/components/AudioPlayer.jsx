@@ -289,8 +289,12 @@ const AudioPlayer = () => {
     }
 
     if (!widgetRef.current || !readyRef.current) return;
-    widgetRef.current.toggle();
-  }, [handleOpenPlayer, isExpanded, soundCloudEnabled]);
+    if (isPlaying) {
+      widgetRef.current.pause();
+    } else {
+      widgetRef.current.play();
+    }
+  }, [handleOpenPlayer, isExpanded, isPlaying, soundCloudEnabled]);
 
   const handleNext = useCallback(() => {
     if (!widgetRef.current) return;
