@@ -3,7 +3,7 @@ const TODO_PREFIX = "TODO:";
 const createTodo = (label) => `${TODO_PREFIX} ${label}`;
 
 export const legalConfig = {
-  lastReviewed: "2026-03-20",
+  lastReviewed: "2026-03-28",
   operator: {
     name: "Chingis Zwecker",
     legalName: "Chingis Zwecker B.E.",

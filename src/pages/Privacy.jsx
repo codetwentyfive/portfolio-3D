@@ -16,6 +16,7 @@ const pageCopy = {
       controller: "Verantwortlicher",
       hosting: "Hosting über Vercel",
       cookies: "Cookies, Local Storage und Einwilligungen",
+      soundcloud: "Audio-Player über SoundCloud",
       language: "Sprachspeicher im Browser",
       contact: "Kontaktformular mit EmailJS",
       retention: "Speicherdauer",
@@ -45,7 +46,17 @@ const pageCopy = {
     hostingRecipients:
       "Vercel Inc. als Hosting- und Delivery-Anbieter. Weitere Informationen: Vercel Privacy Policy.",
     cookieNote:
-      "Diese Website verwendet derzeit keine Analyse-, Marketing- oder sonstigen nicht erforderlichen Cookies und kein Cookie-Banner.",
+      "Diese Website lädt derzeit keine Analyse-, Marketing- oder sonstigen nicht erforderlichen Drittinhalte automatisch beim Seitenaufruf. Der optionale SoundCloud-Audio-Player bleibt standardmäßig blockiert und wird erst nach Ihrer ausdrücklichen Auswahl geladen. Daher wird derzeit kein allgemeines Cookie-Banner eingesetzt.",
+    soundcloudPurpose:
+      "Bereitstellung des optionalen Audio-Players und Wiedergabe der von Ihnen ausgewählten SoundCloud-Inhalte.",
+    soundcloudData:
+      "Erst nach Ihrer aktiven Freigabe wird eine Verbindung zu SoundCloud aufgebaut. Dabei können insbesondere Ihre IP-Adresse, Browser- und Geräteinformationen, Referrer-Daten, Nutzungsdaten sowie von SoundCloud gesetzte Cookies oder ähnliche Kennungen verarbeitet werden.",
+    soundcloudBasis:
+      "Art. 6 Abs. 1 lit. a DSGVO sowie § 25 Abs. 1 TDDDG. Die Einbindung erfolgt erst nach Ihrer ausdrücklichen Einwilligung durch Klick auf die Aktivierungsfläche im Player.",
+    soundcloudRecipients:
+      "SoundCloud Global Limited & Co. KG bzw. verbundene SoundCloud-Unternehmen als Anbieter des Audio-Dienstes.",
+    soundcloudTransfer:
+      "Je nach technischer Ausgestaltung kann dabei auch eine Übermittlung personenbezogener Daten in Drittländer, insbesondere in die USA, nicht ausgeschlossen werden. Maßgeblich sind die Datenschutzinformationen von SoundCloud.",
     languagePurpose:
       "Speicherung der von Ihnen gewählten Sprache, damit die Seite bei späteren Besuchen direkt in der gewünschten Sprache angezeigt werden kann.",
     languageData:
@@ -73,6 +84,7 @@ const pageCopy = {
     impressumLink: "Zum Impressum",
     vercelLink: "Vercel Privacy Policy",
     emailjsLink: "EmailJS Privacy Policy",
+    soundcloudLink: "SoundCloud Privacy Policy",
   },
   en: {
     kicker: "Privacy",
@@ -86,6 +98,7 @@ const pageCopy = {
       controller: "Controller",
       hosting: "Hosting via Vercel",
       cookies: "Cookies, local storage, and consent",
+      soundcloud: "Audio player via SoundCloud",
       language: "Language preference in the browser",
       contact: "Contact form via EmailJS",
       retention: "Storage duration",
@@ -115,7 +128,17 @@ const pageCopy = {
     hostingRecipients:
       "Vercel Inc. as hosting and delivery provider. Further information is available in the Vercel Privacy Policy.",
     cookieNote:
-      "This website currently does not use analytics, marketing, or other non-essential cookies and therefore does not use a cookie banner.",
+      "This website currently does not automatically load analytics, marketing, or other non-essential third-party content when the page opens. The optional SoundCloud audio player stays blocked by default and is loaded only after your explicit choice. For that reason, the site currently does not use a general cookie banner.",
+    soundcloudPurpose:
+      "Providing the optional audio player and playing the SoundCloud content you choose.",
+    soundcloudData:
+      "Only after your active approval is a connection to SoundCloud established. In that process, SoundCloud may process in particular your IP address, browser and device information, referrer data, usage data, and cookies or similar identifiers set by SoundCloud.",
+    soundcloudBasis:
+      "Art. 6(1)(a) GDPR and Section 25 para. 1 TDDDG. The integration is activated only after your explicit consent by clicking the enable control in the player.",
+    soundcloudRecipients:
+      "SoundCloud Global Limited & Co. KG and affiliated SoundCloud companies as the provider of the audio service.",
+    soundcloudTransfer:
+      "Depending on the technical setup, transfers of personal data to third countries, in particular the United States, cannot be ruled out. The controlling details are set out in SoundCloud's privacy information.",
     languagePurpose:
       "Saving your chosen language so the website can be shown in that language on later visits.",
     languageData:
@@ -143,6 +166,7 @@ const pageCopy = {
     impressumLink: "Open Impressum",
     vercelLink: "Vercel Privacy Policy",
     emailjsLink: "EmailJS Privacy Policy",
+    soundcloudLink: "SoundCloud Privacy Policy",
   },
 };
 
@@ -251,6 +275,29 @@ const Privacy = ({ embedded = false, impressumHref = "/impressum" }) => {
         <SectionCard title={copy.sections.cookies}>
           <dl>
             <InfoRow label={copy.labels.note}>{copy.cookieNote}</InfoRow>
+          </dl>
+        </SectionCard>
+
+        <SectionCard title={copy.sections.soundcloud}>
+          <dl>
+            <InfoRow label={copy.labels.provider}>SoundCloud</InfoRow>
+            <InfoRow label={copy.labels.purpose}>{copy.soundcloudPurpose}</InfoRow>
+            <InfoRow label={copy.labels.data}>{copy.soundcloudData}</InfoRow>
+            <InfoRow label={copy.labels.legalBasis}>{copy.soundcloudBasis}</InfoRow>
+            <InfoRow label={copy.labels.recipients}>
+              <div>
+                <p>{copy.soundcloudRecipients}</p>
+                <p className="mt-2">{copy.soundcloudTransfer}</p>
+                <a
+                  className="mt-2 inline-block text-sky-700 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-sky-900"
+                  href="https://soundcloud.com/pages/privacy"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {copy.soundcloudLink}
+                </a>
+              </div>
+            </InfoRow>
           </dl>
         </SectionCard>
 
