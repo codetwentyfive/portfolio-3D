@@ -22,6 +22,8 @@ const formatTime = (ms) => {
 const AudioPlayer = () => {
   const { isPlaying, setIsPlaying } = useAudio();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [soundCloudEnabled, setSoundCloudEnabled] = useState(false);
+  const [isWidgetLoading, setIsWidgetLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loopMode, setLoopMode] = useState('all');
   const [progress, setProgress] = useState(0);
@@ -96,6 +98,7 @@ const AudioPlayer = () => {
 
   const loadTrack = useCallback((index, autoPlay = false) => {
     if (!widgetRef.current) return;
+    setIsWidgetLoading(true);
     loadingRef.current = true;
     readyRef.current = false;
     setCurrentIndex(index);
@@ -114,6 +117,8 @@ const AudioPlayer = () => {
   }, []);
 
   useEffect(() => {
+    if (!soundCloudEnabled) return;
+
     const loadAPI = () =>
       new Promise((resolve) => {
         if (window.SC?.Widget) { resolve(); return; }
@@ -125,12 +130,14 @@ const AudioPlayer = () => {
 
     loadAPI().then(() => {
       if (!iframeRef.current || !window.SC?.Widget) return;
+      setIsWidgetLoading(true);
       const w = window.SC.Widget(iframeRef.current);
       widgetRef.current = w;
 
       w.bind(window.SC.Widget.Events.READY, () => {
         readyRef.current = true;
         loadingRef.current = false;
+        setIsWidgetLoading(false);
         w.setVolume(40);
         w.getDuration((d) => setDuration(d));
         if (pendingPlayRef.current) {
@@ -185,9 +192,34 @@ const AudioPlayer = () => {
         }
       });
     });
-  }, [setIsPlaying, loadTrack]);
+  }, [setIsPlaying, loadTrack, soundCloudEnabled]);
+
+  const handleOpenPlayer = useCallback(() => {
+    if (!isExpanded) {
+      setIsExpanded(true);
+    }
+  }, [isExpanded]);
+
+  const handleEnablePlayback = useCallback(() => {
+    setIsExpanded(true);
+
+    if (!soundCloudEnabled) {
+      pendingPlayRef.current = true;
+      setSoundCloudEnabled(true);
+      setIsWidgetLoading(true);
+      return;
+    }
+
+    if (!widgetRef.current || !readyRef.current) return;
+    widgetRef.current.play();
+  }, [soundCloudEnabled]);
 
   const handlePlayPause = useCallback(() => {
+    if (!soundCloudEnabled) {
+      handleOpenPlayer();
+      return;
+    }
+
     if (!isExpanded) {
       setIsExpanded(true);
       if (!widgetRef.current || !readyRef.current) {
@@ -200,7 +232,7 @@ const AudioPlayer = () => {
 
     if (!widgetRef.current || !readyRef.current) return;
     widgetRef.current.toggle();
-  }, [isExpanded]);
+  }, [handleOpenPlayer, isExpanded, soundCloudEnabled]);
 
   const handleNext = useCallback(() => {
     if (!widgetRef.current) return;
@@ -239,16 +271,18 @@ const AudioPlayer = () => {
   return (
       <div
         className={`fixed bottom-4 right-4 sm:right-6 z-50 origin-bottom-right transition-[width,height] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isExpanded ? 'w-[calc(100%-2rem)] sm:w-[380px] h-[84px]' : 'w-14 h-14'
+          isExpanded ? 'w-[calc(100%-2rem)] sm:w-[380px] h-[96px]' : 'w-14 h-14'
         }${nearFooter ? ' player-hidden' : hasAnimated.current ? ' player-visible' : ''}`}
       >
-        <iframe
-          ref={iframeRef}
-          src={initialSrc}
-          allow="autoplay"
-          title="SoundCloud Player"
-          className="absolute w-0 h-0 border-0 overflow-hidden"
-        />
+        {soundCloudEnabled && (
+          <iframe
+            ref={iframeRef}
+            src={initialSrc}
+            allow="autoplay"
+            title="SoundCloud Player"
+            className="absolute w-0 h-0 border-0 overflow-hidden"
+          />
+        )}
         <div
           className={`relative h-full w-full overflow-hidden bg-white/95 backdrop-blur-sm shadow-md transition-[border-radius] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)]${
             bounce ? ' animate-player-bounce' : ''
@@ -256,7 +290,7 @@ const AudioPlayer = () => {
           style={{ borderRadius: isExpanded ? '16px' : '9999px' }}
         >
           <button
-            onClick={handlePlayPause}
+            onClick={handleOpenPlayer}
             aria-label="Open music player"
             className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
               isExpanded ? 'pointer-events-none opacity-0' : 'opacity-100'
@@ -275,6 +309,8 @@ const AudioPlayer = () => {
                 : 'pointer-events-none translate-y-4 opacity-0'
             }`}
           >
+          {soundCloudEnabled ? (
+            <>
           {/* Transport + Track Info */}
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="flex items-center gap-0.5">
@@ -385,6 +421,24 @@ const AudioPlayer = () => {
               {formatTime(duration)}
             </span>
           </div>
+            </>
+          ) : (
+            <div className="flex h-full items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-gray-800">Enable SoundCloud playback</p>
+                <p className="text-[10px] text-gray-400">
+                  Load SoundCloud only after you choose to play.
+                </p>
+              </div>
+              <button
+                onClick={handleEnablePlayback}
+                className="shrink-0 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-black"
+                aria-label="Enable SoundCloud playback"
+              >
+                {isWidgetLoading ? 'Loading...' : 'Enable'}
+              </button>
+            </div>
+          )}
           </div>
         </div>
       </div>
