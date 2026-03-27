@@ -64,8 +64,8 @@ const SEO = ({ page = "home", globalSchemas = false }) => {
         name="keywords"
         content={
           lang === "de"
-            ? "Full Stack Entwickler, Webentwickler, Karlsruhe, Deutschland, React, Next.js, TypeScript, Node.js, Freelancer, Webentwicklung"
-            : "Full Stack Developer, Web Developer, Karlsruhe, Germany, React, Next.js, TypeScript, Node.js, Freelance, Web Development"
+            ? "Full Stack Entwickler, Webentwickler, Karlsruhe, Deutschland, React, Next.js, TypeScript, Node.js, Freelancer, Webentwicklung, Chingis Zwecker, Chinggis Zwecker, Chinggis Entwickler, chingis.dev"
+            : "Full Stack Developer, Web Developer, Karlsruhe, Germany, React, Next.js, TypeScript, Node.js, Freelance, Web Development, Chingis Zwecker, Chinggis Zwecker, Chinggis Developer, chingis.dev"
         }
       />
       <meta name="geo.region" content="DE-BW" />

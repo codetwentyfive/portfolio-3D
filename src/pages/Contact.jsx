@@ -7,6 +7,7 @@ import useAlert from "../hooks/useAlert";
 import Alert from "../components/Alert";
 import SEO from "../components/SEO";
 import { useTranslation } from 'react-i18next';
+import { Link } from "react-router-dom";
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -161,6 +162,15 @@ const Contact = () => {
           >
             {isLoading ? t('contact_sending') : t('contact_send_button')}
           </button>
+          <p className="text-sm leading-6 text-slate-500">
+            {t('contact_privacy_notice')}{" "}
+            <Link
+              className="text-sky-700 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-sky-900"
+              to="/rechtliches#datenschutz"
+            >
+              {t('privacy')}
+            </Link>
+          </p>
         </form>
       </div>
       <div className="lg:w-1/2 w-full lg:h-[640px] md:h-[550px] h-[350px]">

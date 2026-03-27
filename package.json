@@ -15,7 +15,6 @@
     "@react-spring/three": "^9.7.3",
     "@react-three/drei": "^9.101.0",
     "@react-three/fiber": "^8.15.19",
-    "@vercel/analytics": "^2.0.1",
     "i18next": "^25.8.18",
     "motion": "^12.36.0",
     "react": "^18.2.0",

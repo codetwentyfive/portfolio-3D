@@ -1,6 +1,6 @@
 {
   "hi_message": "Hallo, ich bin",
-  "name": "Chingis Zwecker E.",
+  "name": "Chingis Zwecker",
   "location": "ein Full-Stack Entwickler aus Karlsruhe.",
   "digital_nomad_message": "\"Als Full-Stack Entwickler konzentriere ich mich auf die Entwicklung skalierbarer Webanwendungen mit modernen Technologien und bewährten Best Practices. Mein Ziel ist es, effiziente und wartbare Lösungen zu liefern.\"",
   "skills_message1": "Ich verwandle Kaffee in Code und grüble dabei, ob ein Bug nur ein Feature ist, das eine Existenzkrise hat.",
@@ -13,6 +13,8 @@
   "about": "Über mich",
   "projects": "Projekte",
   "contact": "Kontakt",
+  "impressum": "Impressum",
+  "privacy": "Datenschutz",
   "greeting_about": "Hi! Ich bin",
   "short_intro": "Als Full-Stack Entwickler erschaffe ich digitale Erlebnisse und frage mich dabei, ob mein Code träumt, wenn er in Produktion läuft. Wie Schrödingers Bug: Er ist gleichzeitig gefixt und kaputt, bis man in die Logs schaut ✨",
   "my_skills": "Meine digitale Werkzeugkiste",
@@ -39,6 +41,7 @@
   "contact_message_placeholder": "Schreiben Sie hier Ihre Nachricht...",
   "contact_sending": "Senden...",
   "contact_send_button": "Nachricht senden",
+  "contact_privacy_notice": "Wenn Sie das Formular absenden, werden Ihre Angaben gemaess der",
   "contact_success_message": "Nachricht erfolgreich gesendet!",
   "contact_error_message": "Ich habe Ihre Nachricht nicht erhalten",
   "hint_drag_rotate": "Zum Drehen einfach ziehen ✨"

@@ -1,6 +1,6 @@
 {
   "hi_message": "Hello, I'm",
-  "name": "Chingis Zwecker E.",
+  "name": "Chingis Zwecker",
   "location": "a Full-Stack Developer based in Karlsruhe, Germany.",
   "digital_nomad_message": "\"As a Full-Stack Developer, I focus on developing scalable web applications using modern technologies and proven best practices. My goal is to deliver efficient and maintainable solutions.\"",
   "skills_message1": "I transform coffee into code while pondering if a bug is just a feature having an existential crisis.",
@@ -13,6 +13,8 @@
   "about": "About",
   "projects": "Projects",
   "contact": "Contact",
+  "impressum": "Impressum",
+  "privacy": "Privacy",
   "greeting_about": "Hi! I'm",
   "short_intro": "As a Full-Stack Developer, I craft digital experiences while wondering if my code dreams when it runs in production. Like Schrödinger's bug: it's both fixed and broken until you check the logs ✨",
   "my_skills": "My Digital Toolbox",
@@ -39,6 +41,7 @@
   "contact_message_placeholder": "Write your message here...",
   "contact_sending": "Sending...",
   "contact_send_button": "Send Message",
+  "contact_privacy_notice": "If you send the form, your details will be processed according to the",
   "contact_success_message": "Message sent successfully!",
   "contact_error_message": "I didn't receive your message",
   "hint_drag_rotate": "Drag to rotate & explore"

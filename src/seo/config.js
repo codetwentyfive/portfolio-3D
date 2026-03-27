@@ -60,5 +60,44 @@ export const seoConfig = {
           "Ein Projekt im Kopf? Ich nehme neue Kunden fuer Freelance und Beratung an — Webentwicklung, Legacy-Modernisierung, KI-Strategie und IT-Architektur. Aus Karlsruhe, weltweit remote verfuegbar.",
       },
     },
+    legal: {
+      path: "/rechtliches",
+      en: {
+        title: "Legal | Chingis Zwecker E.",
+        description:
+          "Combined legal notice and privacy policy for the professional portfolio website of Chingis Zwecker E.",
+      },
+      de: {
+        title: "Rechtliches | Chingis Zwecker B.E.",
+        description:
+          "Gebuendelte Seite fuer Impressum und Datenschutzerklaerung der Portfolio-Website von Chingis Zwecker E.",
+      },
+    },
+    impressum: {
+      path: "/impressum",
+      en: {
+        title: "Impressum | Chingis Zwecker B.E. - Legal Notice",
+        description:
+          "Legal notice and provider identification for the professional portfolio website of Chingis Zwecker E. under German disclosure requirements.",
+      },
+      de: {
+        title: "Impressum | Chingis Zwecker B.E. - Anbieterkennzeichnung",
+        description:
+          "Impressum und Anbieterkennzeichnung fuer die beruflich ausgerichtete Portfolio-Website von Chingis Zwecker E. nach deutschen Informationspflichten.",
+      },
+    },
+    privacy: {
+      path: "/datenschutz",
+      en: {
+        title: "Privacy Policy | Chingis Zwecker B.E.",
+        description:
+          "Privacy policy for the professional portfolio website of Chingis Zwecker E., covering Vercel hosting, browser language storage, and the optional EmailJS contact form.",
+      },
+      de: {
+        title: "Datenschutz | Chingis Zwecker B.E.",
+        description:
+          "Datenschutzerklaerung fuer die Portfolio-Website von Chingis Zwecker E. mit Hinweisen zu Vercel-Hosting, Sprachspeicher im Browser und dem optionalen EmailJS-Kontaktformular.",
+      },
+    },
   },
 };

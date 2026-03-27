@@ -7,6 +7,7 @@ export const personSchema = {
   "@type": "Person",
   "@id": `${siteUrl}/#person`,
   name: "Chingis Zwecker E.",
+  alternateName: ["Chinggis Zwecker E.", "Chinggis Zwecker", "Chingis Zwecker"],
   url: siteUrl,
   image: ogImage,
   jobTitle: "AI Engineer, Developer & IT Architect",
@@ -19,7 +20,7 @@ export const personSchema = {
     addressLocality: "Karlsruhe",
     addressCountry: "DE",
   },
-  email: "chingiszwecker@gmail.com",
+  email: "hello@chingis.dev",
   sameAs: [
     "https://github.com/codetwentyfive",
     "https://www.linkedin.com/in/chingis-zwecker/",
@@ -76,8 +77,9 @@ export const websiteSchema = {
   "@id": `${siteUrl}/#website`,
   url: siteUrl,
   name: siteName,
+  alternateName: ["Chinggis Zwecker E. Portfolio", "Chinggis Dev"],
   description:
-    "Portfolio of Chingis Zwecker E., a Full Stack Developer based in Karlsruhe, Germany.",
+    "Portfolio of Chingis Zwecker E. (also known as Chinggis), a Full Stack Developer based in Karlsruhe, Germany.",
   author: { "@id": `${siteUrl}/#person` },
   inLanguage: ["en", "de"],
 };

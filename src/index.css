@@ -63,11 +63,34 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .footer {
-    @apply max-w-5xl mx-auto sm:px-16 pb-6 px-8 flex flex-col gap-7;
+    @apply w-full px-0 pb-0 flex flex-col overflow-hidden;
+  }
+
+  .footer-default-bg {
+    background: linear-gradient(
+      135deg,
+      #0b4a7d 0%,
+      #3e7a5e 25%,
+      #e65c00 50%,
+      #a14a34 75%,
+      #3e7a5e 100%
+    );
+    background-size: 400% 400%;
+    animation: gradient 12s ease infinite;
+  }
+
+  .footer-contact-bg {
+    background: linear-gradient(to right, #2193b0, #6dd5ed, #2193b0);
+    background-size: 200% auto;
+    animation: gradient 12s ease infinite;
+  }
+
+  .footer-animated {
+    @apply relative w-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl px-8 py-6 text-white;
   }
 
   .footer-container {
-    @apply flex flex-wrap gap-7 items-center justify-between;
+    @apply flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-16;
   }
 
   .animated-gradient-bg {
