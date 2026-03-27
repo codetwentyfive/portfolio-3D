@@ -12,6 +12,7 @@ const PLAYLIST = [
 const REGULAR_COUNT = 4;
 
 const WIDGET_PARAMS = '&auto_play=false&buying=false&sharing=false&download=false&show_artwork=false&show_playcount=false&show_user=false&visual=false';
+const WIDGET_LOAD_TIMEOUT_MS = 5000;
 
 const formatTime = (ms) => {
   if (!ms || ms <= 0) return '0:00';
@@ -24,6 +25,9 @@ const AudioPlayer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [soundCloudEnabled, setSoundCloudEnabled] = useState(false);
   const [isWidgetLoading, setIsWidgetLoading] = useState(false);
+  const [isWidgetReady, setIsWidgetReady] = useState(false);
+  const [widgetError, setWidgetError] = useState(false);
+  const [widgetAttempt, setWidgetAttempt] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loopMode, setLoopMode] = useState('all');
   const [progress, setProgress] = useState(0);
@@ -41,6 +45,7 @@ const AudioPlayer = () => {
   const loadingRef = useRef(false);
   const completedRef = useRef(new Set());
   const progressBarRef = useRef(null);
+  const widgetTimeoutRef = useRef(null);
 
   const currentIndexRef = useRef(0);
   const loopModeRef = useRef('all');
@@ -116,83 +121,122 @@ const AudioPlayer = () => {
     });
   }, []);
 
+  const handleWidgetFailure = useCallback(() => {
+    readyRef.current = false;
+    loadingRef.current = false;
+    pendingPlayRef.current = false;
+    widgetRef.current = null;
+    setIsPlaying(false);
+    setIsWidgetLoading(false);
+    setIsWidgetReady(false);
+    setWidgetError(true);
+  }, [setIsPlaying]);
+
   useEffect(() => {
     if (!soundCloudEnabled) return;
 
+    let isActive = true;
+
+    window.clearTimeout(widgetTimeoutRef.current);
+    widgetTimeoutRef.current = window.setTimeout(() => {
+      if (!isActive || readyRef.current) return;
+      handleWidgetFailure();
+    }, WIDGET_LOAD_TIMEOUT_MS);
+
     const loadAPI = () =>
-      new Promise((resolve) => {
+      new Promise((resolve, reject) => {
         if (window.SC?.Widget) { resolve(); return; }
+        document.querySelector('script[src="https://w.soundcloud.com/player/api.js"]')?.remove();
         const s = document.createElement('script');
         s.src = 'https://w.soundcloud.com/player/api.js';
         s.onload = resolve;
+        s.onerror = reject;
         document.head.appendChild(s);
       });
 
-    loadAPI().then(() => {
-      if (!iframeRef.current || !window.SC?.Widget) return;
-      setIsWidgetLoading(true);
-      const w = window.SC.Widget(iframeRef.current);
-      widgetRef.current = w;
-
-      w.bind(window.SC.Widget.Events.READY, () => {
-        readyRef.current = true;
-        loadingRef.current = false;
-        setIsWidgetLoading(false);
-        w.setVolume(40);
-        w.getDuration((d) => setDuration(d));
-        if (pendingPlayRef.current) {
-          pendingPlayRef.current = false;
-          w.play();
-        }
-      });
-
-      w.bind(window.SC.Widget.Events.PLAY, () => setIsPlaying(true));
-
-      w.bind(window.SC.Widget.Events.PAUSE, () => {
-        if (!loadingRef.current) setIsPlaying(false);
-      });
-
-      w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data) => {
-        setProgress(data.relativePosition);
-        setPosition(data.currentPosition);
-      });
-
-      w.bind(window.SC.Widget.Events.FINISH, () => {
-        const idx = currentIndexRef.current;
-        const loop = loopModeRef.current;
-
-        completedRef.current.add(idx);
-
-        if (!secretRef.current) {
-          const allDone = Array.from({ length: REGULAR_COUNT }, (_, i) => i)
-            .every((i) => completedRef.current.has(i));
-          if (allDone) {
-            secretRef.current = true;
-            setSecretUnlocked(true);
-          }
-        }
-
-        if (loop === 'one') {
-          w.seekTo(0);
-          w.play();
+    loadAPI()
+      .then(() => {
+        if (!isActive || !iframeRef.current || !window.SC?.Widget) {
+          handleWidgetFailure();
           return;
         }
 
-        const max = secretRef.current ? PLAYLIST.length - 1 : REGULAR_COUNT - 1;
-        const next = idx + 1;
+        setIsWidgetLoading(true);
+        const w = window.SC.Widget(iframeRef.current);
+        widgetRef.current = w;
 
-        if (next > max) {
-          if (loop === 'all') {
-            loadTrack(0, true);
-          } else {
-            setIsPlaying(false);
+        w.bind(window.SC.Widget.Events.READY, () => {
+          if (!isActive) return;
+          window.clearTimeout(widgetTimeoutRef.current);
+          readyRef.current = true;
+          loadingRef.current = false;
+          setWidgetError(false);
+          setIsWidgetReady(true);
+          setIsWidgetLoading(false);
+          w.setVolume(40);
+          w.getDuration((d) => setDuration(d));
+          if (pendingPlayRef.current) {
+            pendingPlayRef.current = false;
+            w.play();
           }
-        } else {
-          loadTrack(next, true);
-        }
+        });
+
+        w.bind(window.SC.Widget.Events.PLAY, () => setIsPlaying(true));
+
+        w.bind(window.SC.Widget.Events.PAUSE, () => {
+          if (!loadingRef.current) setIsPlaying(false);
+        });
+
+        w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data) => {
+          setProgress(data.relativePosition);
+          setPosition(data.currentPosition);
+        });
+
+        w.bind(window.SC.Widget.Events.FINISH, () => {
+          const idx = currentIndexRef.current;
+          const loop = loopModeRef.current;
+
+          completedRef.current.add(idx);
+
+          if (!secretRef.current) {
+            const allDone = Array.from({ length: REGULAR_COUNT }, (_, i) => i)
+              .every((i) => completedRef.current.has(i));
+            if (allDone) {
+              secretRef.current = true;
+              setSecretUnlocked(true);
+            }
+          }
+
+          if (loop === 'one') {
+            w.seekTo(0);
+            w.play();
+            return;
+          }
+
+          const max = secretRef.current ? PLAYLIST.length - 1 : REGULAR_COUNT - 1;
+          const next = idx + 1;
+
+          if (next > max) {
+            if (loop === 'all') {
+              loadTrack(0, true);
+            } else {
+              setIsPlaying(false);
+            }
+          } else {
+            loadTrack(next, true);
+          }
+        });
+      })
+      .catch(() => {
+        if (!isActive) return;
+        handleWidgetFailure();
       });
-    });
-  }, [setIsPlaying, loadTrack, soundCloudEnabled]);
+
+    return () => {
+      isActive = false;
+      window.clearTimeout(widgetTimeoutRef.current);
+    };
+  }, [handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
@@ -205,14 +249,28 @@ const AudioPlayer = () => {
 
     if (!soundCloudEnabled) {
       pendingPlayRef.current = true;
+      setWidgetError(false);
+      setIsWidgetReady(false);
       setSoundCloudEnabled(true);
       setIsWidgetLoading(true);
+      setWidgetAttempt((prev) => prev + 1);
       return;
     }
 
     if (!widgetRef.current || !readyRef.current) return;
     widgetRef.current.play();
   }, [soundCloudEnabled]);
+
+  const handleRetryWidget = useCallback(() => {
+    pendingPlayRef.current = true;
+    readyRef.current = false;
+    loadingRef.current = true;
+    widgetRef.current = null;
+    setWidgetError(false);
+    setIsWidgetReady(false);
+    setIsWidgetLoading(true);
+    setWidgetAttempt((prev) => prev + 1);
+  }, []);
 
   const handlePlayPause = useCallback(() => {
     if (!soundCloudEnabled) {
@@ -276,6 +334,7 @@ const AudioPlayer = () => {
       >
         {soundCloudEnabled && (
           <iframe
+            key={widgetAttempt}
             ref={iframeRef}
             src={initialSrc}
             allow="autoplay"
@@ -309,7 +368,7 @@ const AudioPlayer = () => {
                 : 'pointer-events-none translate-y-4 opacity-0'
             }`}
           >
-          {soundCloudEnabled ? (
+          {soundCloudEnabled && isWidgetReady && !widgetError ? (
             <>
           {/* Transport + Track Info */}
           <div className="flex items-center gap-1 sm:gap-2">
@@ -422,6 +481,44 @@ const AudioPlayer = () => {
             </span>
           </div>
             </>
+          ) : soundCloudEnabled && widgetError ? (
+            <div className="flex h-full items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-gray-800">SoundCloud was blocked</p>
+                <p className="text-[10px] text-gray-400">
+                  Allow SoundCloud or open this track directly.
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <a
+                  href={track.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-black"
+                >
+                  Open track
+                </a>
+                <button
+                  onClick={handleRetryWidget}
+                  className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  aria-label="Retry SoundCloud playback"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          ) : soundCloudEnabled ? (
+            <div className="flex h-full items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-gray-800">Starting SoundCloud...</p>
+                <p className="text-[10px] text-gray-400">
+                  Loading the player after your explicit choice.
+                </p>
+              </div>
+              <span className="shrink-0 rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-500">
+                {isWidgetLoading ? 'Loading...' : 'Waiting...'}
+              </span>
+            </div>
           ) : (
             <div className="flex h-full items-center justify-between gap-3">
               <div className="min-w-0">
