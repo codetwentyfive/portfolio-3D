@@ -46,6 +46,7 @@ const AudioPlayer = () => {
   const completedRef = useRef(new Set());
   const progressBarRef = useRef(null);
   const widgetTimeoutRef = useRef(null);
+  const lastPlayPausePressRef = useRef(0);
 
   const currentIndexRef = useRef(0);
   const loopModeRef = useRef('all');
@@ -272,6 +273,33 @@ const AudioPlayer = () => {
     setWidgetAttempt((prev) => prev + 1);
   }, []);
 
+  const toggleWidgetPlayback = useCallback(() => {
+    if (!widgetRef.current || !readyRef.current) return;
+
+    const widget = widgetRef.current;
+
+    if (typeof widget.isPaused === 'function') {
+      widget.isPaused((paused) => {
+        if (paused) {
+          widget.play();
+          setIsPlaying(true);
+        } else {
+          widget.pause();
+          setIsPlaying(false);
+        }
+      });
+      return;
+    }
+
+    if (isPlaying) {
+      widget.pause();
+      setIsPlaying(false);
+    } else {
+      widget.play();
+      setIsPlaying(true);
+    }
+  }, [isPlaying, setIsPlaying]);
+
   const handlePlayPause = useCallback(() => {
     if (!soundCloudEnabled) {
       handleOpenPlayer();
@@ -289,12 +317,18 @@ const AudioPlayer = () => {
     }
 
     if (!widgetRef.current || !readyRef.current) return;
-    if (isPlaying) {
-      widgetRef.current.pause();
-    } else {
-      widgetRef.current.play();
-    }
-  }, [handleOpenPlayer, isExpanded, isPlaying, soundCloudEnabled]);
+    toggleWidgetPlayback();
+  }, [handleOpenPlayer, isExpanded, soundCloudEnabled, toggleWidgetPlayback]);
+
+  const handlePlayPausePress = useCallback((event) => {
+    event.stopPropagation();
+
+    const now = Date.now();
+    if (now - lastPlayPausePressRef.current < 250) return;
+
+    lastPlayPausePressRef.current = now;
+    handlePlayPause();
+  }, [handlePlayPause]);
 
   const handleNext = useCallback(() => {
     if (!widgetRef.current) return;
@@ -343,7 +377,9 @@ const AudioPlayer = () => {
             src={initialSrc}
             allow="autoplay"
             title="SoundCloud Player"
-            className="absolute w-0 h-0 border-0 overflow-hidden"
+            aria-hidden="true"
+            tabIndex={-1}
+            className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden border-0 opacity-0"
           />
         )}
         <div
@@ -388,8 +424,10 @@ const AudioPlayer = () => {
               </button>
 
               <button
-                onClick={handlePlayPause}
-                className={`p-2 rounded-xl transition-colors ${
+                type="button"
+                onClick={handlePlayPausePress}
+                onPointerUp={handlePlayPausePress}
+                className={`relative z-10 p-2 rounded-xl transition-colors ${
                   isPlaying
                     ? 'bg-blue-50 hover:bg-blue-100 active:bg-blue-200'
                     : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300'
