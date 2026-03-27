@@ -20,6 +20,15 @@ const formatTime = (ms) => {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 };
 
+const isEditableTarget = (target) => {
+  if (!(target instanceof HTMLElement)) return false;
+
+  return (
+    target.isContentEditable ||
+    ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(target.tagName)
+  );
+};
+
 const AudioPlayer = () => {
   const { isPlaying, setIsPlaying } = useAudio();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -106,7 +115,6 @@ const AudioPlayer = () => {
     if (!widgetRef.current) return;
     setIsWidgetLoading(true);
     loadingRef.current = true;
-    readyRef.current = false;
     setCurrentIndex(index);
     setProgress(0);
     setPosition(0);
@@ -182,10 +190,16 @@ const AudioPlayer = () => {
           }
         });
 
-        w.bind(window.SC.Widget.Events.PLAY, () => setIsPlaying(true));
+        w.bind(window.SC.Widget.Events.PLAY, () => {
+          loadingRef.current = false;
+          setIsWidgetLoading(false);
+          setIsPlaying(true);
+        });
 
         w.bind(window.SC.Widget.Events.PAUSE, () => {
-          if (!loadingRef.current) setIsPlaying(false);
+          loadingRef.current = false;
+          setIsWidgetLoading(false);
+          setIsPlaying(false);
         });
 
         w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data) => {
@@ -299,6 +313,23 @@ const AudioPlayer = () => {
       setIsPlaying(true);
     }
   }, [isPlaying, setIsPlaying]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event) => {
+      if (event.repeat || event.code !== 'Space') return;
+      if (!soundCloudEnabled || widgetError || !readyRef.current) return;
+      if (isEditableTarget(event.target)) return;
+
+      event.preventDefault();
+      toggleWidgetPlayback();
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [soundCloudEnabled, toggleWidgetPlayback, widgetError]);
 
   const handlePlayPause = useCallback(() => {
     if (!soundCloudEnabled) {
