@@ -10,7 +10,7 @@ const SiteFooter = () => {
 
   return (
     <footer
-      className={`footer text-sm font-poppins ${
+      className={`footer text-sm font-poppins relative z-[60] ${
         isContactPage ? "footer-contact-bg" : "footer-default-bg"
       }`}
       role="contentinfo"

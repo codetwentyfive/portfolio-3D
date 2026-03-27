@@ -6,15 +6,27 @@ import { useTranslation } from "react-i18next";
 const HintBox = () => {
   const { t } = useTranslation();
   return (
-    <div 
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 animate-fade-in"
+    <div
+      className="hidden lg:block fixed bottom-28 left-1/2 -translate-x-1/2 z-40 animate-fade-in"
       role="status"
       aria-live="polite"
     >
-      <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-gray-100/20 animate-float">
-        <p className="text-sm text-gray-900 flex items-center gap-2">
-          <span className="text-blue-600" aria-hidden="true">✨</span>
-          <span className="font-medium">{t("hint_drag_rotate")}</span>
+      <div className="bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2.5 animate-float">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-4 h-4 text-blue-500 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path d="M21 12a9 9 0 11-6.22-8.56" />
+          <path d="M21 3v5h-5" />
+        </svg>
+        <p className="text-sm font-medium text-gray-700 whitespace-nowrap">
+          {t("hint_drag_rotate")}
         </p>
       </div>
     </div>

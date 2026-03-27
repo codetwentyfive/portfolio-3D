@@ -11,7 +11,6 @@ const App = () => {
       <main className="bg-slate-300/20 h-full">
         <Router>
           <Navbar />
-          <AudioPlayer />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -37,6 +36,7 @@ const App = () => {
               }
             />
           </Routes>
+          <AudioPlayer />
           <SiteFooter />
         </Router>
       </main>
