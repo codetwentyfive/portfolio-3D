@@ -10,6 +10,7 @@ const PLAYLIST = [
 
 const WIDGET_PARAMS = '&auto_play=false&buying=false&sharing=false&download=false&show_artwork=false&show_playcount=false&show_user=false&visual=false';
 const WIDGET_LOAD_TIMEOUT_MS = 5000;
+const SOUND_CLOUD_CONSENT_KEY = 'soundcloud-enabled';
 
 const formatTime = (ms) => {
   if (!ms || ms <= 0) return '0:00';
@@ -47,6 +48,7 @@ const AudioPlayer = () => {
   const iframeRef = useRef(null);
   const readyRef = useRef(false);
   const pendingPlayRef = useRef(false);
+  const autoplayOnLoadRef = useRef(false);
   const loadingRef = useRef(false);
   const progressBarRef = useRef(null);
   const widgetTimeoutRef = useRef(null);
@@ -54,6 +56,16 @@ const AudioPlayer = () => {
 
   const currentIndexRef = useRef(0);
   const loopModeRef = useRef('all');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const savedPreference = window.localStorage.getItem(SOUND_CLOUD_CONSENT_KEY);
+    if (savedPreference === 'true') {
+      setSoundCloudEnabled(true);
+      setWidgetAttempt(1);
+    }
+  }, []);
 
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
   useEffect(() => { loopModeRef.current = loopMode; }, [loopMode]);
@@ -161,6 +173,7 @@ const AudioPlayer = () => {
         document.querySelector('script[src="https://w.soundcloud.com/player/api.js"]')?.remove();
         const s = document.createElement('script');
         s.src = 'https://w.soundcloud.com/player/api.js';
+        s.async = true;
         s.onload = resolve;
         s.onerror = reject;
         document.head.appendChild(s);
@@ -187,6 +200,9 @@ const AudioPlayer = () => {
           setIsWidgetLoading(false);
           w.setVolume(40);
           w.getDuration((d) => setDuration(d));
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
+          }
           if (pendingPlayRef.current) {
             pendingPlayRef.current = false;
             w.play();
@@ -260,11 +276,15 @@ const AudioPlayer = () => {
 
     if (!soundCloudEnabled) {
       pendingPlayRef.current = true;
+      autoplayOnLoadRef.current = true;
       setWidgetError(false);
       setIsWidgetReady(false);
       setSoundCloudEnabled(true);
       setIsWidgetLoading(true);
       setWidgetAttempt((prev) => prev + 1);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
+      }
       return;
     }
 
@@ -274,6 +294,7 @@ const AudioPlayer = () => {
 
   const handleRetryWidget = useCallback(() => {
     pendingPlayRef.current = true;
+    autoplayOnLoadRef.current = true;
     readyRef.current = false;
     loadingRef.current = true;
     widgetRef.current = null;
@@ -329,7 +350,7 @@ const AudioPlayer = () => {
 
   const handlePlayPause = useCallback(() => {
     if (!soundCloudEnabled) {
-      handleOpenPlayer();
+      handleEnablePlayback();
       return;
     }
 
@@ -389,7 +410,10 @@ const AudioPlayer = () => {
   }, []);
 
   const track = PLAYLIST[currentIndex];
-  const initialSrc = `https://w.soundcloud.com/player/?url=${encodeURIComponent(PLAYLIST[0].url)}${WIDGET_PARAMS}`;
+  const initialWidgetParams = autoplayOnLoadRef.current
+    ? WIDGET_PARAMS.replace('auto_play=false', 'auto_play=true')
+    : WIDGET_PARAMS;
+  const initialSrc = `https://w.soundcloud.com/player/?url=${encodeURIComponent(PLAYLIST[0].url)}${initialWidgetParams}`;
 
   return (
       <div
