@@ -9,9 +9,17 @@ import SEO from "../components/SEO";
 import { useTranslation } from 'react-i18next';
 import { Link } from "react-router-dom";
 
+const EMPTY_FORM = { name: "", email: "", message: "", company: "" };
+const NAME_MAX_LENGTH = 100;
+const EMAIL_MAX_LENGTH = 254;
+const MESSAGE_MIN_LENGTH = 10;
+const MESSAGE_MAX_LENGTH = 2000;
+const SUBMIT_COOLDOWN_MS = 30000;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const Contact = () => {
-  const formRef = useRef(null);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const lastSubmittedAtRef = useRef(0);
+  const [form, setForm] = useState(EMPTY_FORM);
   const [isLoading, setIsLoading] = useState(false);
   const [currentAnimation, setCurrentAnimation] = useState("idle");
 
@@ -23,21 +31,69 @@ const Contact = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const getValidationError = (nextForm) => {
+    const now = Date.now();
+
+    if (now - lastSubmittedAtRef.current < SUBMIT_COOLDOWN_MS) {
+      return "rate_limit";
+    }
+
+    if (nextForm.company) {
+      return "validation";
+    }
+
+    if (
+      nextForm.name.length < 2 ||
+      nextForm.name.length > NAME_MAX_LENGTH ||
+      !EMAIL_REGEX.test(nextForm.email) ||
+      nextForm.email.length > EMAIL_MAX_LENGTH ||
+      nextForm.message.length < MESSAGE_MIN_LENGTH ||
+      nextForm.message.length > MESSAGE_MAX_LENGTH
+    ) {
+      return "validation";
+    }
+
+    return null;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const sanitizedForm = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
+      company: form.company.trim(),
+    };
+    const validationError = getValidationError(sanitizedForm);
+
+    if (validationError) {
+      showAlert({
+        show: true,
+        text:
+          validationError === "rate_limit"
+            ? t("contact_rate_limit_error")
+            : t("contact_validation_error"),
+        type: "danger",
+      });
+      setCurrentAnimation("idle");
+      return;
+    }
+
+    setForm(sanitizedForm);
     setIsLoading(true);
     setCurrentAnimation("hit");
+    lastSubmittedAtRef.current = Date.now();
 
     emailjs
       .send(
         import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
         {
-          from_name: form.name,
+          from_name: sanitizedForm.name,
           to_name: "Chingis",
-          from_email: form.email,
+          from_email: sanitizedForm.email,
           to_email: "chingisenkhbaatar@gmail.com",
-          message: `Email: ${form.email}\n\nMessage: ${form.message}`,
+          message: `Email: ${sanitizedForm.email}\n\nMessage: ${sanitizedForm.message}`,
         },
         import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
       )
@@ -48,18 +104,17 @@ const Contact = () => {
           text: t('contact_success_message'),
           type: "success",
         });
-        setForm({ name: "", email: "", message: "" });
+        setForm(EMPTY_FORM);
 
         setTimeout(() => {
           hideAlert();
           setCurrentAnimation("idle");
-          setForm({ name: "", email: "", message: "" });
-        }, [3000]);
+          setForm(EMPTY_FORM);
+        }, 3000);
       })
-      .catch((error) => {
+      .catch(() => {
         setIsLoading(false);
         setCurrentAnimation("idle");
-        console.log(error);
         showAlert({
           show: true,
           text: t('contact_error_message'),
@@ -112,6 +167,21 @@ const Contact = () => {
           className="w-full flex flex-col gap-7 mt-14 "
           onSubmit={handleSubmit}
         >
+          <div
+            className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+            aria-hidden="true"
+          >
+            <label htmlFor="company">Company</label>
+            <input
+              id="company"
+              type="text"
+              name="company"
+              autoComplete="organization"
+              tabIndex={-1}
+              value={form.company}
+              onChange={handleChange}
+            />
+          </div>
           <label className="text-black-500 font-semibold">
             {t('contact_name_label')}
             <input
@@ -120,6 +190,8 @@ const Contact = () => {
               className="input"
               placeholder={t('contact_name_placeholder')}
               required
+              autoComplete="name"
+              maxLength={NAME_MAX_LENGTH}
               value={form.name}
               onChange={handleChange}
               onFocus={handleFocus}
@@ -134,6 +206,8 @@ const Contact = () => {
               className="input"
               placeholder={t('contact_email_placeholder')}
               required
+              autoComplete="email"
+              maxLength={EMAIL_MAX_LENGTH}
               value={form.email}
               onChange={handleChange}
               onFocus={handleFocus}
@@ -147,6 +221,9 @@ const Contact = () => {
               rows="4"
               className="textarea"
               placeholder={t('contact_message_placeholder')}
+              required
+              minLength={MESSAGE_MIN_LENGTH}
+              maxLength={MESSAGE_MAX_LENGTH}
               value={form.message}
               onChange={handleChange}
               onFocus={handleFocus}

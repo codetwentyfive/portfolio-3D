@@ -15,7 +15,7 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[hash].[ext]'
       }
     },
-    sourcemap: true,
+    sourcemap: false,
     reportCompressedSize: true,
   },
   assetsInclude: ["**/*.glb"],

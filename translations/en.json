@@ -44,5 +44,7 @@
   "contact_privacy_notice": "If you send the form, your details will be processed according to the",
   "contact_success_message": "Message sent successfully!",
   "contact_error_message": "I didn't receive your message",
+  "contact_validation_error": "Please check your input and try again.",
+  "contact_rate_limit_error": "Please wait a moment before sending another message.",
   "hint_drag_rotate": "Drag to rotate & explore"
 }

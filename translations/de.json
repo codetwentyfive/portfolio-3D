@@ -44,5 +44,7 @@
   "contact_privacy_notice": "Wenn Sie das Formular absenden, werden Ihre Angaben gemaess der",
   "contact_success_message": "Nachricht erfolgreich gesendet!",
   "contact_error_message": "Ich habe Ihre Nachricht nicht erhalten",
+  "contact_validation_error": "Bitte pruefen Sie Ihre Eingaben und versuchen Sie es erneut.",
+  "contact_rate_limit_error": "Bitte warten Sie einen Moment, bevor Sie eine weitere Nachricht senden.",
   "hint_drag_rotate": "Zum Drehen einfach ziehen ✨"
 }

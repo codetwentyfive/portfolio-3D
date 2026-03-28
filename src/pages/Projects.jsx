@@ -1,6 +1,5 @@
 import { arrow, github } from "../assets/icons";
 import { projects } from "../constants/index";
-import { Link } from "react-router-dom";
 import CTA from "../components/CTA";
 import SEO from "../components/SEO";
 import { useTranslation } from "react-i18next";
@@ -69,14 +68,14 @@ const Projects = () => {
               </p>
               <div className="flex flex-row justify-between">
                 <div className="mt-5 flex items-center gap-2 font-poppins">
-                  <Link
-                    to={project.link}
+                  <a
+                    href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-semibold text-blue-600"
                   >
                     Live Link
-                  </Link>
+                  </a>
 
                   <img
                     src={arrow}
@@ -92,14 +91,14 @@ const Projects = () => {
                   </div>
                 ) : project.github && (
                   <div className="mt-5 flex items-center gap-2 font-poppins">
-                    <Link
-                      to={project.github}
+                    <a
+                      href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-blue-600"
                     >
                       Github
-                    </Link>
+                    </a>
 
                     <img
                       src={github}

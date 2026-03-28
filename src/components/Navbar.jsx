@@ -44,7 +44,7 @@ const Navbar = () => {
           {t('about')}
         </NavLink>
         <NavLink
-          to="/Projects"
+          to="/projects"
           className={({ isActive }) =>
             isActive ? "gradient_text font-bold" : "text-black"
           }
@@ -54,7 +54,7 @@ const Navbar = () => {
           {t('projects')}
         </NavLink>
         <NavLink
-          to="/Contact"
+          to="/contact"
           className={({ isActive }) =>
             isActive ? "gradient_text font-bold" : "text-black"
           }

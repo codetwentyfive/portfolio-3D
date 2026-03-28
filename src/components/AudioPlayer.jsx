@@ -6,10 +6,7 @@ const PLAYLIST = [
   { title: 'T3v1 M', url: 'https://soundcloud.com/codetwentyfive/t3v1-m' },
   { title: 'Walk Home', url: 'https://soundcloud.com/codetwentyfive/walk-home' },
   { title: 'Маша', url: 'https://soundcloud.com/codetwentyfive/masha' },
-  { title: 'Destroyed Butthole', url: 'https://soundcloud.com/codetwentyfive/destroyed-butthole' },
 ];
-
-const REGULAR_COUNT = 4;
 
 const WIDGET_PARAMS = '&auto_play=false&buying=false&sharing=false&download=false&show_artwork=false&show_playcount=false&show_user=false&visual=false';
 const WIDGET_LOAD_TIMEOUT_MS = 5000;
@@ -42,7 +39,6 @@ const AudioPlayer = () => {
   const [progress, setProgress] = useState(0);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [secretUnlocked, setSecretUnlocked] = useState(false);
   const [bounce, setBounce] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
   const hasAnimated = useRef(false);
@@ -52,18 +48,15 @@ const AudioPlayer = () => {
   const readyRef = useRef(false);
   const pendingPlayRef = useRef(false);
   const loadingRef = useRef(false);
-  const completedRef = useRef(new Set());
   const progressBarRef = useRef(null);
   const widgetTimeoutRef = useRef(null);
   const lastPlayPausePressRef = useRef(0);
 
   const currentIndexRef = useRef(0);
   const loopModeRef = useRef('all');
-  const secretRef = useRef(false);
 
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
   useEffect(() => { loopModeRef.current = loopMode; }, [loopMode]);
-  useEffect(() => { secretRef.current = secretUnlocked; }, [secretUnlocked]);
 
   const prevPlayingRef = useRef(false);
   useEffect(() => {
@@ -108,7 +101,7 @@ const AudioPlayer = () => {
   }, []);
 
   const getMaxIndex = useCallback(() => {
-    return secretRef.current ? PLAYLIST.length - 1 : REGULAR_COUNT - 1;
+    return PLAYLIST.length - 1;
   }, []);
 
   const loadTrack = useCallback((index, autoPlay = false) => {
@@ -127,6 +120,16 @@ const AudioPlayer = () => {
       show_artwork: false,
       show_playcount: false,
       show_user: false,
+    });
+  }, []);
+
+  const syncDuration = useCallback(() => {
+    if (!widgetRef.current || !readyRef.current) return;
+
+    widgetRef.current.getDuration((nextDuration) => {
+      if (nextDuration > 0) {
+        setDuration(nextDuration);
+      }
     });
   }, []);
 
@@ -193,6 +196,7 @@ const AudioPlayer = () => {
         w.bind(window.SC.Widget.Events.PLAY, () => {
           loadingRef.current = false;
           setIsWidgetLoading(false);
+          syncDuration();
           setIsPlaying(true);
         });
 
@@ -203,6 +207,9 @@ const AudioPlayer = () => {
         });
 
         w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data) => {
+          if (!duration) {
+            syncDuration();
+          }
           setProgress(data.relativePosition);
           setPosition(data.currentPosition);
         });
@@ -211,24 +218,13 @@ const AudioPlayer = () => {
           const idx = currentIndexRef.current;
           const loop = loopModeRef.current;
 
-          completedRef.current.add(idx);
-
-          if (!secretRef.current) {
-            const allDone = Array.from({ length: REGULAR_COUNT }, (_, i) => i)
-              .every((i) => completedRef.current.has(i));
-            if (allDone) {
-              secretRef.current = true;
-              setSecretUnlocked(true);
-            }
-          }
-
           if (loop === 'one') {
             w.seekTo(0);
             w.play();
             return;
           }
 
-          const max = secretRef.current ? PLAYLIST.length - 1 : REGULAR_COUNT - 1;
+          const max = PLAYLIST.length - 1;
           const next = idx + 1;
 
           if (next > max) {
@@ -251,7 +247,7 @@ const AudioPlayer = () => {
       isActive = false;
       window.clearTimeout(widgetTimeoutRef.current);
     };
-  }, [handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, widgetAttempt]);
+  }, [duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
