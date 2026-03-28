@@ -51,6 +51,7 @@ const AudioPlayer = () => {
   const pendingPlayRef = useRef(false);
   const autoplayOnLoadRef = useRef(false);
   const autoplayRetryTimeoutsRef = useRef([]);
+  const playbackStateSyncRef = useRef(null);
   const loadingRef = useRef(false);
   const progressBarRef = useRef(null);
   const widgetTimeoutRef = useRef(null);
@@ -129,6 +130,34 @@ const AudioPlayer = () => {
     autoplayRetryTimeoutsRef.current = [];
   }, []);
 
+  const clearPlaybackStateSync = useCallback(() => {
+    if (playbackStateSyncRef.current) {
+      window.clearTimeout(playbackStateSyncRef.current);
+      playbackStateSyncRef.current = null;
+    }
+  }, []);
+
+  const schedulePlaybackStateSync = useCallback((remainingChecks = 12) => {
+    clearPlaybackStateSync();
+
+    if (remainingChecks <= 0 || !widgetRef.current || !readyRef.current) return;
+
+    playbackStateSyncRef.current = window.setTimeout(() => {
+      if (!widgetRef.current || !readyRef.current || typeof widgetRef.current.isPaused !== 'function') {
+        playbackStateSyncRef.current = null;
+        return;
+      }
+
+      widgetRef.current.isPaused((paused) => {
+        setIsPlaying(!paused);
+        if (!paused) {
+          setIsWidgetLoading(false);
+        }
+        schedulePlaybackStateSync(remainingChecks - 1);
+      });
+    }, 250);
+  }, [clearPlaybackStateSync, setIsPlaying]);
+
   const scheduleAutoplayRetries = useCallback(() => {
     clearAutoplayRetries();
 
@@ -163,11 +192,14 @@ const AudioPlayer = () => {
       show_user: false,
     });
     if (autoPlay) {
+      widgetRef.current.play();
       scheduleAutoplayRetries();
+      schedulePlaybackStateSync();
     } else {
       clearAutoplayRetries();
+      clearPlaybackStateSync();
     }
-  }, [clearAutoplayRetries, scheduleAutoplayRetries, setIsPlaying]);
+  }, [clearAutoplayRetries, clearPlaybackStateSync, scheduleAutoplayRetries, schedulePlaybackStateSync, setIsPlaying]);
 
   const syncDuration = useCallback(() => {
     if (!widgetRef.current || !readyRef.current) return;
@@ -202,12 +234,13 @@ const AudioPlayer = () => {
     loadingRef.current = false;
     pendingPlayRef.current = false;
     clearAutoplayRetries();
+    clearPlaybackStateSync();
     widgetRef.current = null;
     setIsPlaying(false);
     setIsWidgetLoading(false);
     setIsWidgetReady(false);
     setWidgetError(true);
-  }, [clearAutoplayRetries, setIsPlaying]);
+  }, [clearAutoplayRetries, clearPlaybackStateSync, setIsPlaying]);
 
   useEffect(() => {
     if (!soundCloudEnabled) return;
@@ -258,12 +291,14 @@ const AudioPlayer = () => {
           }
           if (pendingPlayRef.current) {
             scheduleAutoplayRetries();
+            schedulePlaybackStateSync();
           }
         });
 
         w.bind(window.SC.Widget.Events.PLAY, () => {
           pendingPlayRef.current = false;
           clearAutoplayRetries();
+          clearPlaybackStateSync();
           loadingRef.current = false;
           setIsWidgetLoading(false);
           syncDuration();
@@ -271,6 +306,7 @@ const AudioPlayer = () => {
         });
 
         w.bind(window.SC.Widget.Events.PAUSE, () => {
+          clearPlaybackStateSync();
           loadingRef.current = false;
           setIsWidgetLoading(false);
           setIsPlaying(false);
@@ -316,9 +352,10 @@ const AudioPlayer = () => {
     return () => {
       isActive = false;
       clearAutoplayRetries();
+      clearPlaybackStateSync();
       window.clearTimeout(widgetTimeoutRef.current);
     };
-  }, [clearAutoplayRetries, duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, widgetAttempt]);
+  }, [clearAutoplayRetries, clearPlaybackStateSync, duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, schedulePlaybackStateSync, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
@@ -412,20 +449,23 @@ const AudioPlayer = () => {
 
     if (!widgetRef.current || !readyRef.current) {
       pendingPlayRef.current = true;
+      schedulePlaybackStateSync();
       return;
     }
 
     setIsWidgetLoading(true);
     setIsPlaying(true);
     widgetRef.current.play();
-  }, [handleEnablePlayback, isExpanded, setIsPlaying, soundCloudEnabled]);
+    schedulePlaybackStateSync();
+  }, [handleEnablePlayback, isExpanded, schedulePlaybackStateSync, setIsPlaying, soundCloudEnabled]);
 
   const pauseWidget = useCallback(() => {
     if (!canControlWidget()) return;
 
+    clearPlaybackStateSync();
     widgetRef.current.pause();
     setIsPlaying(false);
-  }, [canControlWidget, setIsPlaying]);
+  }, [canControlWidget, clearPlaybackStateSync, setIsPlaying]);
 
   const handlePlayPause = useCallback(() => {
     if (!soundCloudEnabled || !canControlWidget() || !isPlaying) {
