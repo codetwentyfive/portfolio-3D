@@ -11,6 +11,7 @@ const PLAYLIST = [
 const WIDGET_PARAMS = '&auto_play=false&buying=false&sharing=false&download=false&show_artwork=false&show_playcount=false&show_user=false&visual=false';
 const WIDGET_LOAD_TIMEOUT_MS = 5000;
 const SOUND_CLOUD_CONSENT_KEY = 'soundcloud-enabled';
+const SEEK_STEP_MS = 10000;
 
 const formatTime = (ms) => {
   if (!ms || ms <= 0) return '0:00';
@@ -116,6 +117,10 @@ const AudioPlayer = () => {
     return PLAYLIST.length - 1;
   }, []);
 
+  const canControlWidget = useCallback(() => {
+    return Boolean(widgetRef.current && readyRef.current);
+  }, []);
+
   const loadTrack = useCallback((index, autoPlay = false) => {
     if (!widgetRef.current) return;
     setIsWidgetLoading(true);
@@ -144,6 +149,24 @@ const AudioPlayer = () => {
       }
     });
   }, []);
+
+  const seekToMs = useCallback((nextPositionMs) => {
+    if (!widgetRef.current || !readyRef.current) return;
+
+    widgetRef.current.getDuration((currentDuration) => {
+      if (!currentDuration || currentDuration <= 0) return;
+
+      const clampedPosition = Math.max(0, Math.min(nextPositionMs, currentDuration));
+      widgetRef.current.seekTo(clampedPosition);
+      setPosition(clampedPosition);
+      setDuration(currentDuration);
+      setProgress(clampedPosition / currentDuration);
+    });
+  }, []);
+
+  const seekByMs = useCallback((offsetMs) => {
+    seekToMs(position + offsetMs);
+  }, [position, seekToMs]);
 
   const handleWidgetFailure = useCallback(() => {
     readyRef.current = false;
@@ -331,53 +354,6 @@ const AudioPlayer = () => {
     }
   }, [isPlaying, setIsPlaying]);
 
-  useEffect(() => {
-    const handleGlobalKeyDown = (event) => {
-      if (event.repeat || event.code !== 'Space') return;
-      if (!soundCloudEnabled || widgetError || !readyRef.current) return;
-      if (isEditableTarget(event.target)) return;
-
-      event.preventDefault();
-      toggleWidgetPlayback();
-    };
-
-    window.addEventListener('keydown', handleGlobalKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleGlobalKeyDown);
-    };
-  }, [soundCloudEnabled, toggleWidgetPlayback, widgetError]);
-
-  const handlePlayPause = useCallback(() => {
-    if (!soundCloudEnabled) {
-      handleEnablePlayback();
-      return;
-    }
-
-    if (!isExpanded) {
-      setIsExpanded(true);
-      if (!widgetRef.current || !readyRef.current) {
-        pendingPlayRef.current = true;
-        return;
-      }
-      widgetRef.current.play();
-      return;
-    }
-
-    if (!widgetRef.current || !readyRef.current) return;
-    toggleWidgetPlayback();
-  }, [handleOpenPlayer, isExpanded, soundCloudEnabled, toggleWidgetPlayback]);
-
-  const handlePlayPausePress = useCallback((event) => {
-    event.stopPropagation();
-
-    const now = Date.now();
-    if (now - lastPlayPausePressRef.current < 250) return;
-
-    lastPlayPausePressRef.current = now;
-    handlePlayPause();
-  }, [handlePlayPause]);
-
   const handleNext = useCallback(() => {
     if (!widgetRef.current) return;
     const max = getMaxIndex();
@@ -391,6 +367,110 @@ const AudioPlayer = () => {
     const prev = currentIndexRef.current - 1;
     loadTrack(prev < 0 ? max : prev, true);
   }, [loadTrack, getMaxIndex]);
+
+  const playWidget = useCallback(() => {
+    if (!soundCloudEnabled) {
+      handleEnablePlayback();
+      return;
+    }
+
+    if (!isExpanded) {
+      setIsExpanded(true);
+    }
+
+    if (!widgetRef.current || !readyRef.current) {
+      pendingPlayRef.current = true;
+      return;
+    }
+
+    widgetRef.current.play();
+  }, [handleEnablePlayback, isExpanded, soundCloudEnabled]);
+
+  const pauseWidget = useCallback(() => {
+    if (!canControlWidget()) return;
+
+    widgetRef.current.pause();
+    setIsPlaying(false);
+  }, [canControlWidget, setIsPlaying]);
+
+  const handlePlayPause = useCallback(() => {
+    if (!soundCloudEnabled || !canControlWidget() || !isPlaying) {
+      playWidget();
+      return;
+    }
+
+    pauseWidget();
+  }, [canControlWidget, isPlaying, pauseWidget, playWidget, soundCloudEnabled]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event) => {
+      if (event.repeat) return;
+      if (isEditableTarget(event.target)) return;
+
+      const shouldHandlePlaybackKey =
+        event.code === 'Space' ||
+        event.code === 'KeyK' ||
+        event.code === 'MediaPlayPause' ||
+        event.key === 'MediaPlayPause';
+      const shouldHandleNextKey =
+        event.code === 'MediaTrackNext' ||
+        event.key === 'MediaTrackNext' ||
+        (event.shiftKey && event.code === 'KeyN');
+      const shouldHandlePrevKey =
+        event.code === 'MediaTrackPrevious' ||
+        event.key === 'MediaTrackPrevious' ||
+        (event.shiftKey && event.code === 'KeyP');
+      const shouldSeekBackward = event.code === 'ArrowLeft' || event.code === 'KeyJ';
+      const shouldSeekForward = event.code === 'ArrowRight' || event.code === 'KeyL';
+
+      if (shouldHandlePlaybackKey) {
+        event.preventDefault();
+        handlePlayPause();
+        return;
+      }
+
+      if (!soundCloudEnabled || widgetError || !readyRef.current) return;
+
+      if (shouldHandleNextKey) {
+        event.preventDefault();
+        handleNext();
+        return;
+      }
+
+      if (shouldHandlePrevKey) {
+        event.preventDefault();
+        handlePrev();
+        return;
+      }
+
+      if (shouldSeekBackward) {
+        event.preventDefault();
+        seekByMs(-SEEK_STEP_MS);
+        return;
+      }
+
+      if (shouldSeekForward) {
+        event.preventDefault();
+        seekByMs(SEEK_STEP_MS);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [handleNext, handlePlayPause, handlePrev, seekByMs, soundCloudEnabled, widgetError]);
+
+  const handlePlayPausePress = useCallback((event) => {
+    event.stopPropagation();
+
+    const now = Date.now();
+    if (now - lastPlayPausePressRef.current < 250) return;
+
+    lastPlayPausePressRef.current = now;
+    handlePlayPause();
+  }, [handlePlayPause]);
 
   const cycleLoop = useCallback(() => {
     setLoopMode((prev) => {
@@ -410,6 +490,112 @@ const AudioPlayer = () => {
   }, []);
 
   const track = PLAYLIST[currentIndex];
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: 'Chingis',
+      album: 'SoundCloud Picks',
+      artwork: [
+        { src: '/og-image.png', sizes: '1200x630', type: 'image/png' },
+      ],
+    });
+  }, [track.title]);
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.playbackState = isPlaying
+      ? 'playing'
+      : isWidgetLoading
+        ? 'paused'
+        : 'none';
+  }, [isPlaying, isWidgetLoading]);
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    if (!canControlWidget() || duration <= 0) return;
+
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: duration / 1000,
+        playbackRate: 1,
+        position: Math.min(position / 1000, duration / 1000),
+      });
+    } catch {
+      // Older browsers can expose mediaSession without position state support.
+    }
+  }, [canControlWidget, duration, position]);
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+
+    const setHandler = (action, handler) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch {
+        // Browsers expose different subsets of Media Session actions.
+      }
+    };
+
+    setHandler('play', () => {
+      playWidget();
+    });
+    setHandler('pause', () => {
+      pauseWidget();
+    });
+    setHandler('previoustrack', () => {
+      if (canControlWidget()) {
+        handlePrev();
+      }
+    });
+    setHandler('nexttrack', () => {
+      if (canControlWidget()) {
+        handleNext();
+      }
+    });
+    setHandler('seekbackward', (details) => {
+      if (canControlWidget()) {
+        seekByMs(-(details?.seekOffset ?? SEEK_STEP_MS));
+      }
+    });
+    setHandler('seekforward', (details) => {
+      if (canControlWidget()) {
+        seekByMs(details?.seekOffset ?? SEEK_STEP_MS);
+      }
+    });
+    setHandler('seekto', (details) => {
+      if (canControlWidget() && typeof details?.seekTime === 'number') {
+        seekToMs(details.seekTime * 1000);
+      }
+    });
+    setHandler('stop', () => {
+      pauseWidget();
+    });
+
+    return () => {
+      [
+        'play',
+        'pause',
+        'previoustrack',
+        'nexttrack',
+        'seekbackward',
+        'seekforward',
+        'seekto',
+        'stop',
+      ].forEach((action) => setHandler(action, null));
+    };
+  }, [
+    canControlWidget,
+    handleNext,
+    handlePrev,
+    pauseWidget,
+    playWidget,
+    seekByMs,
+    seekToMs,
+  ]);
   const initialWidgetParams = autoplayOnLoadRef.current
     ? WIDGET_PARAMS.replace('auto_play=false', 'auto_play=true')
     : WIDGET_PARAMS;
