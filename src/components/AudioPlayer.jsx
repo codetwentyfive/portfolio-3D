@@ -9,7 +9,7 @@ const PLAYLIST = [
 ];
 
 const WIDGET_PARAMS = '&auto_play=false&buying=false&sharing=false&download=false&show_artwork=false&show_playcount=false&show_user=false&visual=false';
-const WIDGET_LOAD_TIMEOUT_MS = 5000;
+const WIDGET_LOAD_TIMEOUT_MS = 8000;
 const SOUND_CLOUD_CONSENT_KEY = 'soundcloud-enabled';
 const SEEK_STEP_MS = 10000;
 
@@ -59,6 +59,7 @@ const AudioPlayer = () => {
 
   const currentIndexRef = useRef(0);
   const loopModeRef = useRef('all');
+  const durationRef = useRef(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -72,6 +73,7 @@ const AudioPlayer = () => {
 
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
   useEffect(() => { loopModeRef.current = loopMode; }, [loopMode]);
+  useEffect(() => { durationRef.current = duration; }, [duration]);
 
   const prevPlayingRef = useRef(false);
   useEffect(() => {
@@ -290,6 +292,7 @@ const AudioPlayer = () => {
             window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
           }
           if (pendingPlayRef.current) {
+            w.play();
             scheduleAutoplayRetries();
             schedulePlaybackStateSync();
           }
@@ -313,7 +316,7 @@ const AudioPlayer = () => {
         });
 
         w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data) => {
-          if (!duration) {
+          if (!durationRef.current) {
             syncDuration();
           }
           setProgress(data.relativePosition);
@@ -355,7 +358,7 @@ const AudioPlayer = () => {
       clearPlaybackStateSync();
       window.clearTimeout(widgetTimeoutRef.current);
     };
-  }, [clearAutoplayRetries, clearPlaybackStateSync, duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, schedulePlaybackStateSync, widgetAttempt]);
+  }, [clearAutoplayRetries, clearPlaybackStateSync, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, schedulePlaybackStateSync, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
@@ -690,8 +693,8 @@ const AudioPlayer = () => {
             title="SoundCloud Player"
             aria-hidden="true"
             tabIndex={-1}
-            // Keep the iframe off-screen but non-zero so the widget can render safely.
-            className="pointer-events-none absolute -left-[9999px] top-0 h-px w-px overflow-hidden border-0 opacity-0"
+            // Keep the widget mounted in-place for mobile browsers while the custom UI stays on top.
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-hidden border-0 opacity-0"
           />
         )}
         <div
