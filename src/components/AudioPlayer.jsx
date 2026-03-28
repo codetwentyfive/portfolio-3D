@@ -383,8 +383,10 @@ const AudioPlayer = () => {
       return;
     }
 
+    setIsWidgetLoading(true);
+    setIsPlaying(true);
     widgetRef.current.play();
-  }, [handleEnablePlayback, isExpanded, soundCloudEnabled]);
+  }, [handleEnablePlayback, isExpanded, setIsPlaying, soundCloudEnabled]);
 
   const pauseWidget = useCallback(() => {
     if (!canControlWidget()) return;
@@ -627,8 +629,9 @@ const AudioPlayer = () => {
           style={{ borderRadius: isExpanded ? '16px' : '9999px' }}
         >
           <button
-            onClick={handleOpenPlayer}
-            aria-label="Open music player"
+            type="button"
+            onClick={handlePlayPause}
+            aria-label={isPlaying ? "Pause music player" : "Play music player"}
             className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
               isExpanded ? 'pointer-events-none opacity-0' : 'opacity-100'
             }`}
@@ -664,7 +667,6 @@ const AudioPlayer = () => {
               <button
                 type="button"
                 onClick={handlePlayPausePress}
-                onPointerUp={handlePlayPausePress}
                 className={`relative z-10 p-2 rounded-xl transition-colors ${
                   isPlaying
                     ? 'bg-blue-50 hover:bg-blue-100 active:bg-blue-200'
