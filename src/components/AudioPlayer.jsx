@@ -406,7 +406,8 @@ const AudioPlayer = () => {
             title="SoundCloud Player"
             aria-hidden="true"
             tabIndex={-1}
-            className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden border-0 opacity-0"
+            // Keep the iframe off-screen but non-zero so the widget can render safely.
+            className="pointer-events-none absolute -left-[9999px] top-0 h-px w-px overflow-hidden border-0 opacity-0"
           />
         )}
         <div
