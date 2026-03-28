@@ -44,7 +44,7 @@ const About = () => {
               </div>
               {/* Tooltip */}
               <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 
-                             bg-black/80 text-white px-2 py-1 rounded-md text-sm
+                             border border-slate-200 bg-white/95 px-2 py-1 rounded-md text-sm text-slate-700 shadow-lg
                              opacity-0 group-hover:opacity-100 transition-opacity duration-300
                              whitespace-nowrap pointer-events-none">
                 {skill.name}

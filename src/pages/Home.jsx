@@ -95,7 +95,7 @@ const Home = () => {
           <ambientLight intensity={0.1} />
           <pointLight />
           <spotLight />
-          <hemisphereLight skyColor="#b1e1ff" groundColor="#000000" intensity={1} />
+          <hemisphereLight skyColor="#b1e1ff" groundColor="#dbeafe" intensity={1} />
           <Sky isRotating={isRotating} />
           <Bird />
           <Island

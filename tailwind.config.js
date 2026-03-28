@@ -19,8 +19,8 @@ export default {
         }
       },
       fontFamily: {
-        worksans: ["Work Sans", "sans-serif"],
-        poppins: ['Poppins', "sans-serif"]
+        worksans: ["Manrope", "sans-serif"],
+        poppins: ["Syne", "sans-serif"]
       },
       boxShadow: {
         card: '0px 1px 2px 0px rgba(0, 0, 0, 0.05)'

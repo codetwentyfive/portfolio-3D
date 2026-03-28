@@ -61,7 +61,7 @@ const HomeInfo = ({ currentStage }) => {
   const renderContent = {
     1: (
       <div role="region" aria-label="Welcome section">
-        <h1 className="sm:text-xl sm:leading-snug text-center greeting py-4 px-8 text-white mx-5 animated-gradient-bg rounded-2xl">
+        <h1 className="hero-greeting text-center greeting py-4 px-8 text-slate-900 mx-5 animated-gradient-bg rounded-2xl">
           <span className="relative z-10">
             {t("hi_message")} <span className="font-semibold">{t("name")}</span> 
             <span aria-hidden="true">👋</span>

@@ -15,25 +15,25 @@ const SiteFooter = () => {
       }`}
       role="contentinfo"
     >
-      <div className="footer-container footer-animated border-t border-white/20 pt-6 font-medium">
-        <p className="text-white/95 text-sm leading-normal font-semibold tracking-[0.01em]">
+      <div className="footer-container footer-animated pt-6 font-medium">
+        <p className="text-slate-700 text-sm leading-normal font-semibold tracking-[0.01em]">
           &copy; {year} {legalConfig.operator.name}
         </p>
         <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:w-auto">
           <a
-            className="text-white/90 font-medium transition-colors hover:text-white"
+            className="text-slate-600 font-medium transition-colors hover:text-sky-700"
             href={`mailto:${legalConfig.operator.email}`}
           >
             {legalConfig.operator.email}
           </a>
           <Link
-            className="font-semibold tracking-[0.01em] text-white/90 transition-colors hover:text-white"
+            className="font-semibold tracking-[0.01em] text-slate-600 transition-colors hover:text-sky-700"
             to="/rechtliches#impressum"
           >
             {t("impressum")}
           </Link>
           <Link
-            className="font-semibold tracking-[0.01em] text-white/90 transition-colors hover:text-white"
+            className="font-semibold tracking-[0.01em] text-slate-600 transition-colors hover:text-sky-700"
             to="/rechtliches#datenschutz"
           >
             {t("privacy")}

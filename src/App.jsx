@@ -8,7 +8,7 @@ import SiteFooter from "./components/SiteFooter";
 const App = () => {
   return (
     <AudioProvider>
-      <main className="bg-slate-300/20 h-full">
+      <main className="min-h-screen">
         <Router>
           <Navbar />
           <Routes>

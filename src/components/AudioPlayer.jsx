@@ -808,7 +808,7 @@ const AudioPlayer = () => {
                   href={track.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-black"
+                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700"
                 >
                   Open track
                 </a>
@@ -829,7 +829,7 @@ const AudioPlayer = () => {
                   Loading the player after your explicit choice.
                 </p>
               </div>
-              <span className="shrink-0 rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-500">
+              <span className="shrink-0 rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700">
                 {isWidgetLoading ? 'Loading...' : 'Waiting...'}
               </span>
             </div>
@@ -843,7 +843,7 @@ const AudioPlayer = () => {
               </div>
               <button
                 onClick={handleEnablePlayback}
-                className="shrink-0 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-black"
+                className="shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700"
                 aria-label="Enable SoundCloud playback"
               >
                 {isWidgetLoading ? 'Loading...' : 'Enable'}

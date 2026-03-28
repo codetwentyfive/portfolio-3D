@@ -16,7 +16,7 @@ const Navbar = () => {
         className="w-10 h-10 rounded-lg bg-white items-center justify-center flex font-bold shadow-md"
         aria-label="Home"
       >
-        <p className="gradient_text">Chi</p>
+        <p className="gradient_text font-poppins text-sm tracking-[-0.05em]">Chi</p>
       </NavLink>
       <button
         className="md:hidden bg-white p-2 rounded-lg w-10 h-10 z-50 flex items-center justify-center"
@@ -29,14 +29,14 @@ const Navbar = () => {
         </span>
       </button>
       <nav 
-        className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row text-lg gap-4 md:gap-7 font-medium absolute md:relative top-16 md:top-0 right-4 md:right-0 bg-white md:bg-transparent p-4 md:p-0 rounded-lg shadow-md md:shadow-none z-50`}
+        className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row text-lg gap-4 md:gap-7 absolute md:relative top-16 md:top-0 right-4 md:right-0 bg-white md:bg-transparent p-4 md:p-0 rounded-lg shadow-md md:shadow-none z-50`}
         role="navigation"
         aria-label="Main navigation"
       >
         <NavLink
           to="/about"
           className={({ isActive }) =>
-            isActive ? "gradient_text font-bold" : "text-black"
+            isActive ? "nav-link gradient_text" : "nav-link"
           }
           onClick={() => setIsMenuOpen(false)}
           aria-label={t('about')}
@@ -46,7 +46,7 @@ const Navbar = () => {
         <NavLink
           to="/projects"
           className={({ isActive }) =>
-            isActive ? "gradient_text font-bold" : "text-black"
+            isActive ? "nav-link gradient_text" : "nav-link"
           }
           onClick={() => setIsMenuOpen(false)}
           aria-label={t('projects')}
@@ -56,7 +56,7 @@ const Navbar = () => {
         <NavLink
           to="/contact"
           className={({ isActive }) =>
-            isActive ? "gradient_text font-bold" : "text-black"
+            isActive ? "nav-link gradient_text" : "nav-link"
           }
           onClick={() => setIsMenuOpen(false)}
           aria-label={t('contact')}

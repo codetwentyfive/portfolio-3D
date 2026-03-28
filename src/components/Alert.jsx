@@ -11,14 +11,18 @@ const Alert = ({ type, text }) => {
     >
       <div
         className={`${
-          type === "danger" ? "bg-red-900" : "bg-blue-900"
-        } p-2 text-white leading-none lg:rounded-full flex lg:inline-flex items-center`}
+          type === "danger"
+            ? "border border-red-200 bg-red-50 text-red-800"
+            : "border border-blue-200 bg-blue-50 text-blue-800"
+        } p-2 leading-none shadow-sm lg:rounded-full flex lg:inline-flex items-center`}
         role="alert"
         aria-atomic="true"
       >
         <span
           className={`${
-            type === "danger" ? "bg-red-600" : "bg-blue-600"
+            type === "danger"
+              ? "bg-red-100 text-red-700"
+              : "bg-blue-100 text-blue-700"
           } flex rounded-full uppercase px-2 py-1 font-semibold mr-3`}
           aria-label={`Alert type: ${alertType}`}
         >
