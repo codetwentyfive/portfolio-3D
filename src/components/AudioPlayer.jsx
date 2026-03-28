@@ -50,6 +50,7 @@ const AudioPlayer = () => {
   const readyRef = useRef(false);
   const pendingPlayRef = useRef(false);
   const autoplayOnLoadRef = useRef(false);
+  const autoplayRetryTimeoutsRef = useRef([]);
   const loadingRef = useRef(false);
   const progressBarRef = useRef(null);
   const widgetTimeoutRef = useRef(null);
@@ -121,9 +122,32 @@ const AudioPlayer = () => {
     return Boolean(widgetRef.current && readyRef.current);
   }, []);
 
+  const clearAutoplayRetries = useCallback(() => {
+    autoplayRetryTimeoutsRef.current.forEach((timeoutId) => {
+      window.clearTimeout(timeoutId);
+    });
+    autoplayRetryTimeoutsRef.current = [];
+  }, []);
+
+  const scheduleAutoplayRetries = useCallback(() => {
+    clearAutoplayRetries();
+
+    [0, 250, 900, 1800].forEach((delay) => {
+      const timeoutId = window.setTimeout(() => {
+        if (!pendingPlayRef.current || !widgetRef.current || !readyRef.current) return;
+        widgetRef.current.play();
+      }, delay);
+
+      autoplayRetryTimeoutsRef.current.push(timeoutId);
+    });
+  }, [clearAutoplayRetries]);
+
   const loadTrack = useCallback((index, autoPlay = false) => {
     if (!widgetRef.current) return;
+
+    pendingPlayRef.current = autoPlay;
     setIsWidgetLoading(true);
+    setIsPlaying(false);
     loadingRef.current = true;
     setCurrentIndex(index);
     setProgress(0);
@@ -138,7 +162,12 @@ const AudioPlayer = () => {
       show_playcount: false,
       show_user: false,
     });
-  }, []);
+    if (autoPlay) {
+      scheduleAutoplayRetries();
+    } else {
+      clearAutoplayRetries();
+    }
+  }, [clearAutoplayRetries, scheduleAutoplayRetries, setIsPlaying]);
 
   const syncDuration = useCallback(() => {
     if (!widgetRef.current || !readyRef.current) return;
@@ -172,12 +201,13 @@ const AudioPlayer = () => {
     readyRef.current = false;
     loadingRef.current = false;
     pendingPlayRef.current = false;
+    clearAutoplayRetries();
     widgetRef.current = null;
     setIsPlaying(false);
     setIsWidgetLoading(false);
     setIsWidgetReady(false);
     setWidgetError(true);
-  }, [setIsPlaying]);
+  }, [clearAutoplayRetries, setIsPlaying]);
 
   useEffect(() => {
     if (!soundCloudEnabled) return;
@@ -227,12 +257,13 @@ const AudioPlayer = () => {
             window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
           }
           if (pendingPlayRef.current) {
-            pendingPlayRef.current = false;
-            w.play();
+            scheduleAutoplayRetries();
           }
         });
 
         w.bind(window.SC.Widget.Events.PLAY, () => {
+          pendingPlayRef.current = false;
+          clearAutoplayRetries();
           loadingRef.current = false;
           setIsWidgetLoading(false);
           syncDuration();
@@ -284,9 +315,10 @@ const AudioPlayer = () => {
 
     return () => {
       isActive = false;
+      clearAutoplayRetries();
       window.clearTimeout(widgetTimeoutRef.current);
     };
-  }, [duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, widgetAttempt]);
+  }, [clearAutoplayRetries, duration, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
