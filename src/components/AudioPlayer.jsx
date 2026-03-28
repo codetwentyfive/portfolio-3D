@@ -163,7 +163,7 @@ const AudioPlayer = () => {
   const scheduleAutoplayRetries = useCallback(() => {
     clearAutoplayRetries();
 
-    [0, 250, 900, 1800].forEach((delay) => {
+    [700, 1800].forEach((delay) => {
       const timeoutId = window.setTimeout(() => {
         if (!pendingPlayRef.current || !widgetRef.current || !readyRef.current) return;
         widgetRef.current.play();
@@ -194,7 +194,6 @@ const AudioPlayer = () => {
       show_user: false,
     });
     if (autoPlay) {
-      widgetRef.current.play();
       scheduleAutoplayRetries();
       schedulePlaybackStateSync();
     } else {
@@ -299,13 +298,7 @@ const AudioPlayer = () => {
         });
 
         w.bind(window.SC.Widget.Events.PLAY, () => {
-          pendingPlayRef.current = false;
-          clearAutoplayRetries();
-          clearPlaybackStateSync();
-          loadingRef.current = false;
-          setIsWidgetLoading(false);
           syncDuration();
-          setIsPlaying(true);
         });
 
         w.bind(window.SC.Widget.Events.PAUSE, () => {
@@ -319,6 +312,12 @@ const AudioPlayer = () => {
           if (!durationRef.current) {
             syncDuration();
           }
+          pendingPlayRef.current = false;
+          clearAutoplayRetries();
+          clearPlaybackStateSync();
+          loadingRef.current = false;
+          setIsWidgetLoading(false);
+          setIsPlaying(true);
           setProgress(data.relativePosition);
           setPosition(data.currentPosition);
         });
@@ -384,8 +383,11 @@ const AudioPlayer = () => {
     }
 
     if (!widgetRef.current || !readyRef.current) return;
+    pendingPlayRef.current = true;
+    setIsWidgetLoading(true);
     widgetRef.current.play();
-  }, [soundCloudEnabled]);
+    schedulePlaybackStateSync();
+  }, [schedulePlaybackStateSync, soundCloudEnabled]);
 
   const handleRetryWidget = useCallback(() => {
     pendingPlayRef.current = true;
@@ -407,9 +409,12 @@ const AudioPlayer = () => {
     if (typeof widget.isPaused === 'function') {
       widget.isPaused((paused) => {
         if (paused) {
+          setIsWidgetLoading(true);
+          pendingPlayRef.current = true;
           widget.play();
-          setIsPlaying(true);
+          schedulePlaybackStateSync();
         } else {
+          pendingPlayRef.current = false;
           widget.pause();
           setIsPlaying(false);
         }
@@ -418,13 +423,16 @@ const AudioPlayer = () => {
     }
 
     if (isPlaying) {
+      pendingPlayRef.current = false;
       widget.pause();
       setIsPlaying(false);
     } else {
+      setIsWidgetLoading(true);
+      pendingPlayRef.current = true;
       widget.play();
-      setIsPlaying(true);
+      schedulePlaybackStateSync();
     }
-  }, [isPlaying, setIsPlaying]);
+  }, [isPlaying, schedulePlaybackStateSync, setIsPlaying]);
 
   const handleNext = useCallback(() => {
     if (!widgetRef.current) return;
@@ -457,27 +465,49 @@ const AudioPlayer = () => {
     }
 
     setIsWidgetLoading(true);
-    setIsPlaying(true);
+    pendingPlayRef.current = true;
     widgetRef.current.play();
     schedulePlaybackStateSync();
-  }, [handleEnablePlayback, isExpanded, schedulePlaybackStateSync, setIsPlaying, soundCloudEnabled]);
+  }, [handleEnablePlayback, isExpanded, schedulePlaybackStateSync, soundCloudEnabled]);
 
   const pauseWidget = useCallback(() => {
     if (!canControlWidget()) return;
 
     clearPlaybackStateSync();
+    pendingPlayRef.current = false;
     widgetRef.current.pause();
     setIsPlaying(false);
   }, [canControlWidget, clearPlaybackStateSync, setIsPlaying]);
 
   const handlePlayPause = useCallback(() => {
-    if (!soundCloudEnabled || !canControlWidget() || !isPlaying) {
+    if (!soundCloudEnabled || !canControlWidget()) {
       playWidget();
       return;
     }
 
-    pauseWidget();
-  }, [canControlWidget, isPlaying, pauseWidget, playWidget, soundCloudEnabled]);
+    if (isWidgetLoading || pendingPlayRef.current) {
+      playWidget();
+      return;
+    }
+
+    if (typeof widgetRef.current?.isPaused === 'function') {
+      widgetRef.current.isPaused((paused) => {
+        if (paused) {
+          playWidget();
+        } else {
+          pauseWidget();
+        }
+      });
+      return;
+    }
+
+    if (isPlaying) {
+      pauseWidget();
+      return;
+    }
+
+    playWidget();
+  }, [canControlWidget, isPlaying, isWidgetLoading, pauseWidget, playWidget, soundCloudEnabled]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (event) => {
