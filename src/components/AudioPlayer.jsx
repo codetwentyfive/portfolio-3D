@@ -31,7 +31,7 @@ const isEditableTarget = (target) => {
 const AudioPlayer = () => {
   const { isPlaying, setIsPlaying } = useAudio();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [soundCloudEnabled, setSoundCloudEnabled] = useState(false);
+  const [hasSoundCloudConsent, setHasSoundCloudConsent] = useState(false);
   const [isWidgetLoading, setIsWidgetLoading] = useState(false);
   const [isWidgetReady, setIsWidgetReady] = useState(false);
   const [widgetError, setWidgetError] = useState(false);
@@ -48,8 +48,7 @@ const AudioPlayer = () => {
   const widgetRef = useRef(null);
   const iframeRef = useRef(null);
   const readyRef = useRef(false);
-  const pendingPlayRef = useRef(false);
-  const autoplayOnLoadRef = useRef(false);
+  const playRequestPendingRef = useRef(false);
   const autoplayRetryTimeoutsRef = useRef([]);
   const playbackStateSyncRef = useRef(null);
   const loadingRef = useRef(false);
@@ -66,7 +65,7 @@ const AudioPlayer = () => {
 
     const savedPreference = window.localStorage.getItem(SOUND_CLOUD_CONSENT_KEY);
     if (savedPreference === 'true') {
-      setSoundCloudEnabled(true);
+      setHasSoundCloudConsent(true);
       setWidgetAttempt(1);
     }
   }, []);
@@ -121,6 +120,12 @@ const AudioPlayer = () => {
     return PLAYLIST.length - 1;
   }, []);
 
+  const persistSoundCloudConsent = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
+    }
+  }, []);
+
   const canControlWidget = useCallback(() => {
     return Boolean(widgetRef.current && readyRef.current);
   }, []);
@@ -165,7 +170,7 @@ const AudioPlayer = () => {
 
     [700, 1800].forEach((delay) => {
       const timeoutId = window.setTimeout(() => {
-        if (!pendingPlayRef.current || !widgetRef.current || !readyRef.current) return;
+        if (!playRequestPendingRef.current || !widgetRef.current || !readyRef.current) return;
         widgetRef.current.play();
       }, delay);
 
@@ -176,7 +181,7 @@ const AudioPlayer = () => {
   const loadTrack = useCallback((index, autoPlay = false) => {
     if (!widgetRef.current) return;
 
-    pendingPlayRef.current = autoPlay;
+    playRequestPendingRef.current = autoPlay;
     setIsWidgetLoading(true);
     setIsPlaying(false);
     loadingRef.current = true;
@@ -233,7 +238,7 @@ const AudioPlayer = () => {
   const handleWidgetFailure = useCallback(() => {
     readyRef.current = false;
     loadingRef.current = false;
-    pendingPlayRef.current = false;
+    playRequestPendingRef.current = false;
     clearAutoplayRetries();
     clearPlaybackStateSync();
     widgetRef.current = null;
@@ -244,7 +249,7 @@ const AudioPlayer = () => {
   }, [clearAutoplayRetries, clearPlaybackStateSync, setIsPlaying]);
 
   useEffect(() => {
-    if (!soundCloudEnabled) return;
+    if (!hasSoundCloudConsent) return;
 
     let isActive = true;
 
@@ -287,10 +292,7 @@ const AudioPlayer = () => {
           setIsWidgetLoading(false);
           w.setVolume(40);
           w.getDuration((d) => setDuration(d));
-          if (typeof window !== 'undefined') {
-            window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
-          }
-          if (pendingPlayRef.current) {
+          if (playRequestPendingRef.current) {
             w.play();
             scheduleAutoplayRetries();
             schedulePlaybackStateSync();
@@ -312,7 +314,7 @@ const AudioPlayer = () => {
           if (!durationRef.current) {
             syncDuration();
           }
-          pendingPlayRef.current = false;
+          playRequestPendingRef.current = false;
           clearAutoplayRetries();
           clearPlaybackStateSync();
           loadingRef.current = false;
@@ -357,7 +359,7 @@ const AudioPlayer = () => {
       clearPlaybackStateSync();
       window.clearTimeout(widgetTimeoutRef.current);
     };
-  }, [clearAutoplayRetries, clearPlaybackStateSync, handleWidgetFailure, loadTrack, setIsPlaying, soundCloudEnabled, syncDuration, scheduleAutoplayRetries, schedulePlaybackStateSync, widgetAttempt]);
+  }, [clearAutoplayRetries, clearPlaybackStateSync, handleWidgetFailure, hasSoundCloudConsent, loadTrack, setIsPlaying, syncDuration, scheduleAutoplayRetries, schedulePlaybackStateSync, widgetAttempt]);
 
   const handleOpenPlayer = useCallback(() => {
     if (!isExpanded) {
@@ -365,33 +367,29 @@ const AudioPlayer = () => {
     }
   }, [isExpanded]);
 
-  const handleEnablePlayback = useCallback(() => {
+  const handleConsentAndPlay = useCallback(() => {
     setIsExpanded(true);
 
-    if (!soundCloudEnabled) {
-      pendingPlayRef.current = true;
-      autoplayOnLoadRef.current = true;
+    if (!hasSoundCloudConsent) {
+      playRequestPendingRef.current = true;
       setWidgetError(false);
       setIsWidgetReady(false);
-      setSoundCloudEnabled(true);
+      setHasSoundCloudConsent(true);
       setIsWidgetLoading(true);
       setWidgetAttempt((prev) => prev + 1);
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(SOUND_CLOUD_CONSENT_KEY, 'true');
-      }
+      persistSoundCloudConsent();
       return;
     }
 
     if (!widgetRef.current || !readyRef.current) return;
-    pendingPlayRef.current = true;
+    playRequestPendingRef.current = true;
     setIsWidgetLoading(true);
     widgetRef.current.play();
     schedulePlaybackStateSync();
-  }, [schedulePlaybackStateSync, soundCloudEnabled]);
+  }, [hasSoundCloudConsent, persistSoundCloudConsent, schedulePlaybackStateSync]);
 
   const handleRetryWidget = useCallback(() => {
-    pendingPlayRef.current = true;
-    autoplayOnLoadRef.current = true;
+    playRequestPendingRef.current = true;
     readyRef.current = false;
     loadingRef.current = true;
     widgetRef.current = null;
@@ -410,11 +408,11 @@ const AudioPlayer = () => {
       widget.isPaused((paused) => {
         if (paused) {
           setIsWidgetLoading(true);
-          pendingPlayRef.current = true;
+          playRequestPendingRef.current = true;
           widget.play();
           schedulePlaybackStateSync();
         } else {
-          pendingPlayRef.current = false;
+          playRequestPendingRef.current = false;
           widget.pause();
           setIsPlaying(false);
         }
@@ -423,12 +421,12 @@ const AudioPlayer = () => {
     }
 
     if (isPlaying) {
-      pendingPlayRef.current = false;
+      playRequestPendingRef.current = false;
       widget.pause();
       setIsPlaying(false);
     } else {
       setIsWidgetLoading(true);
-      pendingPlayRef.current = true;
+      playRequestPendingRef.current = true;
       widget.play();
       schedulePlaybackStateSync();
     }
@@ -449,8 +447,8 @@ const AudioPlayer = () => {
   }, [loadTrack, getMaxIndex]);
 
   const playWidget = useCallback(() => {
-    if (!soundCloudEnabled) {
-      handleEnablePlayback();
+    if (!hasSoundCloudConsent) {
+      handleConsentAndPlay();
       return;
     }
 
@@ -459,33 +457,33 @@ const AudioPlayer = () => {
     }
 
     if (!widgetRef.current || !readyRef.current) {
-      pendingPlayRef.current = true;
+      playRequestPendingRef.current = true;
       schedulePlaybackStateSync();
       return;
     }
 
     setIsWidgetLoading(true);
-    pendingPlayRef.current = true;
+    playRequestPendingRef.current = true;
     widgetRef.current.play();
     schedulePlaybackStateSync();
-  }, [handleEnablePlayback, isExpanded, schedulePlaybackStateSync, soundCloudEnabled]);
+  }, [handleConsentAndPlay, hasSoundCloudConsent, isExpanded, schedulePlaybackStateSync]);
 
   const pauseWidget = useCallback(() => {
     if (!canControlWidget()) return;
 
     clearPlaybackStateSync();
-    pendingPlayRef.current = false;
+    playRequestPendingRef.current = false;
     widgetRef.current.pause();
     setIsPlaying(false);
   }, [canControlWidget, clearPlaybackStateSync, setIsPlaying]);
 
   const handlePlayPause = useCallback(() => {
-    if (!soundCloudEnabled || !canControlWidget()) {
+    if (!hasSoundCloudConsent || !canControlWidget()) {
       playWidget();
       return;
     }
 
-    if (isWidgetLoading || pendingPlayRef.current) {
+    if (isWidgetLoading || playRequestPendingRef.current) {
       playWidget();
       return;
     }
@@ -507,7 +505,7 @@ const AudioPlayer = () => {
     }
 
     playWidget();
-  }, [canControlWidget, isPlaying, isWidgetLoading, pauseWidget, playWidget, soundCloudEnabled]);
+  }, [canControlWidget, hasSoundCloudConsent, isPlaying, isWidgetLoading, pauseWidget, playWidget]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (event) => {
@@ -536,7 +534,7 @@ const AudioPlayer = () => {
         return;
       }
 
-      if (!soundCloudEnabled || widgetError || !readyRef.current) return;
+      if (!hasSoundCloudConsent || widgetError || !readyRef.current) return;
 
       if (shouldHandleNextKey) {
         event.preventDefault();
@@ -567,7 +565,7 @@ const AudioPlayer = () => {
     return () => {
       window.removeEventListener('keydown', handleGlobalKeyDown);
     };
-  }, [handleNext, handlePlayPause, handlePrev, seekByMs, soundCloudEnabled, widgetError]);
+  }, [handleNext, handlePlayPause, handlePrev, hasSoundCloudConsent, seekByMs, widgetError]);
 
   const handlePlayPausePress = useCallback((event) => {
     event.stopPropagation();
@@ -703,10 +701,7 @@ const AudioPlayer = () => {
     seekByMs,
     seekToMs,
   ]);
-  const initialWidgetParams = autoplayOnLoadRef.current
-    ? WIDGET_PARAMS.replace('auto_play=false', 'auto_play=true')
-    : WIDGET_PARAMS;
-  const initialSrc = `https://w.soundcloud.com/player/?url=${encodeURIComponent(PLAYLIST[0].url)}${initialWidgetParams}`;
+  const initialSrc = `https://w.soundcloud.com/player/?url=${encodeURIComponent(PLAYLIST[0].url)}${WIDGET_PARAMS}`;
 
   return (
       <div
@@ -714,7 +709,7 @@ const AudioPlayer = () => {
           isExpanded ? 'w-[calc(100%-2rem)] sm:w-[380px] h-[96px]' : 'w-14 h-14'
         }${nearFooter ? ' player-hidden' : hasAnimated.current ? ' player-visible' : ''}`}
       >
-        {soundCloudEnabled && (
+        {hasSoundCloudConsent && (
           <iframe
             key={widgetAttempt}
             ref={iframeRef}
@@ -754,7 +749,7 @@ const AudioPlayer = () => {
                 : 'pointer-events-none translate-y-4 opacity-0'
             }`}
           >
-          {soundCloudEnabled && isWidgetReady && !widgetError ? (
+          {hasSoundCloudConsent && isWidgetReady && !widgetError ? (
             <>
           {/* Transport + Track Info */}
           <div className="flex items-center gap-1 sm:gap-2">
@@ -868,7 +863,7 @@ const AudioPlayer = () => {
             </span>
           </div>
             </>
-          ) : soundCloudEnabled && widgetError ? (
+          ) : hasSoundCloudConsent && widgetError ? (
             <div className="flex h-full items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-xs font-medium text-gray-800">SoundCloud was blocked</p>
@@ -894,7 +889,7 @@ const AudioPlayer = () => {
                 </button>
               </div>
             </div>
-          ) : soundCloudEnabled ? (
+          ) : hasSoundCloudConsent ? (
             <div className="flex h-full items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-xs font-medium text-gray-800">Starting SoundCloud...</p>
@@ -915,7 +910,7 @@ const AudioPlayer = () => {
                 </p>
               </div>
               <button
-                onClick={handleEnablePlayback}
+                onClick={handleConsentAndPlay}
                 className="shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700"
                 aria-label="Enable SoundCloud playback"
               >
