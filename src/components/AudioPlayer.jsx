@@ -157,9 +157,10 @@ const AudioPlayer = () => {
 
       widgetRef.current.isPaused((paused) => {
         setIsPlaying(!paused);
-        if (!paused) {
-          setIsWidgetLoading(false);
+        if (paused) {
+          playRequestPendingRef.current = false;
         }
+        setIsWidgetLoading(false);
         schedulePlaybackStateSync(remainingChecks - 1);
       });
     }, 250);
@@ -304,6 +305,8 @@ const AudioPlayer = () => {
         });
 
         w.bind(window.SC.Widget.Events.PAUSE, () => {
+          playRequestPendingRef.current = false;
+          clearAutoplayRetries();
           clearPlaybackStateSync();
           loadingRef.current = false;
           setIsWidgetLoading(false);
@@ -471,11 +474,13 @@ const AudioPlayer = () => {
   const pauseWidget = useCallback(() => {
     if (!canControlWidget()) return;
 
+    clearAutoplayRetries();
     clearPlaybackStateSync();
     playRequestPendingRef.current = false;
+    setIsWidgetLoading(false);
     widgetRef.current.pause();
     setIsPlaying(false);
-  }, [canControlWidget, clearPlaybackStateSync, setIsPlaying]);
+  }, [canControlWidget, clearAutoplayRetries, clearPlaybackStateSync, setIsPlaying]);
 
   const handlePlayPause = useCallback(() => {
     if (!hasSoundCloudConsent || !canControlWidget()) {
