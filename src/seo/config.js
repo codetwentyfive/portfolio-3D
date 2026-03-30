@@ -63,12 +63,12 @@ export const seoConfig = {
     legal: {
       path: "/rechtliches",
       en: {
-        title: "Legal | Chingis Zwecker E.",
+        title: "Legal | Chingis B. Zwecker E.",
         description:
           "Combined legal notice and privacy policy for the professional portfolio website of Chingis Zwecker E.",
       },
       de: {
-        title: "Rechtliches | Chingis Zwecker B.E.",
+        title: "Rechtliches | Chingis B. Zwecker E.",
         description:
           "Gebündelte Seite für Impressum und Datenschutzerklärung der Portfolio-Website von Chingis Zwecker E.",
       },
@@ -76,12 +76,12 @@ export const seoConfig = {
     impressum: {
       path: "/impressum",
       en: {
-        title: "Impressum | Chingis Zwecker B.E. - Legal Notice",
+        title: "Impressum | Chingis B. Zwecker E. - Legal Notice",
         description:
           "Legal notice and provider identification for the professional portfolio website of Chingis Zwecker E. under German disclosure requirements.",
       },
       de: {
-        title: "Impressum | Chingis Zwecker B.E. - Anbieterkennzeichnung",
+        title: "Impressum | Chingis B. Zwecker E. - Anbieterkennzeichnung",
         description:
           "Impressum und Anbieterkennzeichnung für die beruflich ausgerichtete Portfolio-Website von Chingis Zwecker E. nach deutschen Informationspflichten.",
       },
@@ -89,12 +89,12 @@ export const seoConfig = {
     privacy: {
       path: "/datenschutz",
       en: {
-        title: "Privacy Policy | Chingis Zwecker B.E.",
+        title: "Privacy Policy | Chingis B. Zwecker E.",
         description:
           "Privacy policy for the professional portfolio website of Chingis Zwecker E., covering Vercel hosting, browser language storage, and the optional EmailJS contact form.",
       },
       de: {
-        title: "Datenschutz | Chingis Zwecker B.E.",
+        title: "Datenschutz | Chingis B. Zwecker E.",
         description:
           "Datenschutzerklärung für die Portfolio-Website von Chingis Zwecker E. mit Hinweisen zu Vercel-Hosting, Sprachspeicher im Browser und dem optionalen EmailJS-Kontaktformular.",
       },

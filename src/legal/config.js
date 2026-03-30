@@ -6,7 +6,7 @@ export const legalConfig = {
   lastReviewed: "2026-03-28",
   operator: {
     name: "Chingis Zwecker",
-    legalName: "Chingis Zwecker B.E.",
+    legalName: "Chingis B. Zwecker E.",
     businessDescription: {
       de: "Beruflich ausgerichtete Portfolio- und Geschäftswebsite für Freelance-Softwareentwicklung, IT-Architektur und KI-Beratung.",
       en: "Professional portfolio and business website for freelance software engineering, IT architecture, and AI consulting.",
