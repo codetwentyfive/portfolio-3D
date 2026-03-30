@@ -65,7 +65,7 @@ export const personSchema = {
     },
     {
       "@type": "EducationalOrganization",
-      name: "Ludwig-Maximilians-Universitaet Muenchen",
+      name: "Ludwig-Maximilians-Universität München",
       department: "Jurisprudence",
     },
   ],

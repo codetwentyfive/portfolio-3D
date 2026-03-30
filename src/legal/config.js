@@ -8,7 +8,7 @@ export const legalConfig = {
     name: "Chingis Zwecker",
     legalName: "Chingis Zwecker B.E.",
     businessDescription: {
-      de: "Beruflich ausgerichtete Portfolio- und Geschaeftswebsite fuer Freelance-Softwareentwicklung, IT-Architektur und KI-Beratung.",
+      de: "Beruflich ausgerichtete Portfolio- und Geschäftswebsite für Freelance-Softwareentwicklung, IT-Architektur und KI-Beratung.",
       en: "Professional portfolio and business website for freelance software engineering, IT architecture, and AI consulting.",
     },
     streetAddress: "Am Hagsfelder Brunnen 26",

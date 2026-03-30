@@ -11,7 +11,7 @@ const pageCopy = {
     kicker: "Rechtliches",
     title: "Rechtliches",
     intro:
-      "Auf dieser Seite finden Sie das Impressum und die Datenschutzerklaerung fuer diese Website. Beide Bereiche bleiben klar getrennt, sind aber bewusst auf einer gemeinsamen, dezent verlinkten Seite gebuendelt.",
+      "Auf dieser Seite finden Sie das Impressum und die Datenschutzerklärung für diese Website. Beide Bereiche bleiben klar getrennt, sind aber bewusst auf einer gemeinsamen, dezent verlinkten Seite gebündelt.",
     reviewLabel: "Stand",
     jumpLabel: "Direkt zu",
     impressum: "Impressum",

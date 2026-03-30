@@ -18,7 +18,7 @@ export const seoConfig = {
       de: {
         title: "Chingis Zwecker E. | KI-Engineer · Entwickler · IT-Architekt",
         description:
-          "Ich baue, repariere und modernisiere — Webanwendungen, E-Commerce, Zahlungssysteme, Legacy-Systeme, native Apps, Hosting, WordPress und KI-Workflows. Aus Karlsruhe, Loesungen ueber den gesamten Stack hinaus.",
+          "Ich baue, repariere und modernisiere — Webanwendungen, E-Commerce, Zahlungssysteme, Legacy-Systeme, native Apps, Hosting, WordPress und KI-Workflows. Aus Karlsruhe, Lösungen über den gesamten Stack hinaus.",
       },
     },
     about: {
@@ -29,9 +29,9 @@ export const seoConfig = {
           "Developer who ships across domains — modern frontends, robust backends, legacy rescue, infrastructure, AI integration, and project management. The kind of person you call when it needs to work, not just look good on a whiteboard.",
       },
       de: {
-        title: "Ueber mich | Chingis Zwecker E. — Was ich mitbringe",
+        title: "Über mich | Chingis Zwecker E. — Was ich mitbringe",
         description:
-          "Entwickler, der ueber Domaenen hinweg liefert — moderne Frontends, robuste Backends, Legacy-Rettung, Infrastruktur, KI-Integration und Projektmanagement. Der, den man ruft, wenn es funktionieren soll — nicht nur auf dem Whiteboard gut aussehen.",
+          "Entwickler, der über Domänen hinweg liefert — moderne Frontends, robuste Backends, Legacy-Rettung, Infrastruktur, KI-Integration und Projektmanagement. Der, den man ruft, wenn es funktionieren soll — nicht nur auf dem Whiteboard gut aussehen.",
       },
     },
     projects: {
@@ -55,9 +55,9 @@ export const seoConfig = {
           "Have a project in mind? I'm taking on new clients for freelance and consulting — web development, legacy modernization, AI strategy, and IT architecture. Based in Karlsruhe, working remotely worldwide.",
       },
       de: {
-        title: "Kontakt | Chingis Zwecker E. — Sprechen wir ueber Ihr Projekt",
+        title: "Kontakt | Chingis Zwecker E. — Sprechen wir über Ihr Projekt",
         description:
-          "Ein Projekt im Kopf? Ich nehme neue Kunden fuer Freelance und Beratung an — Webentwicklung, Legacy-Modernisierung, KI-Strategie und IT-Architektur. Aus Karlsruhe, weltweit remote verfuegbar.",
+          "Ein Projekt im Kopf? Ich nehme neue Kunden für Freelance und Beratung an — Webentwicklung, Legacy-Modernisierung, KI-Strategie und IT-Architektur. Aus Karlsruhe, weltweit remote verfügbar.",
       },
     },
     legal: {
@@ -70,7 +70,7 @@ export const seoConfig = {
       de: {
         title: "Rechtliches | Chingis Zwecker B.E.",
         description:
-          "Gebuendelte Seite fuer Impressum und Datenschutzerklaerung der Portfolio-Website von Chingis Zwecker E.",
+          "Gebündelte Seite für Impressum und Datenschutzerklärung der Portfolio-Website von Chingis Zwecker E.",
       },
     },
     impressum: {
@@ -83,7 +83,7 @@ export const seoConfig = {
       de: {
         title: "Impressum | Chingis Zwecker B.E. - Anbieterkennzeichnung",
         description:
-          "Impressum und Anbieterkennzeichnung fuer die beruflich ausgerichtete Portfolio-Website von Chingis Zwecker E. nach deutschen Informationspflichten.",
+          "Impressum und Anbieterkennzeichnung für die beruflich ausgerichtete Portfolio-Website von Chingis Zwecker E. nach deutschen Informationspflichten.",
       },
     },
     privacy: {
@@ -96,7 +96,7 @@ export const seoConfig = {
       de: {
         title: "Datenschutz | Chingis Zwecker B.E.",
         description:
-          "Datenschutzerklaerung fuer die Portfolio-Website von Chingis Zwecker E. mit Hinweisen zu Vercel-Hosting, Sprachspeicher im Browser und dem optionalen EmailJS-Kontaktformular.",
+          "Datenschutzerklärung für die Portfolio-Website von Chingis Zwecker E. mit Hinweisen zu Vercel-Hosting, Sprachspeicher im Browser und dem optionalen EmailJS-Kontaktformular.",
       },
     },
   },
