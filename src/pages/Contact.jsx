@@ -245,8 +245,9 @@ const Contact = () => {
               className="text-sky-700 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-sky-900"
               to="/rechtliches#datenschutz"
             >
-              {t('privacy')}
+              {t('contact_privacy_link_text')}
             </Link>
+            {t('contact_privacy_suffix')}
           </p>
         </form>
       </div>

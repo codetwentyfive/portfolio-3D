@@ -44,7 +44,7 @@ export const seoConfig = {
       de: {
         title: "Projekte | Chingis Zwecker E. — Echte Arbeit, echte Ergebnisse",
         description:
-          "E-Commerce-Plattformen, Firmenwebsites, interaktive 3D-Erlebnisse, KI-Agentensysteme und mehr. Jedes Projekt loest ein echtes Problem — vom ersten Konzept bis zum Produktiv-Deploy.",
+          "E-Commerce-Plattformen, Firmenwebsites, interaktive 3D-Erlebnisse, KI-Agentensysteme und mehr. Jedes Projekt löst ein echtes Problem — vom ersten Konzept bis zum Produktiv-Deploy.",
       },
     },
     contact: {
