@@ -15,6 +15,7 @@ const MESSAGE_MIN_LENGTH = 10;
 const MESSAGE_MAX_LENGTH = 2000;
 const SUBMIT_COOLDOWN_MS = 30000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTACT_API_ENDPOINT = import.meta.env.VITE_APP_CONTACT_API_URL || "/api/contact";
 
 const Contact = () => {
   const lastSubmittedAtRef = useRef(0);
@@ -84,7 +85,7 @@ const Contact = () => {
     lastSubmittedAtRef.current = Date.now();
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(CONTACT_API_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +94,14 @@ const Contact = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Contact request failed");
+        const errorPayload = await response.json().catch(() => ({}));
+        const errorMessage =
+          response.status === 429
+            ? t("contact_rate_limit_error")
+            : response.status === 400
+              ? t("contact_validation_error")
+              : errorPayload?.error || t("contact_error_message");
+        throw new Error(errorMessage);
       }
 
       setIsLoading(false);
@@ -109,12 +117,12 @@ const Contact = () => {
         setCurrentAnimation("idle");
         setForm(EMPTY_FORM);
       }, 3000);
-    } catch {
+    } catch (error) {
       setIsLoading(false);
       setCurrentAnimation("idle");
       showAlert({
         show: true,
-        text: t('contact_error_message'),
+        text: error?.message || t('contact_error_message'),
         type: "danger",
       });
     }
