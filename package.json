@@ -11,12 +11,12 @@
     "optimize-textures": "node scripts/optimize-textures.js"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.3.3",
     "@react-spring/three": "^9.7.3",
     "@react-three/drei": "^9.101.0",
     "@react-three/fiber": "^8.15.19",
     "i18next": "^25.8.18",
     "motion": "^12.36.0",
+    "nodemailer": "^8.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^3.0.0",

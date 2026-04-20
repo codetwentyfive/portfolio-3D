@@ -1,5 +1,4 @@
 import { Suspense, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
 import { Canvas } from "@react-three/fiber";
 import Fox from "../models/Fox";
 import Loader from "../components/Loader";
@@ -56,7 +55,7 @@ const Contact = () => {
     return null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const sanitizedForm = {
       name: form.name.trim(),
@@ -84,43 +83,41 @@ const Contact = () => {
     setCurrentAnimation("hit");
     lastSubmittedAtRef.current = Date.now();
 
-    emailjs
-      .send(
-        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
-        {
-          from_name: sanitizedForm.name,
-          to_name: "Chingis",
-          from_email: sanitizedForm.email,
-          to_email: "chingisenkhbaatar@gmail.com",
-          message: `Email: ${sanitizedForm.email}\n\nMessage: ${sanitizedForm.message}`,
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
-      )
-      .then(() => {
-        setIsLoading(false);
-        showAlert({
-          show: true,
-          text: t('contact_success_message'),
-          type: "success",
-        });
-        setForm(EMPTY_FORM);
-
-        setTimeout(() => {
-          hideAlert();
-          setCurrentAnimation("idle");
-          setForm(EMPTY_FORM);
-        }, 3000);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        setCurrentAnimation("idle");
-        showAlert({
-          show: true,
-          text: t('contact_error_message'),
-          type: "danger",
-        });
+        body: JSON.stringify(sanitizedForm),
       });
+
+      if (!response.ok) {
+        throw new Error("Contact request failed");
+      }
+
+      setIsLoading(false);
+      showAlert({
+        show: true,
+        text: t('contact_success_message'),
+        type: "success",
+      });
+      setForm(EMPTY_FORM);
+
+      setTimeout(() => {
+        hideAlert();
+        setCurrentAnimation("idle");
+        setForm(EMPTY_FORM);
+      }, 3000);
+    } catch {
+      setIsLoading(false);
+      setCurrentAnimation("idle");
+      showAlert({
+        show: true,
+        text: t('contact_error_message'),
+        type: "danger",
+      });
+    }
   };
 
   const handleFocus = () => {
