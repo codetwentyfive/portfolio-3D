@@ -104,6 +104,16 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ ok: true });
   } catch (error) {
-    return res.status(500).json({ ok: false, error: "Failed to send email" });
+    console.error("[contact] sendMail failed", {
+      code: error?.code,
+      command: error?.command,
+      responseCode: error?.responseCode,
+      message: error?.message,
+    });
+    return res.status(500).json({
+      ok: false,
+      error: "Failed to send email",
+      code: error?.code || "UNKNOWN",
+    });
   }
 }
