@@ -95,7 +95,7 @@ const Contact = () => {
           to_email: "chingisenkhbaatar@gmail.com",
           message: `Email: ${sanitizedForm.email}\n\nMessage: ${sanitizedForm.message}`,
         },
-        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+        { publicKey: import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY }
       )
       .then(() => {
         setIsLoading(false);
