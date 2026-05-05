@@ -41,9 +41,11 @@
   "contact_message_placeholder": "Write your message here...",
   "contact_sending": "Sending...",
   "contact_send_button": "Send Message",
-  "contact_privacy_notice": "If you send the form, your details will be processed according to the",
+  "contact_privacy_notice": "By submitting this form, your data will be processed in accordance with our",
+  "contact_privacy_link_text": "privacy policy",
+  "contact_privacy_suffix": ".",
   "contact_success_message": "Message sent successfully!",
-  "contact_error_message": "I didn't receive your message",
+  "contact_error_message": "I didn't receive your message.",
   "contact_validation_error": "Please check your input and try again.",
   "contact_rate_limit_error": "Please wait a moment before sending another message.",
   "hint_drag_rotate": "Drag to rotate & explore"

@@ -1,5 +1,4 @@
 import { Suspense, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
 import { Canvas } from "@react-three/fiber";
 import Fox from "../models/Fox";
 import Loader from "../components/Loader";
@@ -16,6 +15,7 @@ const MESSAGE_MIN_LENGTH = 10;
 const MESSAGE_MAX_LENGTH = 2000;
 const SUBMIT_COOLDOWN_MS = 30000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTACT_API_ENDPOINT = import.meta.env.VITE_APP_CONTACT_API_URL || "/api/contact";
 
 const Contact = () => {
   const lastSubmittedAtRef = useRef(0);
@@ -56,7 +56,7 @@ const Contact = () => {
     return null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const sanitizedForm = {
       name: form.name.trim(),
@@ -106,21 +106,20 @@ const Contact = () => {
         });
         setForm(EMPTY_FORM);
 
-        setTimeout(() => {
-          hideAlert();
-          setCurrentAnimation("idle");
-          setForm(EMPTY_FORM);
-        }, 3000);
-      })
-      .catch(() => {
-        setIsLoading(false);
+      setTimeout(() => {
+        hideAlert();
         setCurrentAnimation("idle");
-        showAlert({
-          show: true,
-          text: t('contact_error_message'),
-          type: "danger",
-        });
+        setForm(EMPTY_FORM);
+      }, 3000);
+    } catch (error) {
+      setIsLoading(false);
+      setCurrentAnimation("idle");
+      showAlert({
+        show: true,
+        text: error?.message || t('contact_error_message'),
+        type: "danger",
       });
+    }
   };
 
   const handleFocus = () => {
@@ -245,8 +244,9 @@ const Contact = () => {
               className="text-sky-700 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-sky-900"
               to="/rechtliches#datenschutz"
             >
-              {t('privacy')}
+              {t('contact_privacy_link_text')}
             </Link>
+            {t('contact_privacy_suffix')}
           </p>
         </form>
       </div>
