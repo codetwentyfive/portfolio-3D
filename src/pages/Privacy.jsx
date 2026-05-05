@@ -10,7 +10,7 @@ const pageCopy = {
     intro:
       "Diese Datenschutzerklärung gilt für diese Website unter " +
       legalConfig.operator.website +
-      ". Sie ist auf die aktuell eingesetzte technische Konfiguration zugeschnitten: Hosting über Vercel, keine eingebundene Web-Analytics, Speicherung der Sprachwahl im Local Storage und eine freiwillige Kontaktaufnahme über das Formular mit EmailJS.",
+      ". Sie ist auf die aktuell eingesetzte technische Konfiguration zugeschnitten: Hosting über Vercel, keine eingebundene Web-Analytics, Speicherung der Sprachwahl im Local Storage und eine freiwillige Kontaktaufnahme über das Formular, das über eine eigene Serverless-Funktion auf Vercel verarbeitet und per SMTP an das E-Mail-Postfach der*des Verantwortlichen zugestellt wird.",
     updatedLabel: "Stand",
     sections: {
       controller: "Verantwortlicher",
@@ -18,7 +18,7 @@ const pageCopy = {
       cookies: "Cookies, Local Storage und Einwilligungen",
       soundcloud: "Audio-Player über SoundCloud",
       language: "Sprachspeicher im Browser",
-      contact: "Kontaktformular mit EmailJS",
+      contact: "Kontaktformular",
       retention: "Speicherdauer",
       rights: "Ihre Rechte",
     },
@@ -70,20 +70,19 @@ const pageCopy = {
     contactPurpose:
       "Bearbeitung und Beantwortung Ihrer Anfrage.",
     contactData:
-      "Die von Ihnen eingegebenen Angaben aus dem Formular, insbesondere Name, E-Mail-Adresse und Nachricht.",
+      "Die von Ihnen eingegebenen Angaben aus dem Formular, insbesondere Name, E-Mail-Adresse und Nachricht. Zur Vermeidung von Missbrauch und Spam werden zusätzlich technische Angaben des Aufrufs (insbesondere IP-Adresse und User-Agent) für etwa 30 Sekunden im Arbeitsspeicher der Serverless-Funktion verarbeitet (Rate-Limit) und anschließend nicht weiter gespeichert.",
     contactBasis:
-      "Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf eine vorvertragliche Kommunikation gerichtet ist, im Übrigen Art. 6 Abs. 1 lit. f DSGVO.",
+      "Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf eine vorvertragliche Kommunikation gerichtet ist, im Übrigen Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse umfasst die Beantwortung Ihrer Anfrage sowie den Schutz des Formulars vor automatisiertem Missbrauch.",
     contactRecipients:
-      "EmailJS Pte. Ltd. für die technische Übermittlung der Formularnachricht sowie der von Ihnen gewählte E-Mail-Dienst auf Empfängerseite.",
+      "Die Nachricht wird durch eine eigene Serverless-Funktion auf der Hosting-Plattform Vercel verarbeitet (siehe Abschnitt „Hosting über Vercel“) und anschließend per SMTP an das im Impressum genannte E-Mail-Postfach übermittelt. Empfänger ist insoweit ausschließlich die*der Verantwortliche; eine Weitergabe an EmailJS oder vergleichbare Dritte erfolgt nicht mehr.",
     contactTransfer:
-      "Nach der aktuellen EmailJS Privacy Policy werden Daten auf Servern in den USA verarbeitet; für Übermittlungen aus Europa verweist EmailJS auf Angemessenheitsbeschlüsse oder Standardvertragsklauseln.",
+      "Eine Übermittlung in Drittländer findet durch die Verarbeitung im Rahmen dieses Formulars als solche nicht statt. Etwaige Drittlandbezüge können sich nur aus dem von der*dem Verantwortlichen genutzten E-Mail-Anbieter ergeben.",
     retentionText:
       "Local-Storage-Daten zur Sprache bleiben gespeichert, bis Sie sie selbst löschen oder ändern. Nachrichten aus dem Kontaktformular werden nur so lange aufbewahrt, wie dies für die Bearbeitung der Anfrage erforderlich ist und keine gesetzlichen Aufbewahrungspflichten oder berechtigten Interessen entgegenstehen.",
     rightsText:
       "Sie haben nach Maßgabe der DSGVO insbesondere das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen. Sofern eine Verarbeitung auf Ihrer Einwilligung beruhen sollte, können Sie diese jederzeit mit Wirkung für die Zukunft widerrufen. Zudem haben Sie das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren.",
     impressumLink: "Zum Impressum",
     vercelLink: "Vercel Privacy Policy",
-    emailjsLink: "EmailJS Privacy Policy",
     soundcloudLink: "SoundCloud Privacy Policy",
   },
   en: {
@@ -92,7 +91,7 @@ const pageCopy = {
     intro:
       "This privacy policy applies to this website at " +
       legalConfig.operator.website +
-      ". It is tailored to the site's current setup: hosting on Vercel, no embedded web analytics, storage of the language preference in local storage, and an optional contact form powered by EmailJS.",
+      ". It is tailored to the site's current setup: hosting on Vercel, no embedded web analytics, storage of the language preference in local storage, and an optional contact form that is processed by a first-party serverless function on Vercel and delivered via SMTP to the controller's mailbox.",
     updatedLabel: "Last reviewed",
     sections: {
       controller: "Controller",
@@ -100,7 +99,7 @@ const pageCopy = {
       cookies: "Cookies, local storage, and consent",
       soundcloud: "Audio player via SoundCloud",
       language: "Language preference in the browser",
-      contact: "Contact form via EmailJS",
+      contact: "Contact form",
       retention: "Storage duration",
       rights: "Your rights",
     },
@@ -152,20 +151,19 @@ const pageCopy = {
     contactPurpose:
       "Handling and responding to your inquiry.",
     contactData:
-      "The information you enter into the form, especially name, email address, and message.",
+      "The information you enter into the form, especially name, email address, and message. To prevent abuse and spam, technical request metadata (in particular IP address and user-agent) is additionally processed in the serverless function's memory for roughly 30 seconds (rate limit) and is not stored thereafter.",
     contactBasis:
-      "Art. 6(1)(b) GDPR where your request concerns pre-contractual communication; otherwise Art. 6(1)(f) GDPR.",
+      "Art. 6(1)(b) GDPR where your request concerns pre-contractual communication; otherwise Art. 6(1)(f) GDPR. The legitimate interest covers responding to your inquiry and protecting the form against automated abuse.",
     contactRecipients:
-      "EmailJS Pte. Ltd. for the technical transmission of the form message and the email provider used on the recipient side.",
+      "The message is processed by a first-party serverless function on the Vercel hosting platform (see the \"Hosting via Vercel\" section) and then delivered via SMTP to the mailbox listed in the Impressum. The recipient is exclusively the controller; the message is no longer forwarded to EmailJS or comparable third parties.",
     contactTransfer:
-      "According to the current EmailJS Privacy Policy, data is processed on servers in the United States; for transfers from Europe, EmailJS refers to adequacy decisions or Standard Contractual Clauses.",
+      "The form processing itself does not entail a transfer to third countries. Any third-country implications can only arise from the email provider used by the controller to receive the message.",
     retentionText:
       "Language local-storage data remains until you delete or change it yourself. Contact-form messages are retained only as long as needed to handle the request unless statutory retention duties or overriding legitimate interests require longer storage.",
     rightsText:
       "Under the GDPR, you generally have the right to access, rectification, erasure, restriction of processing, data portability, and objection to processing based on legitimate interests. If processing is based on consent, you may withdraw that consent at any time for the future. You also have the right to lodge a complaint with a supervisory authority.",
     impressumLink: "Open Impressum",
     vercelLink: "Vercel Privacy Policy",
-    emailjsLink: "EmailJS Privacy Policy",
     soundcloudLink: "SoundCloud Privacy Policy",
   },
 };
@@ -317,7 +315,6 @@ const Privacy = ({ embedded = false, impressumHref = "/impressum" }) => {
 
         <SectionCard title={copy.sections.contact}>
           <dl>
-            <InfoRow label={copy.labels.provider}>EmailJS Pte. Ltd.</InfoRow>
             <InfoRow label={copy.labels.purpose}>{copy.contactPurpose}</InfoRow>
             <InfoRow label={copy.labels.data}>{copy.contactData}</InfoRow>
             <InfoRow label={copy.labels.legalBasis}>{copy.contactBasis}</InfoRow>
@@ -325,14 +322,6 @@ const Privacy = ({ embedded = false, impressumHref = "/impressum" }) => {
               <div>
                 <p>{copy.contactRecipients}</p>
                 <p className="mt-2">{copy.contactTransfer}</p>
-                <a
-                  className="mt-2 inline-block text-sky-700 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-sky-900"
-                  href="https://www.emailjs.com/legal/privacy-policy/"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {copy.emailjsLink}
-                </a>
               </div>
             </InfoRow>
           </dl>
