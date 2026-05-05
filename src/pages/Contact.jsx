@@ -84,27 +84,30 @@ const Contact = () => {
     setCurrentAnimation("hit");
     lastSubmittedAtRef.current = Date.now();
 
-    emailjs
-      .send(
-        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
-        {
-          from_name: sanitizedForm.name,
-          to_name: "Chingis",
-          from_email: sanitizedForm.email,
-          to_email: "chingisenkhbaatar@gmail.com",
-          message: `Email: ${sanitizedForm.email}\n\nMessage: ${sanitizedForm.message}`,
-        },
-        { publicKey: import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY }
-      )
-      .then(() => {
-        setIsLoading(false);
-        showAlert({
-          show: true,
-          text: t('contact_success_message'),
-          type: "success",
-        });
-        setForm(EMPTY_FORM);
+    try {
+      const response = await fetch(CONTACT_API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sanitizedForm),
+      });
+
+      if (!response.ok) {
+        const errorKey =
+          response.status === 429
+            ? "contact_rate_limit_error"
+            : response.status === 400
+              ? "contact_validation_error"
+              : "contact_error_message";
+        throw new Error(errorKey);
+      }
+
+      setIsLoading(false);
+      showAlert({
+        show: true,
+        text: t("contact_success_message"),
+        type: "success",
+      });
+      setForm(EMPTY_FORM);
 
       setTimeout(() => {
         hideAlert();
@@ -116,7 +119,7 @@ const Contact = () => {
       setCurrentAnimation("idle");
       showAlert({
         show: true,
-        text: error?.message || t('contact_error_message'),
+        text: t(error?.message || "contact_error_message"),
         type: "danger",
       });
     }
