@@ -1,4 +1,3 @@
-/* eslint-env node */
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -11,11 +10,10 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     build: {
       target: "esnext",
-      minify: "esbuild",
+      minify: "oxc",
       cssMinify: true,
       rollupOptions: {
         output: {
-          manualChunks: undefined, // Disable chunk splitting
           entryFileNames: "assets/[name].[hash].js",
           assetFileNames: "assets/[name].[hash].[ext]",
         },

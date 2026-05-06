@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { seoConfig } from "../seo/config";
 import {
@@ -12,6 +12,10 @@ import {
 const SEO = ({ page = "home", globalSchemas = false }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language || "en";
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const pageConfig = seoConfig.pages[page];
   if (!pageConfig) return null;
@@ -30,13 +34,11 @@ const SEO = ({ page = "home", globalSchemas = false }) => {
   if (breadcrumbSchema) schemas.push(breadcrumbSchema);
 
   return (
-    <Helmet>
-      <html lang={lang} />
+    <>
       <title>{langConfig.title}</title>
       <meta name="description" content={langConfig.description} />
       <link rel="canonical" href={canonicalUrl} />
 
-      {/* OpenGraph */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:title" content={langConfig.title} />
@@ -51,13 +53,11 @@ const SEO = ({ page = "home", globalSchemas = false }) => {
         content={lang === "de" ? "en_US" : "de_DE"}
       />
 
-      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={langConfig.title} />
       <meta name="twitter:description" content={langConfig.description} />
       <meta name="twitter:image" content={seoConfig.ogImage} />
 
-      {/* Additional SEO */}
       <meta name="author" content="Chingis Zwecker E." />
       <meta name="robots" content="index, follow" />
       <meta
@@ -71,13 +71,14 @@ const SEO = ({ page = "home", globalSchemas = false }) => {
       <meta name="geo.region" content="DE-BW" />
       <meta name="geo.placename" content="Karlsruhe" />
 
-      {/* JSON-LD Structured Data */}
       {schemas.map((schema, i) => (
-        <script key={i} type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
       ))}
-    </Helmet>
+    </>
   );
 };
 

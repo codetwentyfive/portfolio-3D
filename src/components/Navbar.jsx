@@ -16,7 +16,7 @@ const Navbar = () => {
         className="w-10 h-10 rounded-lg bg-white items-center justify-center flex font-bold shadow-md"
         aria-label="Home"
       >
-        <p className="gradient_text font-poppins text-sm tracking-[-0.05em]">Chi</p>
+        <p className="gradient_text font-poppins text-sm tracking-tighter">Chi</p>
       </NavLink>
       <button
         className="md:hidden bg-white p-2 rounded-lg w-10 h-10 z-50 flex items-center justify-center"

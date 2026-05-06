@@ -21,7 +21,7 @@ const About = () => {
       <SEO page="about" />
       <h1 className="head-text">
         {t("greeting_about")}{" "}
-        <span className="gradient_text font-semibold drop-shadow">Chingis</span>
+        <span className="gradient_text font-semibold drop-shadow-sm">Chingis</span>
       </h1>
 
       <div className="mt-5 flex flex-col gap-3 text-slate-500">

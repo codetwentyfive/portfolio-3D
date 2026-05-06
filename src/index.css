@@ -1,160 +1,230 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --blue-rgb: 237 245 255;
-  --green-rgb: 125 161 35;
+@theme {
+  --color-gray-200: #d5dae1;
+
+  --color-black-500: #1d2235;
+  --color-black: #000;
+
+  --color-blue-500: #2b77e7;
+
+  --font-worksans: Manrope, sans-serif;
+  --font-poppins: Syne, sans-serif;
+
+  --shadow-card: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+
+  --animate-gradient: gradient 15s ease infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-float: float 3s ease-in-out infinite;
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px) translateX(-50%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) translateX(-50%);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) translateX(-50%);
+    }
+    50% {
+      transform: translateY(-10px) translateX(-50%);
+    }
+  }
 }
 
-body {
-  font-family: "Manrope", sans-serif;
-  background:
-    radial-gradient(circle at top, #eff6ff 0%, #f8fafc 45%, #ffffff 100%);
-  color: #0f172a;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-body:has(.card[data-color="blue"]:hover) {
-  background-color: rgb(var(--blue-rgb) / 25%);
+@utility max-container {
+  @apply max-w-5xl mx-auto sm:p-16 pb-12 pt-[126px]! px-8 min-h-screen;
 }
 
-body:has(.card[data-color="green"]:hover) {
-  background-color: rgb(var(--green-rgb) / 25%);
+@utility head-text {
+  @apply sm:text-5xl text-3xl font-semibold sm:leading-[1.02] font-poppins text-slate-900 tracking-tighter;
 }
 
-@layer utilities {
-  .max-container {
-    @apply max-w-5xl mx-auto sm:p-16 pb-12 !pt-[126px] px-8 min-h-screen;
-  }
+@utility subhead-text {
+  @apply font-medium sm:text-3xl text-xl relative font-poppins text-slate-900 tracking-[-0.045em];
+}
 
-  .head-text {
-    @apply sm:text-5xl text-3xl font-semibold sm:leading-[1.02] font-poppins text-slate-900 tracking-[-0.05em];
-  }
+@utility animated-gradient-text {
+  @apply bg-linear-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient;
+}
 
-  .subhead-text {
-    @apply font-medium sm:text-3xl text-xl relative font-poppins text-slate-900 tracking-[-0.045em];
-  }
+@utility blue-gradient_text {
+  @apply bg-linear-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient;
+}
 
-  .animated-gradient-text {
-    @apply bg-gradient-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
-  }
+@utility gradient_text {
+  @apply bg-linear-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient;
+}
 
-  .blue-gradient_text {
-    @apply bg-gradient-to-r from-[#00c6ff] via-[#0072ff] to-[#00c6ff] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
-  }
+@utility input {
+  @apply bg-white border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-2.5 font-normal shadow-card;
+}
 
-  .gradient_text {
-    @apply bg-gradient-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient;
-  }
+@utility textarea {
+  @apply block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-200 focus:ring-blue-500 focus:border-blue-500 mt-2.5 font-normal shadow-card;
+}
 
-  .input {
-    @apply bg-white border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-2.5 font-normal shadow-card;
-  }
+@utility btn {
+  @apply text-white bg-linear-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-size-[200%_auto] animate-gradient focus:ring-4 focus:outline-hidden focus:ring-blue-300 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center tracking-[0.01em];
+}
 
-  .textarea {
-    @apply block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-200 focus:ring-blue-500 focus:border-blue-500 mt-2.5 font-normal shadow-card;
-  }
+@utility nav-link {
+  @apply font-worksans text-[15px] font-semibold tracking-[-0.02em] text-slate-900 transition-colors;
+}
 
-  .btn {
-    @apply text-white bg-gradient-to-r from-[#2193b0] via-[#6dd5ed] to-[#2193b0] bg-[length:200%_auto] animate-gradient focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center tracking-[0.01em];
-  }
+@utility hero-greeting {
+  @apply font-poppins text-[1.05rem] leading-[1.35] tracking-[-0.035em] sm:text-[1.2rem] sm:leading-[1.3];
+}
 
-  .nav-link {
-    @apply font-worksans text-[15px] font-semibold tracking-[-0.02em] text-slate-900 transition-colors;
-  }
+@utility header {
+  @apply flex justify-between items-center sm:px-16 px-8 py-4 max-w-5xl mx-auto absolute top-0 bg-transparent z-50 right-0 left-0;
+}
 
-  .hero-greeting {
-    @apply font-poppins text-[1.05rem] leading-[1.35] tracking-[-0.035em] sm:text-[1.2rem] sm:leading-[1.3];
-  }
+@utility footer {
+  @apply w-full px-0 pb-0 flex flex-col overflow-hidden;
+}
 
-  .header {
-    @apply flex justify-between items-center sm:px-16 px-8 py-4 max-w-5xl mx-auto absolute top-0 bg-transparent z-50 right-0 left-0;
-  }
+@utility footer-default-bg {
+  background: linear-gradient(
+    135deg,
+    #f8fbff 0%,
+    #eef6ff 30%,
+    #f4fbf7 65%,
+    #fff7ed 100%
+  );
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
 
-  .footer {
-    @apply w-full px-0 pb-0 flex flex-col overflow-hidden;
-  }
+@utility footer-contact-bg {
+  background: linear-gradient(135deg, #f8fbff 0%, #eff6ff 55%, #ecfeff 100%);
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
 
-  .footer-default-bg {
-    background: linear-gradient(
-      135deg,
-      #f8fbff 0%,
-      #eef6ff 30%,
-      #f4fbf7 65%,
-      #fff7ed 100%
-    );
-    border-top: 1px solid rgba(226, 232, 240, 0.9);
-  }
+@utility footer-animated {
+  @apply relative w-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl px-8 py-6 text-slate-900;
+}
 
-  .footer-contact-bg {
-    background: linear-gradient(135deg, #f8fbff 0%, #eff6ff 55%, #ecfeff 100%);
-    border-top: 1px solid rgba(226, 232, 240, 0.9);
-  }
+@utility footer-container {
+  @apply flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-16;
+}
 
-  .footer-animated {
-    @apply relative w-full overflow-hidden rounded-t-2xl sm:rounded-t-3xl px-8 py-6 text-slate-900;
-  }
+@utility animated-gradient-bg {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    135deg,
+    #fdf2f8 0%,
+    #eff6ff 30%,
+    #f0fdf4 65%,
+    #fff7ed 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 18px 45px rgba(148, 163, 184, 0.18);
 
-  .footer-container {
-    @apply flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-16;
-  }
-
-  .animated-gradient-bg {
-    @apply relative overflow-hidden;
-    background: linear-gradient(
-      135deg,
-      #fdf2f8 0%,
-      #eff6ff 30%,
-      #f0fdf4 65%,
-      #fff7ed 100%
-    );
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
-    border-radius: 20px;
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 18px 45px rgba(148, 163, 184, 0.18);
-  }
-
-  .animated-gradient-bg::before {
+  &::before {
     content: '';
     position: absolute;
     inset: 0;
     background: inherit;
     opacity: 0.9;
   }
+}
 
-  .info-box {
-    @apply mx-5 relative flex text-slate-900 flex-col gap-3 max-w-2xl pt-4 pb-12 px-8 z-30;
-    background: linear-gradient(
-      135deg,
-      #dbeafe 0%,
-      #fdf2f8 28%,
-      #fef3c7 58%,
-      #dcfce7 100%
+@utility info-box {
+  @apply mx-5 relative flex text-slate-900 flex-col gap-3 max-w-2xl pt-4 pb-12 px-8 z-30;
+  background: linear-gradient(
+    135deg,
+    #dbeafe 0%,
+    #fdf2f8 28%,
+    #fef3c7 58%,
+    #dcfce7 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient 12s ease infinite;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 18px 45px rgba(148, 163, 184, 0.16);
+}
+
+@utility neo-btn {
+  @apply py-3 px-6 rounded-lg text-blue-500 text-center font-semibold sm:w-1/2 w-[90%] -bottom-5 absolute mx-auto right-0 left-0 flex justify-center items-center gap-3;
+}
+
+@utility cta {
+  @apply w-full flex items-center md:flex-row flex-col sm:mt-16 mt-8 gap-7;
+}
+
+@utility cta-text {
+  @apply text-slate-900 font-extrabold flex-1 text-3xl max-md:text-center;
+}
+
+@layer utilities {
+  :root {
+    --blue-rgb: 237 245 255;
+    --green-rgb: 125 161 35;
+  }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: radial-gradient(
+      circle at top,
+      #eff6ff 0%,
+      #f8fafc 45%,
+      #ffffff 100%
     );
-    background-size: 400% 400%;
-    animation: gradient 12s ease infinite;
-    border-radius: 20px;
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 18px 45px rgba(148, 163, 184, 0.16);
+    color: #0f172a;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  .neo-btn {
-    @apply py-3 px-6 rounded-lg text-blue-500 text-center font-semibold sm:w-1/2 w-[90%] -bottom-5 absolute mx-auto right-0 left-0 flex justify-center items-center gap-3;
+  body:has(.card[data-color='blue']:hover) {
+    background-color: rgb(var(--blue-rgb) / 25%);
   }
 
-  .cta {
-    @apply w-full flex items-center md:flex-row flex-col sm:mt-16 mt-8 gap-7;
-  }
-
-  .cta-text {
-    @apply text-slate-900 font-extrabold flex-1 text-3xl max-md:text-center;
+  body:has(.card[data-color='green']:hover) {
+    background-color: rgb(var(--green-rgb) / 25%);
   }
 }
 

@@ -14,7 +14,7 @@ const Alert = ({ type, text }) => {
           type === "danger"
             ? "border border-red-200 bg-red-50 text-red-800"
             : "border border-blue-200 bg-blue-50 text-blue-800"
-        } p-2 leading-none shadow-sm lg:rounded-full flex lg:inline-flex items-center`}
+        } p-2 leading-none shadow-xs lg:rounded-full flex lg:inline-flex items-center`}
         role="alert"
         aria-atomic="true"
       >

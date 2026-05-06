@@ -174,14 +174,14 @@ const formatReviewDate = (lang) =>
   }).format(new Date(legalConfig.lastReviewed));
 
 const SectionCard = ({ title, children }) => (
-  <article className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur">
+  <article className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xs backdrop-blur-sm">
     <h2 className="text-2xl font-semibold text-slate-900">{title}</h2>
     <div className="mt-5">{children}</div>
   </article>
 );
 
 const InfoRow = ({ label, children }) => (
-  <div className="grid gap-2 border-t border-slate-200 py-4 first:border-t-0 first:pt-0 md:grid-cols-[220px,1fr]">
+  <div className="grid gap-2 border-t border-slate-200 py-4 first:border-t-0 first:pt-0 md:grid-cols-[220px_1fr]">
     <dt className="font-semibold text-slate-900">{label}</dt>
     <dd className="text-slate-600">{children}</dd>
   </div>

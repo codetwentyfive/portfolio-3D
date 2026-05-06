@@ -1,4 +1,3 @@
-/* eslint-env node */
 import nodemailer from "nodemailer";
 
 const NAME_MAX_LENGTH = 100;

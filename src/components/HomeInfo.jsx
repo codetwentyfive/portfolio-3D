@@ -11,7 +11,7 @@ const HintBox = () => {
       role="status"
       aria-live="polite"
     >
-      <div className="bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2.5 animate-float">
+      <div className="bg-white/95 backdrop-blur-xs px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2.5 animate-float">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -19,7 +19,7 @@ const HintBox = () => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-4 h-4 text-blue-500 flex-shrink-0"
+          className="w-4 h-4 text-blue-500 shrink-0"
           aria-hidden="true"
         >
           <path d="M21 12a9 9 0 11-6.22-8.56" />

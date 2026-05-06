@@ -863,7 +863,7 @@ const AudioPlayer = () => {
       }${nearFooter ? ' player-hidden' : hasAnimated.current ? ' player-visible' : ''}`}
     >
       <div
-        className={`relative h-full w-full overflow-hidden bg-white/95 backdrop-blur-sm shadow-md transition-[border-radius] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)]${
+        className={`relative h-full w-full overflow-hidden bg-white/95 backdrop-blur-xs shadow-md transition-[border-radius] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)]${
           bounce ? ' animate-player-bounce' : ''
         }`}
         style={{ borderRadius: isExpanded ? '16px' : '9999px' }}
@@ -907,7 +907,7 @@ const AudioPlayer = () => {
         </button>
 
         {showConsentEmbed ? (
-          <div className="absolute inset-x-0 top-0 z-20 border-b border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+          <div className="absolute inset-x-0 top-0 z-20 border-b border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-xs">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-sm font-medium text-gray-800">Enable SoundCloud playback</p>
@@ -1041,10 +1041,10 @@ const AudioPlayer = () => {
                     onTouchEnd={handleSeek}
                   >
                     <div
-                      className="relative h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-500"
+                      className="relative h-full rounded-full bg-linear-to-r from-blue-400 to-blue-500"
                       style={{ width: `${Math.min(progress * 100, 100)}%` }}
                     >
-                      <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-blue-500 bg-white shadow-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100" />
+                      <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-blue-500 bg-white shadow-xs transition-opacity sm:opacity-0 sm:group-hover:opacity-100" />
                     </div>
                   </div>
                   <span className="w-7 select-none text-[10px] tabular-nums text-gray-400">

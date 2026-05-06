@@ -117,14 +117,14 @@ const renderAddressLines = (...lines) =>
   ));
 
 const InfoRow = ({ label, children }) => (
-  <div className="grid gap-2 border-t border-slate-200 py-4 first:border-t-0 first:pt-0 md:grid-cols-[220px,1fr]">
+  <div className="grid gap-2 border-t border-slate-200 py-4 first:border-t-0 first:pt-0 md:grid-cols-[220px_1fr]">
     <dt className="font-semibold text-slate-900">{label}</dt>
     <dd className="text-slate-600">{children}</dd>
   </div>
 );
 
 const SectionCard = ({ title, children, isDefinitionList = true }) => (
-  <article className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur">
+  <article className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xs backdrop-blur-sm">
     <h2 className="text-2xl font-semibold text-slate-900">{title}</h2>
     <div className="mt-5">{isDefinitionList ? <dl>{children}</dl> : children}</div>
   </article>
@@ -167,7 +167,7 @@ const Impressum = ({ embedded = false }) => {
       </div>
 
       {missingFields.length > 0 ? (
-        <div className="mt-8 rounded-3xl border border-amber-200 bg-amber-50 p-6 text-slate-700 shadow-sm">
+        <div className="mt-8 rounded-3xl border border-amber-200 bg-amber-50 p-6 text-slate-700 shadow-xs">
           <h2 className="text-xl font-semibold text-amber-900">
             {copy.missingTitle}
           </h2>

@@ -33,7 +33,7 @@ const Projects = () => {
       <SEO page="projects" />
       <h1 className="head-text">
         {t("project_header1")}{" "}
-        <span className="gradient_text font-semibold drop-shadow">
+        <span className="gradient_text font-semibold drop-shadow-sm">
           {t("project_header2")}
         </span>
       </h1>
