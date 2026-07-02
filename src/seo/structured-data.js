@@ -1,4 +1,4 @@
-import { seoConfig } from "./config";
+import { seoConfig } from "./config.js";
 
 const { siteUrl, siteName, ogImage } = seoConfig;
 
@@ -24,6 +24,7 @@ export const personSchema = {
   sameAs: [
     "https://github.com/codetwentyfive",
     "https://www.linkedin.com/in/chingis-zwecker/",
+    "https://chingis.shop",
   ],
   knowsAbout: [
     "Web Development",

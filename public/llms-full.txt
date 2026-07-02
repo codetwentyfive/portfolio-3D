@@ -13,7 +13,7 @@ His background combines a technical self-taught path through The Odin Project wi
 - Full name: Chingis Zwecker E.
 - Professional title: Full Stack Developer
 - Location: Karlsruhe, Baden-Württemberg, Germany
-- Email: chingiszwecker@gmail.com
+- Email: hello@chingis.dev
 - Website: https://chingis.dev
 - GitHub: https://github.com/codetwentyfive
 - LinkedIn: https://www.linkedin.com/in/chingis-zwecker/
@@ -175,4 +175,4 @@ Chingis is currently employed at beWirken while also taking freelance projects. 
 - Consulting engagements (web development, AI strategy, IT infrastructure)
 - Part-time or full-time positions (remote or Karlsruhe area)
 
-Best way to reach him: chingiszwecker@gmail.com or through the contact form at https://chingis.dev/contact
+Best way to reach him: hello@chingis.dev or through the contact form at https://chingis.dev/contact
