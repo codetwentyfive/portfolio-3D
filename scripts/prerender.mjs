@@ -143,7 +143,13 @@ for (const { out, key, url } of ROUTES) {
   }
 
   // --- body: inject crawlable content into #root ---
-  const content = `<div id="prerender-content" style="max-width:820px;margin:0 auto;padding:96px 24px;color:#e5e7eb;font-family:system-ui,sans-serif;line-height:1.6">${BODIES[key]()}
+  // Visually hidden (accessible sr-only clip pattern), NOT display:none — the
+  // text stays in the raw HTML for crawlers/AI bots (which read HTML, not CSS)
+  // and for screen readers, but never visibly "flashes" before the SPA mounts.
+  // React's createRoot() clears #root on mount, so this is gone for JS users.
+  const srOnly =
+    "position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:normal;border:0";
+  const content = `<div id="prerender-content" style="${srOnly}">${BODIES[key]()}
     </div>`;
   html = html.replace(
     /<div id="root">\s*<\/div>/,
