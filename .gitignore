@@ -9,6 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
+.next
+next-env.d.ts
 dist-ssr
 *.local
 .env 
@@ -25,3 +27,4 @@ dist-ssr
 CLAUDE.md
 PROJECT_OVERVIEW.md
 .vercel
+*.tsbuildinfo
