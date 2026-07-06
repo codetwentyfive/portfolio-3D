@@ -77,22 +77,24 @@ export default async function ProjectsPage({ params: { locale } }: Props) {
                 {getProjectDescription(project)}
               </p>
               <div className="flex flex-row justify-between">
-                <div className="mt-5 flex items-center gap-2 font-poppins">
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-blue-600"
-                  >
-                    Live Link
-                  </a>
+                {project.link && (
+                  <div className="mt-5 flex items-center gap-2 font-poppins">
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-blue-600"
+                    >
+                      Live Link
+                    </a>
 
-                  <img
-                    src={arrow.src}
-                    alt="arrow"
-                    className="w-4 h-4 object-contain"
-                  />
-                </div>
+                    <img
+                      src={arrow.src}
+                      alt="arrow"
+                      className="w-4 h-4 object-contain"
+                    />
+                  </div>
+                )}
                 {getProjectStatus(project) ? (
                   <div className="mt-5 flex items-center gap-2 font-poppins">
                     <span className="font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full text-sm">
