@@ -68,5 +68,7 @@
   "services_meta_title": "Services | Chingis Zwecker E.",
   "services_meta_description": "Freelance software engineering in Karlsruhe: web apps with Next.js, e-commerce and payments, legacy modernization, AI integration, hosting, and interactive 3D experiences.",
   "not_found_text": "This page does not exist — maybe the island rotated away.",
-  "not_found_home": "Back to the island"
+  "not_found_home": "Back to the island",
+  "services_process_heading": "How we'll work",
+  "services_process_heading_span": "together"
 }

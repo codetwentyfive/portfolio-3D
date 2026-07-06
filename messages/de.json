@@ -68,5 +68,7 @@
   "services_meta_title": "Leistungen | Chingis Zwecker E.",
   "services_meta_description": "Freelance-Softwareentwicklung in Karlsruhe: Web-Apps mit Next.js, E-Commerce und Payments, Legacy-Modernisierung, AI-Integration, Hosting und interaktive 3D-Erlebnisse.",
   "not_found_text": "Diese Seite gibt es nicht — vielleicht ist die Insel weitergedreht.",
-  "not_found_home": "Zurück zur Insel"
+  "not_found_home": "Zurück zur Insel",
+  "services_process_heading": "So arbeiten wir",
+  "services_process_heading_span": "zusammen"
 }

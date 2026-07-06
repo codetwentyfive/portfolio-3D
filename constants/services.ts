@@ -8,6 +8,59 @@ export interface ServiceItem {
   theme: string;
 }
 
+export interface ProcessStep {
+  key: string;
+  title: Record<Locale, string>;
+  description: Record<Locale, string>;
+}
+
+export const serviceProcess: ProcessStep[] = [
+  {
+    key: "intro",
+    title: {
+      en: "Intro call",
+      de: "Kennenlernen",
+    },
+    description: {
+      en: "A short, free first conversation: what do you need, what already exists, what is the goal?",
+      de: "Ein kurzes, kostenloses Erstgespräch: Was brauchst du, was gibt es schon, was ist das Ziel?",
+    },
+  },
+  {
+    key: "proposal",
+    title: {
+      en: "Proposal",
+      de: "Angebot",
+    },
+    description: {
+      en: "Clear scope with a fixed price or day rate. No surprises on the invoice.",
+      de: "Klarer Umfang mit Festpreis oder Tagessatz. Keine Überraschungen auf der Rechnung.",
+    },
+  },
+  {
+    key: "build",
+    title: {
+      en: "Build",
+      de: "Umsetzung",
+    },
+    description: {
+      en: "Short feedback loops with live previews you can click through while I work.",
+      de: "Kurze Feedback-Schleifen mit Live-Vorschauen, die du schon während der Umsetzung anklicken kannst.",
+    },
+  },
+  {
+    key: "care",
+    title: {
+      en: "After launch",
+      de: "Nach dem Launch",
+    },
+    description: {
+      en: "I stay reachable: maintenance, updates, and new features when you need them.",
+      de: "Ich bleibe erreichbar: Wartung, Updates und neue Features, wenn du sie brauchst.",
+    },
+  },
+];
+
 // Follows the existing constants pattern: per-locale objects, resolved in the page.
 export const services: ServiceItem[] = [
   {
