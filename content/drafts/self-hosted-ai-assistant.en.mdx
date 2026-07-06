@@ -1,0 +1,36 @@
+---
+title: "Anatomy of a self-hosted AI assistant"
+description: "What it actually takes to run your own AI assistant on your own hardware — the stack, the failure modes, and why privacy-sensitive work is worth the setup."
+date: "2026-07-06"
+tags: ["AI", "Self-Hosting", "Docker", "Ollama"]
+---
+
+Every AI assistant you use through a web interface has one property you can't change: your data lives on someone else's computer. For most things that's fine. For client data, contracts, or anything under NDA, it isn't. So I run my own assistant — on my own hardware, with local models for the sensitive parts. Here is what that actually looks like.
+
+## The stack
+
+**The gateway.** At the core sits an open-source agent gateway running in Docker. It manages agent sessions, tools, and scheduling. Docker isn't optional decoration here: it gives the whole system filesystem isolation, so an agent that executes code does it inside a container, not on my machine.
+
+**The interface.** Telegram. No custom frontend, no login page to maintain — a bot token and a chat window I already have on every device. Underrated pattern: the best UI for a personal assistant is the messenger you already use.
+
+**The models.** Two tiers. Cloud models handle tasks where quality matters more than privacy. Local models via Ollama handle everything sensitive — the gateway reaches them through `host.docker.internal`, so the container talks to the model server on the host. Nothing in that tier ever leaves the machine.
+
+**Scheduled agents.** A cron system inside the gateway runs agents on a schedule. Mine compiles a morning news briefing: it searches, reads, summarizes, and delivers to Telegram before I've made coffee.
+
+## The failure modes nobody tells you about
+
+Running this in production — even a production of one — teaches you things the README doesn't:
+
+**Two instances, one bot.** Run the gateway twice (say, one native install and one Docker container) and Telegram answers with a 409 conflict, because both instances fight over the same bot updates. Obvious in hindsight; confusing at 11 pm.
+
+**Stale in-memory state.** After switching between installs, the gateway held on to old device credentials in memory. The fix was a container restart — but the lesson is broader: any long-running agent system needs a clean story for credential rotation.
+
+**Sandboxing beats convenience.** The native (non-Docker) install couldn't spawn sandboxed processes on my setup. Instead of fighting it, I made Docker the default. When an AI agent can execute code, isolation is not a nice-to-have.
+
+**Context budgets are real budgets.** The news-briefing agent kept truncating its own research. Doubling its context allocation fixed it — but every token of context is latency and cost. Sizing context per agent, per task, is a genuine engineering decision, not a config afterthought.
+
+## Why this matters beyond my desk
+
+This is the same architecture I build for clients who want AI in their workflows without shipping their data to a third party: a gateway they control, models sized to the sensitivity of the data, tools behind explicit allowlists, and boring, observable infrastructure around all of it — Docker, cron, logs.
+
+Self-hosting AI isn't about distrusting cloud providers. It's about having the *option* — and knowing, for every piece of data, exactly which machine it lives on.
