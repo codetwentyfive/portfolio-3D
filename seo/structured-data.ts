@@ -27,6 +27,7 @@ export const personSchema: StructuredData = {
   sameAs: [
     "https://github.com/codetwentyfive",
     "https://www.linkedin.com/in/chingis-zwecker/",
+    "https://chingis.shop",
   ],
   knowsAbout: [
     "Web Development",

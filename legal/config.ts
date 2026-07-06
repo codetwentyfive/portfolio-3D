@@ -71,7 +71,7 @@ export interface LegalConfig {
 }
 
 export const legalConfig: LegalConfig = {
-  lastReviewed: "2026-03-28",
+  lastReviewed: "2026-07-06",
   operator: {
     name: "Chingis Zwecker",
     legalName: "Chingis B. Zwecker E.",

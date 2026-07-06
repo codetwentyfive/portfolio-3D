@@ -97,14 +97,13 @@ const ContactContent = () => {
       });
 
       if (!response.ok) {
-        const errorPayload = await response.json().catch(() => ({}));
-        const errorMessage =
+        const errorKey =
           response.status === 429
-            ? t("contact_rate_limit_error")
+            ? "contact_rate_limit_error"
             : response.status === 400
-              ? t("contact_validation_error")
-              : errorPayload?.error || t("contact_error_message");
-        throw new Error(errorMessage);
+              ? "contact_validation_error"
+              : "contact_error_message";
+        throw new Error(errorKey);
       }
 
       setIsLoading(false);
@@ -123,7 +122,7 @@ const ContactContent = () => {
       setIsLoading(false);
       setCurrentAnimation("idle");
       showAlert({
-        text: error instanceof Error ? error.message : t("contact_error_message"),
+        text: t(error instanceof Error ? error.message : "contact_error_message"),
         type: "danger",
       });
     }

@@ -105,7 +105,17 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ ok: false, error: "Failed to send email" }, { status: 500 });
+  } catch (error) {
+    const mailError = error as { code?: string; command?: string; responseCode?: number; message?: string };
+    console.error("[contact] sendMail failed", {
+      code: mailError?.code,
+      command: mailError?.command,
+      responseCode: mailError?.responseCode,
+      message: mailError?.message,
+    });
+    return NextResponse.json(
+      { ok: false, error: "Failed to send email", code: mailError?.code || "UNKNOWN" },
+      { status: 500 }
+    );
   }
 }
