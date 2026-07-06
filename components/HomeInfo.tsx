@@ -21,7 +21,7 @@ const HintBox = () => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-4 h-4 text-blue-500 flex-shrink-0"
+          className="w-4 h-4 text-blue-500 shrink-0"
           aria-hidden="true"
         >
           <path d="M21 12a9 9 0 11-6.22-8.56" />

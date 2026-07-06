@@ -8,7 +8,7 @@
 - Role: Full Stack Developer
 - Location: Karlsruhe, Baden-Württemberg, Germany
 - Website: https://chingis.dev
-- Email: chingiszwecker@gmail.com
+- Email: hello@chingis.dev
 - GitHub: https://github.com/codetwentyfive
 - LinkedIn: https://www.linkedin.com/in/chingis-zwecker/
 - Languages spoken: English, German, Mongolian
