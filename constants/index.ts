@@ -235,24 +235,24 @@ export const experiences: Experience[] = [
     },
     points: [
       {
-        en: "Development and programming for werkbank projects at beWirken",
-        de: "Programmierung in werkbank-Aufträgen für beWirken",
+        en: "Development and programming for werkbank client projects",
+        de: "Entwicklung und Programmierung in werkbank-Kund*innenprojekten",
       },
       {
-        en: "Regular updates and maintenance of beWirken's IT infrastructure",
-        de: "Regelmäßige Updates & Pflege der IT-Infrastruktur von beWirken",
+        en: "Responsible for beWirken's IT infrastructure: maintenance, updates, and security hardening",
+        de: "Verantwortlich für die IT-Infrastruktur von beWirken: Wartung, Updates und Security-Härtung",
       },
       {
-        en: "Consulting and sparring on IT infrastructure improvements and IT security",
-        de: "Beratung & Sparring zu Pflegemaßnahmen & Verbesserungen der IT-Infrastruktur & IT-Sicherheit",
+        en: "Consulting on IT architecture decisions and security improvements",
+        de: "Beratung zu IT-Architekturentscheidungen und Sicherheitsverbesserungen",
       },
       {
-        en: "Sparring and consulting for the media production team on external client projects",
-        de: "Sparring & Beratung für das Medienproduktionsteam für Kund*innenprojekte im Außen",
+        en: "AI strategy development and implementation across the organization",
+        de: "KI-Strategie und deren Umsetzung in der gesamten Organisation",
       },
       {
-        en: "AI strategy development and implementation at beWirken",
-        de: "KI Sparring, Strategie & Umsetzung bei beWirken",
+        en: "Technical sparring for the media production team on external client projects",
+        de: "Technisches Sparring für das Medienproduktionsteam bei externen Kund*innenprojekten",
       },
     ],
   },
@@ -330,57 +330,31 @@ export const experiences: Experience[] = [
   },
   {
     title: {
-      en: "Caretaker",
-      de: "Angehörigenpflege",
+      en: "Self-Taught Developer - Full Stack JavaScript",
+      de: "Autodidaktischer Entwickler - Full Stack JavaScript",
     },
     company_name: {
-      en: "Familiy",
-      de: "Familie",
-    },
-    icon: caretaker,
-    iconBg: "#2a3988",
-    date: {
-      en: "September 2022 - now",
-      de: "September 2022 - heute",
-    },
-    points: [
-      {
-        en: "Taking care of my father, who suffers from broken spine injuries, and assisting with both everyday tasks and managerial responsibilities.",
-        de: "Verwaltung der täglichen Angelegenheiten und des Wohlergehens meines pflegebedürftigen Vaters",
-      },
-    ],
-  },
-  {
-    title: {
-      en: "Student - Foundations, Full Stack Javascript",
-      de: "Student - Grundlagen, Full Stack JavaScript",
-    },
-    company_name: {
-      en: "The Odin Project & co.",
-      de: "The Odin-Projekt & Co.",
+      en: "The Odin Project & beyond",
+      de: "The Odin Project & mehr",
     },
     icon: odin,
     iconBg: "#d44b56",
     date: {
-      en: "February 2020 - now",
-      de: "Februar 2020 - heute",
+      en: "February 2020 - June 2024",
+      de: "Februar 2020 - Juni 2024",
     },
     points: [
       {
-        en: "Learned about how to design and maintain a website from creation to deployment",
-        de: "Gelernt, wie man eine Website von der Erstellung bis zum Release entwirft und pflegt",
+        en: "Self-directed full-stack curriculum: JavaScript, TypeScript, React, Node.js, Git, and testing",
+        de: "Selbst organisiertes Full-Stack-Curriculum: JavaScript, TypeScript, React, Node.js, Git und Testing",
       },
       {
-        en: "Learned Javascript fundamentals",
-        de: "Grundlagen von JavaScript gelernt",
+        en: "Dozens of projects built, deployed, and iterated in public — from CLI tools to full web apps",
+        de: "Dutzende Projekte gebaut, deployt und öffentlich weiterentwickelt — von CLI-Tools bis zu kompletten Web-Apps",
       },
       {
-        en: "React frameworks",
-        de: "React-Frameworks",
-      },
-      {
-        en: "Node.js",
-        de: "Node.js",
+        en: "Transitioned directly into client work: the freelance projects above grew out of this foundation",
+        de: "Direkter Übergang in Kund*innenarbeit: Die Freelance-Projekte oben sind aus dieser Grundlage entstanden",
       },
     ],
   },
