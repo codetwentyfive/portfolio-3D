@@ -71,19 +71,19 @@ export const services: ServiceItem[] = [
       de: "Web-App-Entwicklung",
     },
     description: {
-      en: "Full-stack web applications with Next.js, TypeScript, and Tailwind — from a clean landing page to a complete product with auth, database, and API.",
-      de: "Full-Stack-Webanwendungen mit Next.js, TypeScript und Tailwind — von der sauberen Landingpage bis zum kompletten Produkt mit Auth, Datenbank und API.",
+      en: "Full-stack web applications, from a clean landing page to a complete product with auth, database, and API. I pick the stack that fits your project, not the other way around.",
+      de: "Full-Stack-Webanwendungen, von der sauberen Landingpage bis zum kompletten Produkt mit Auth, Datenbank und API. Ich wähle den Stack, der zu deinem Projekt passt — nicht umgekehrt.",
     },
     points: {
       en: [
-        "Next.js (App Router), React, TypeScript",
-        "PostgreSQL + Prisma, NextAuth",
-        "Deployment and CI on Vercel",
+        "Frontend: React, Next.js, TypeScript, and whatever your codebase already uses",
+        "Backend & data: Node.js, PHP, REST/GraphQL APIs, PostgreSQL, MySQL, MongoDB",
+        "Auth, testing, CI/CD — production-grade from day one",
       ],
       de: [
-        "Next.js (App Router), React, TypeScript",
-        "PostgreSQL + Prisma, NextAuth",
-        "Deployment und CI auf Vercel",
+        "Frontend: React, Next.js, TypeScript und was deine Codebasis schon nutzt",
+        "Backend & Daten: Node.js, PHP, REST-/GraphQL-APIs, PostgreSQL, MySQL, MongoDB",
+        "Auth, Testing, CI/CD — von Anfang an produktionsreif",
       ],
     },
   },
@@ -150,14 +150,14 @@ export const services: ServiceItem[] = [
     },
     points: {
       en: [
-        "Claude / OpenAI API integration",
+        "Model-agnostic: Claude, OpenAI, Gemini, or self-hosted open-source models",
         "RAG, summarization, and extraction pipelines",
-        "Self-hosted and privacy-friendly setups",
+        "Agent workflows and automation, privacy-friendly by design",
       ],
       de: [
-        "Claude- / OpenAI-API-Integration",
+        "Modell-agnostisch: Claude, OpenAI, Gemini oder self-hosted Open-Source-Modelle",
         "RAG-, Zusammenfassungs- und Extraktions-Pipelines",
-        "Self-hosted und datenschutzfreundliche Setups",
+        "Agent-Workflows und Automatisierung, datenschutzfreundlich gedacht",
       ],
     },
   },
@@ -169,17 +169,17 @@ export const services: ServiceItem[] = [
       de: "Hosting, WordPress & Betreuung",
     },
     description: {
-      en: "Websites need a home and someone who answers the phone. I handle hosting, domains, WordPress maintenance, performance, and security updates — so you don't have to.",
-      de: "Websites brauchen ein Zuhause und jemanden, der rangeht. Ich kümmere mich um Hosting, Domains, WordPress-Wartung, Performance und Sicherheitsupdates — damit du es nicht musst.",
+      en: "Websites need a home and someone who answers the phone. I handle hosting, domains, WordPress maintenance, performance, and security updates — on your infrastructure or mine.",
+      de: "Websites brauchen ein Zuhause und jemanden, der rangeht. Ich kümmere mich um Hosting, Domains, WordPress-Wartung, Performance und Sicherheitsupdates — auf deiner Infrastruktur oder meiner.",
     },
     points: {
       en: [
-        "Hosting setup and migrations",
+        "Setup & migrations: Hetzner, Cloudways, Vercel, Docker, classic web hosting",
         "WordPress fixes, plugins, themes",
         "Performance and security hardening",
       ],
       de: [
-        "Hosting-Setup und Umzüge",
+        "Setup & Umzüge: Hetzner, Cloudways, Vercel, Docker, klassisches Webhosting",
         "WordPress-Fixes, Plugins, Themes",
         "Performance- und Security-Härtung",
       ],
