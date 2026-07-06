@@ -1,0 +1,30 @@
+---
+title: "Migrating this site from Vite to Next.js 14"
+description: "Why I moved my 3D portfolio from a Vite SPA to Next.js App Router — and what actually broke along the way."
+date: "2026-07-06"
+tags: ["Next.js", "Migration", "React Three Fiber"]
+---
+
+This site — the one you are reading right now — started as a Vite single-page app: React Router, i18next with localStorage, and a React Three Fiber island floating in the middle of it. It worked fine. So why migrate?
+
+## The honest reasons
+
+**SEO was invisible.** As an SPA, every route served the same empty `index.html`. Google saw one page in one language, even though the site speaks English and German. With the App Router, every page is server-rendered, both languages get their own URLs (`/de/...`, `/en/...`) with proper `hreflang` tags, and metadata is generated per page.
+
+**The site was growing past "portfolio".** A blog and a services page don't belong in a client-rendered bundle. MDX files rendered at build time are simpler, faster, and indexable.
+
+**One stack everywhere.** My client projects run on Next.js, TypeScript, and Tailwind. Having the portfolio on a different setup meant maintaining two mental models for zero benefit.
+
+## What actually required care
+
+**React Three Fiber and React versions.** R3F v8 requires React 18, which pins the migration to Next.js 14 — not 15. Upgrading to R3F v9 and React 19 at the same time as a framework migration would have doubled the risk for no visible gain. One migration at a time.
+
+**GLB imports.** Vite happily imports `.glb` files as URLs. Next.js does not, so all 3D models moved to `public/3d/` and are referenced as plain paths. As a bonus they now get immutable cache headers.
+
+**`window` at render time.** The old pages read `window.innerWidth` during render to scale the 3D scenes. That crashes on the server. The fix is the usual one: compute sizes in an effect, render the scene as a client component behind a thin server page.
+
+**i18n strategy.** localStorage-based language switching became route-based locales with next-intl. The middleware remembers your choice in a cookie, and the language switcher just swaps the same path into the other locale tree.
+
+## Was it worth it?
+
+The site looks identical. That was the point — the migration is invisible to visitors and very visible to crawlers. And this article you are reading is the first thing the old stack could not have served.

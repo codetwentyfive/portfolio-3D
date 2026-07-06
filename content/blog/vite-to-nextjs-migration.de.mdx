@@ -1,0 +1,30 @@
+---
+title: "Diese Seite: von Vite zu Next.js 14"
+description: "Warum ich mein 3D-Portfolio von einer Vite-SPA auf den Next.js App Router umgezogen habe — und was dabei wirklich kaputtging."
+date: "2026-07-06"
+tags: ["Next.js", "Migration", "React Three Fiber"]
+---
+
+Diese Seite — genau die, die du gerade liest — war ursprünglich eine Vite-Single-Page-App: React Router, i18next mit localStorage und eine React-Three-Fiber-Insel mittendrin. Das lief gut. Warum also migrieren?
+
+## Die ehrlichen Gründe
+
+**SEO war unsichtbar.** Als SPA lieferte jede Route dasselbe leere `index.html` aus. Google sah eine Seite in einer Sprache, obwohl die Website Deutsch und Englisch spricht. Mit dem App Router wird jede Seite serverseitig gerendert, beide Sprachen bekommen eigene URLs (`/de/...`, `/en/...`) mit sauberen `hreflang`-Tags, und die Metadaten entstehen pro Seite.
+
+**Die Seite wuchs über „Portfolio" hinaus.** Ein Blog und eine Leistungsseite gehören nicht in ein clientseitig gerendertes Bundle. MDX-Dateien, die beim Build gerendert werden, sind einfacher, schneller und indexierbar.
+
+**Ein Stack überall.** Meine Kundenprojekte laufen auf Next.js, TypeScript und Tailwind. Das Portfolio auf einem anderen Setup zu halten hieß, zwei mentale Modelle für null Nutzen zu pflegen.
+
+## Was wirklich Sorgfalt brauchte
+
+**React Three Fiber und React-Versionen.** R3F v8 braucht React 18 — das legt die Migration auf Next.js 14 fest, nicht 15. R3F v9 und React 19 gleichzeitig mit dem Framework-Wechsel anzufassen hätte das Risiko verdoppelt, ohne sichtbaren Gewinn. Eine Migration nach der anderen.
+
+**GLB-Importe.** Vite importiert `.glb`-Dateien bereitwillig als URLs. Next.js nicht — also sind alle 3D-Modelle nach `public/3d/` umgezogen und werden als einfache Pfade referenziert. Als Bonus bekommen sie jetzt unveränderliche Cache-Header.
+
+**`window` zur Renderzeit.** Die alten Seiten lasen `window.innerWidth` direkt beim Rendern, um die 3D-Szenen zu skalieren. Auf dem Server stürzt das ab. Der Fix ist der übliche: Größen im Effect berechnen, die Szene als Client-Komponente hinter einer schlanken Server-Page rendern.
+
+**i18n-Strategie.** Aus localStorage-Sprachwechsel wurden routenbasierte Locales mit next-intl. Die Middleware merkt sich die Wahl in einem Cookie, und der Sprachumschalter tauscht denselben Pfad einfach in den anderen Locale-Baum.
+
+## Hat es sich gelohnt?
+
+Die Seite sieht identisch aus. Das war der Punkt — die Migration ist für Besucher*innen unsichtbar und für Crawler sehr sichtbar. Und dieser Artikel ist das Erste, was der alte Stack nicht hätte ausliefern können.
