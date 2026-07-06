@@ -1,8 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./models/**/*.{js,ts,jsx,tsx}",
+    "./context/**/*.{js,ts,jsx,tsx}",
+    "./constants/**/*.{js,ts,jsx,tsx}",
+    "./content/**/*.mdx",
   ],
   theme: {
     extend: {
@@ -19,8 +23,8 @@ export default {
         }
       },
       fontFamily: {
-        worksans: ["Manrope", "sans-serif"],
-        poppins: ["Syne", "sans-serif"]
+        worksans: ["var(--font-manrope)", "sans-serif"],
+        poppins: ["var(--font-syne)", "sans-serif"]
       },
       boxShadow: {
         card: '0px 1px 2px 0px rgba(0, 0, 0, 0.05)'
