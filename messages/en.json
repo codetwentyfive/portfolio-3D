@@ -41,6 +41,24 @@
     }
   },
   "archive": {
+    "mobile": {
+      "eyebrow": "Chingis / Selected work",
+      "context": "Each island is a project I've built.",
+      "rotate": "Drag the island to rotate it",
+      "view": "3D controls",
+      "swipe": "Swipe here to switch worlds",
+      "swipeLabel": "World switcher. Swipe left or right, or use the arrow keys.",
+      "previous": "Previous",
+      "next": "Next",
+      "descriptions": {
+        "shop": "A nomad's workshop for my shop of Mongolian leatherwork and craft.",
+        "payments": "A dispatch depot for the payments and product systems I build for online shops.",
+        "portfolio": "The original island that started this interactive portfolio.",
+        "seeds": "A miniature stage for the band website I built for The Strange Seeds.",
+        "potera": "A working courtyard for a cleaning company's website.",
+        "assistant": "My home lab: local AI and automations running on my own hardware."
+      }
+    },
     "heading": "Selected work by Chingis",
     "index": "Selected work",
     "signature": "Independent developer.\nKarlsruhe, Germany.",

@@ -383,8 +383,32 @@ html {
 
   /* A model archive: one scene, one index, one caption. Controls are secondary. */
   .studio-explorer {
-    @apply relative isolate min-h-[580px] overflow-hidden bg-paper text-ink;
-    height: 100svh;
+    @apply relative isolate grid grid-cols-1 overflow-hidden bg-paper px-5 pt-[100px] text-ink;
+    grid-template-rows: auto minmax(220px, 1fr) auto;
+    min-height: 100svh;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .studio-mobile-intro {
+    @apply relative z-10 lg:hidden;
+  }
+  .studio-mobile-context {
+    @apply mt-1 text-xs text-slate-600;
+  }
+  .studio-mobile-title {
+    @apply mt-5;
+    min-height: 100px;
+    animation: world-title-next 350ms both;
+  }
+  .studio-explorer[data-direction="previous"] .studio-mobile-title {
+    animation-name: world-title-previous;
+  }
+  .studio-mobile-title h2 {
+    @apply font-display text-[clamp(2rem,7vw,3rem)] font-semibold leading-none tracking-[-0.025em];
+    text-wrap: balance;
+  }
+  .studio-mobile-title > p {
+    @apply mt-2 max-w-[42ch] text-[13px] leading-relaxed text-slate-600;
+    text-wrap: pretty;
   }
   .studio-index {
     @apply absolute left-12 top-[154px] z-10 hidden w-[218px] lg:block;
@@ -423,7 +447,7 @@ html {
     @apply mt-8 whitespace-pre-line text-xs leading-relaxed text-slate-500;
   }
   .studio-stage {
-    @apply absolute inset-x-0 bottom-[115px] top-[135px] lg:bottom-[235px] lg:left-[260px] lg:right-8 lg:top-[105px];
+    @apply relative min-h-0 min-w-0 lg:absolute lg:bottom-[235px] lg:left-[260px] lg:right-8 lg:top-[105px];
   }
   .studio-view-tools {
     @apply absolute bottom-[186px] right-12 z-20 hidden items-center gap-1 lg:flex;
@@ -497,39 +521,79 @@ html {
     @apply hover:-translate-x-1;
   }
   .studio-mobile-hud {
-    @apply pointer-events-none absolute inset-0 lg:hidden;
+    @apply relative z-20 min-w-0 lg:hidden;
+  }
+  .studio-mobile-gesture {
+    @apply mb-1 text-center font-mono text-[10px] text-slate-500;
+  }
+  .studio-mobile-actions {
+    @apply mb-3 flex items-center justify-between gap-4;
+  }
+  .studio-mobile-view {
+    @apply relative;
+  }
+  .studio-mobile-view > summary {
+    @apply flex min-h-11 cursor-pointer items-center gap-2 whitespace-nowrap text-xs text-slate-600;
+    list-style: none;
+  }
+  .studio-mobile-view > summary::-webkit-details-marker {
+    display: none;
   }
   .studio-mobile-tools {
-    @apply pointer-events-auto absolute left-5 top-[84px] z-20 flex items-center;
+    @apply absolute bottom-12 left-0 z-20 flex items-center border border-slate-300 bg-paper p-1;
   }
   .studio-mobile-open {
-    @apply pointer-events-auto absolute right-6 top-[84px] grid h-11 w-11 place-items-center border border-ink;
+    @apply inline-flex min-h-11 items-center justify-end gap-3 border-b border-ink text-right text-xs;
   }
   .studio-mobile-materials {
     @apply relative;
   }
   .studio-mobile-finishes {
-    @apply absolute left-[-132px] top-14 flex gap-1.5 rounded-[3px] p-3;
+    @apply absolute bottom-14 left-[-132px] flex gap-1.5 rounded-[3px] p-3;
   }
   .studio-mobile-finishes::before {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
-  .studio-mobile-index {
-    @apply pointer-events-auto absolute inset-x-5 grid grid-cols-6 border-t border-slate-300 pt-2;
-    bottom: calc(24px + env(safe-area-inset-bottom));
+  .studio-mobile-pager {
+    @apply border-y border-slate-300;
   }
-  .studio-mobile-index > button {
-    @apply relative grid h-14 place-items-center text-slate-500 transition-colors hover:text-ink;
+  .studio-world-swipe {
+    @apply grid min-h-[76px] cursor-ew-resize select-none grid-cols-[1fr_auto] items-center gap-x-4 px-1 pb-3 pt-4;
+    touch-action: pan-y pinch-zoom;
   }
-  .studio-mobile-index > button[aria-pressed="true"] {
-    @apply text-ink;
+  .studio-world-swipe > p {
+    @apply text-xs text-slate-600;
   }
-  .studio-mobile-index > button > span {
-    @apply absolute bottom-0 h-0.5 w-0 bg-accent transition-[width] duration-300;
+  .studio-world-count {
+    @apply whitespace-nowrap font-mono text-[11px] tabular-nums text-slate-500;
   }
-  .studio-mobile-index > button[aria-pressed="true"] > span {
-    @apply w-5;
+  .studio-world-count b {
+    @apply font-medium text-accent;
+  }
+  .studio-world-progress {
+    @apply col-span-2 mt-3 grid grid-cols-6 gap-1;
+  }
+  .studio-world-progress > span {
+    @apply h-0.5 bg-slate-300 transition-colors;
+  }
+  .studio-world-progress > span[data-active="true"] {
+    @apply bg-accent;
+  }
+  .studio-world-neighbors {
+    @apply grid grid-cols-2 border-t border-slate-300;
+  }
+  .studio-world-neighbors > button {
+    @apply flex min-h-[64px] min-w-0 items-center gap-3 py-3 pr-3 text-left text-xs leading-tight hover:text-accent;
+  }
+  .studio-world-neighbors > button:last-child {
+    @apply justify-end border-l border-slate-300 pl-3 pr-0 text-right;
+  }
+  .studio-world-neighbors svg {
+    @apply h-5 w-5 shrink-0;
+  }
+  .studio-world-neighbors small {
+    @apply mb-1 block font-mono text-[9px] uppercase tracking-wide text-slate-500;
   }
   .studio-loader {
     @apply block h-8 w-8 animate-spin rounded-full border border-slate-300 border-t-ink motion-reduce:animate-none;
@@ -633,6 +697,26 @@ html {
     transform: translateY(0);
   }
 }
+@keyframes world-title-next {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes world-title-previous {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 .portfolio-audio {
   @apply fixed right-12 top-[86px] z-[90] text-ink;
 }
@@ -668,7 +752,8 @@ html {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
-.music-panel[hidden], .music-native[hidden] {
+.music-panel[hidden],
+.music-native[hidden] {
   display: none;
 }
 .music-panel-header {
@@ -689,7 +774,8 @@ html {
 .music-icon[aria-pressed="true"] {
   @apply text-accent;
 }
-.portfolio-audio button:disabled, .portfolio-audio input:disabled {
+.portfolio-audio button:disabled,
+.portfolio-audio input:disabled {
   @apply cursor-not-allowed opacity-40;
 }
 .music-status {
@@ -707,7 +793,8 @@ html {
 .music-note {
   @apply text-xs leading-relaxed text-slate-600;
 }
-.music-primary, .music-main-play {
+.music-primary,
+.music-main-play {
   @apply flex min-h-11 items-center justify-center gap-3 rounded-[2px] bg-ink px-5 text-xs font-medium text-paper transition-colors hover:bg-slate-700;
 }
 .music-primary {
@@ -773,7 +860,8 @@ html {
 .music-panel-footer {
   @apply mt-4 flex flex-wrap items-center justify-between gap-x-4 border-t border-slate-300 pt-3 font-mono text-[10px] text-slate-600;
 }
-.music-panel-footer a, .music-panel-footer button {
+.music-panel-footer a,
+.music-panel-footer button {
   @apply inline-flex min-h-11 items-center gap-2 hover:text-ink;
 }
 .music-panel-footer svg {
@@ -788,6 +876,9 @@ html {
     max-width: none;
   }
   .studio-explorer {
+    display: block;
+    padding: 0;
+    min-height: 580px;
     height: max(760px, 100svh);
   }
   .editorial-navigation.refractive-glass {
@@ -874,7 +965,8 @@ html {
     top: 18px;
     right: 80px;
   }
-  .music-launcher-label, .music-chevron {
+  .music-launcher-label,
+  .music-chevron {
     display: none;
   }
   .music-disclosure {

@@ -7,6 +7,7 @@ import { Link } from "@/src/i18n/navigation";
 import { gerStyles, planets, type GerStyle } from "./planets/planet-data";
 import MobileWorldHUD from "./planets/MobileWorldHUD";
 import { ControlGlyph } from "./planets/WorldGlyph";
+import { wrapWorld } from "./planets/world-navigation";
 
 const PlanetCanvas = dynamic(() => import("./planets/PlanetCanvas"), {
   ssr: false,
@@ -29,6 +30,7 @@ export default function HomeScene() {
     () => true,
   );
   const [selected, setSelected] = useState(0);
+  const [direction, setDirection] = useState("next");
   const [style, setStyle] = useState<GerStyle>("paint");
   const [cycle, setCycle] = useState(true);
   const [paused, setPaused] = useState(false);
@@ -81,8 +83,11 @@ export default function HomeScene() {
   }, [cycle, motion, isShop]);
 
   const selectWorld = (index: number) => {
-    const next = (index + planets.length) % planets.length;
+    const next = wrapWorld(index, planets.length);
+    if (next === selected) return;
+    setDirection(index < selected ? "previous" : "next");
     setSelected(next);
+    setZoomed(false);
     const url = new URL(window.location.href);
     url.searchParams.set("world", planets[next].kind);
     window.history.replaceState(window.history.state, "", url);
@@ -93,7 +98,7 @@ export default function HomeScene() {
   };
   const resetView = () => {
     setZoomed(false);
-    setResetKey(key => key + 1);
+    setResetKey((key) => key + 1);
   };
 
   return (
@@ -101,10 +106,19 @@ export default function HomeScene() {
       ref={section}
       data-held={held}
       data-world={planet.kind}
+      data-direction={direction}
       className="planet-explorer studio-explorer"
       aria-label={t("label")}
     >
       <h1 className="sr-only">{a("heading")}</h1>
+      <header className="studio-mobile-intro">
+        <p className="studio-eyebrow">{a("mobile.eyebrow")}</p>
+        <p className="studio-mobile-context">{a("mobile.context")}</p>
+        <div key={planet.kind} className="studio-mobile-title">
+          <h2>{a(`names.${planet.kind}`)}</h2>
+          <p>{a(`mobile.descriptions.${planet.kind}`)}</p>
+        </div>
+      </header>
       <aside className="studio-index" aria-label={t("choose")}>
         <p className="studio-eyebrow">
           {a("index")} <span>{String(planets.length).padStart(2, "0")}</span>
@@ -273,6 +287,7 @@ export default function HomeScene() {
         onCycle={() => setCycle((value) => !value)}
         onPause={() => setPaused((value) => !value)}
         onReset={resetView}
+        held={held}
       />
       <span className="sr-only" aria-live="polite" aria-atomic="true">
         {t("selected")}: {planet.name[locale]}

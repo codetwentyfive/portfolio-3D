@@ -41,6 +41,24 @@
     }
   },
   "archive": {
+    "mobile": {
+      "eyebrow": "Chingis / Ausgewählte Arbeiten",
+      "context": "Jede Insel steht für ein Projekt von mir.",
+      "rotate": "Zum Drehen an der Insel ziehen",
+      "view": "3D-Steuerung",
+      "swipe": "Hier wischen, um die Welt zu wechseln",
+      "swipeLabel": "Weltauswahl. Nach links oder rechts wischen oder die Pfeiltasten nutzen.",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "descriptions": {
+        "shop": "Eine Nomadenwerkstatt für meinen Shop mit mongolischer Lederkunst und Handwerk.",
+        "payments": "Ein Versanddepot für die Zahlungs- und Produktsysteme, die ich für Onlineshops baue.",
+        "portfolio": "Die ursprüngliche Insel, mit der dieses interaktive Portfolio begann.",
+        "seeds": "Eine Miniaturbühne für die Bandwebsite, die ich für The Strange Seeds gebaut habe.",
+        "potera": "Ein Innenhof als Miniatur für die Website einer Reinigungsfirma.",
+        "assistant": "Mein Homelab: lokale KI und Automatisierungen auf meiner eigenen Hardware."
+      }
+    },
     "heading": "Ausgewählte Arbeiten von Chingis",
     "index": "Ausgewählte Arbeiten",
     "signature": "Freier Entwickler.\nKarlsruhe, Deutschland.",

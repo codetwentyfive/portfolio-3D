@@ -6,9 +6,9 @@ Current local design direction, September 5, 2026. Supersedes the concept-world 
 
 The work is represented by miniature working environments, not generic sculptures on interchangeable planets. One large scene, a readable project index, and a single grounded caption replace overlapping slogans, decorative orbit marks, and repeated controls. Cool stone, charcoal, rust, clear glass, and restrained typography carry forward the personal editorial identity without introducing gradients. Existing biography, journal, music, services, and legal content remain.
 
-Desktop navigation shows full words; variable-width movement remains a small interaction rather than a reading obstacle. Mobile keeps the home scene visual-only, with labeled-for-assistive-technology glyphs and controls. The conventional project catalog remains available for visitors who prefer reading to manipulating a model.
+Desktop navigation shows full words; variable-width movement remains a small interaction rather than a reading obstacle. The September 6 [mobile navigation follow-up](mobile-world-navigation.md) replaces the visual-only phone view with project titles, context and a named, looping Previous/Next switcher. The conventional project catalog remains available for visitors who prefer reading to manipulating a model.
 
-The mobile world marks share a 24-unit drawing grid, 1.5-unit stroke and balanced margins. The payments mark is a single card, without competing transfer arrows. The other silhouettes omit tiny ornament; inactive marks use slate-500 for clearer small-screen contrast. Button labels and selected-state indicators remain independent of the decorative SVGs.
+The earlier mobile world marks remain in `WorldGlyph.tsx`, but the mobile selector now uses neighboring project names instead of expecting visitors to decode icons. The models and their visual identity are unchanged by this navigation follow-up.
 
 [Bruno Simon's portfolio](https://bruno-simon.com/) was an interaction reference for an authored 3D environment. These four models are original Blender geometry, not copied assets or representations of the projects' actual premises.
 
