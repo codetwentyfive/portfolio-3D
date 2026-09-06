@@ -182,7 +182,7 @@ const SectionCard = ({
   title: ReactNode;
   children: ReactNode;
 }) => (
-  <article className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur">
+  <article className="border-t border-slate-300 py-8">
     <h2 className="text-2xl font-semibold text-slate-900">{title}</h2>
     <div className="mt-5">{children}</div>
   </article>

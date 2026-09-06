@@ -3,25 +3,26 @@ import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Manrope, Syne } from "next/font/google";
+import { Archivo, Barlow_Condensed } from "next/font/google";
 import { routing } from "@/src/i18n/routing";
 import { AudioProvider } from "@/context/AudioContext";
 import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 import SiteFooter from "@/components/SiteFooter";
+import GlassFilters from "@/components/GlassFilters";
 import "../globals.css";
 
-const manrope = Manrope({
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  variable: "--font-manrope",
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const syne = Syne({
+const barlow = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-syne",
+  weight: ["500", "600", "700"],
+  variable: "--font-barlow",
   display: "swap",
 });
 
@@ -56,8 +57,9 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${manrope.variable} ${syne.variable}`}>
+    <html lang={locale} className={`${archivo.variable} ${barlow.variable}`}>
       <body>
+        <GlassFilters />
         <NextIntlClientProvider messages={messages}>
           <AudioProvider>
             <main className="min-h-screen">

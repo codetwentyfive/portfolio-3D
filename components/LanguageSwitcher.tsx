@@ -6,14 +6,22 @@ import type { Locale } from "@/src/i18n/routing";
 
 const languageFlags: Record<Locale, JSX.Element> = {
   de: (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 rounded-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5 rounded-full"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="12" fill="#ffce00" />
       <path d="M0 0h24v8H0z" fill="#000" />
       <path d="M0 8h24v8H0z" fill="#dd0000" />
     </svg>
   ),
   en: (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 rounded-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5 rounded-full"
+      aria-hidden="true"
+    >
       <defs>
         <clipPath id="language-switcher-uk-flag">
           <circle cx="12" cy="12" r="12" />
@@ -43,20 +51,20 @@ function LanguageSwitcher() {
   const nextLanguage: Locale = locale === "en" ? "de" : "en";
 
   const toggleLanguage = () => {
-    // Re-render the current path under the other locale; the middleware
-    // persists the choice in the NEXT_LOCALE cookie.
-    router.replace(pathname, { locale: nextLanguage });
+    // Preserve the selected miniature and any legal-section anchor across locales.
+    router.replace(`${pathname}${window.location.search}${window.location.hash}`, { locale: nextLanguage });
   };
 
   return (
-    <div className="relative inline-block mx-2">
+    <div className="language-control">
       <button
         type="button"
-        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white shadow-md"
+        className="language-button"
         onClick={toggleLanguage}
         aria-label={`Current language: ${languageLabels[locale]}. Switch to ${languageLabels[nextLanguage]}.`}
       >
         {languageFlags[locale]}
+        <span aria-hidden="true">{locale.toUpperCase()}</span>
       </button>
     </div>
   );

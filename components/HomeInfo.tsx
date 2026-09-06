@@ -13,7 +13,7 @@ const HintBox = () => {
       role="status"
       aria-live="polite"
     >
-      <div className="bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2.5 animate-float">
+      <div className="refractive-glass px-4 py-2.5 rounded-[3px] flex items-center gap-2.5 animate-float">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -73,7 +73,7 @@ const HomeInfo = ({ currentStage }: HomeInfoProps) => {
   const renderContent: Record<number, ReactNode> = {
     1: (
       <div role="region" aria-label="Welcome section">
-        <h1 className="hero-greeting text-center greeting py-4 px-8 text-slate-900 mx-5 animated-gradient-bg rounded-2xl">
+        <h1 className="hero-greeting refractive-glass text-center greeting py-4 px-8 text-ink mx-5 rounded-[3px]">
           <span className="relative z-10">
             {t("hi_message")} <span className="font-semibold">{t("name")}</span>
             <span aria-hidden="true">👋</span>

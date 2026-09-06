@@ -8,7 +8,9 @@ interface Props {
   params: { locale: Locale };
 }
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params: { locale },
+}: Props): Promise<Metadata> {
   const t = await getTranslations({ locale });
   return {
     title: t("blog_meta_title"),
@@ -36,42 +38,56 @@ export default async function BlogPage({ params: { locale } }: Props) {
 
   return (
     <section className="max-container">
-      <h1 className="head-text">
-        {t("blog_heading")}{" "}
-        <span className="gradient_text font-semibold drop-shadow">
-          {t("blog_heading_span")}
+      <header className="journal-hero">
+        <div className="flex items-center justify-between gap-4 editorial-kicker">
+          <span>{t("editorial.journal")}</span>
+          <span>Chingis / {String(posts.length).padStart(2, "0")}</span>
+        </div>
+        <h1 className="journal-title">
+          {t("blog_heading")}
+          <em>{t("blog_heading_span")}</em>
+        </h1>
+        <span className="journal-register" aria-hidden="true">
+          <span />
+          <span />
+          <span />
         </span>
-      </h1>
-      <p className="mt-5 text-slate-500">{t("blog_intro")}</p>
+        <p className="journal-intro">{t("blog_intro")}</p>
+      </header>
 
       {posts.length === 0 ? (
         <p className="mt-16 text-slate-500">{t("blog_empty")}</p>
       ) : (
-        <div className="mt-14 flex flex-col gap-10">
-          {posts.map((post) => (
-            <article key={post.slug} className="group">
-              <Link href={`/blog/${post.slug}`} className="block">
-                <p className="text-sm text-slate-500">
-                  {post.date ? formatDate(post.date, locale) : null}
+        <div className="mt-7">
+          <p className="editorial-kicker">{t("editorial.index")}</p>
+          {posts.map((post, index) => (
+            <article key={post.slug} className="journal-entry group">
+              <span className="journal-entry-number" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <Link href={`/blog/${post.slug}`} className="block min-w-0">
+                <p className="editorial-kicker">
+                  <time dateTime={post.date}>
+                    {post.date ? formatDate(post.date, locale) : null}
+                  </time>
                 </p>
-                <h2 className="mt-1 text-2xl font-poppins font-semibold text-slate-900 transition-colors group-hover:text-sky-700">
+                <h2 className="journal-entry-title transition-colors group-hover:text-accent">
                   {post.title}
                 </h2>
-                <p className="mt-2 text-slate-500">{post.description}</p>
+                <p className="mt-4 max-w-[620px] text-sm leading-relaxed text-slate-600 sm:text-base">
+                  {post.description}
+                </p>
                 {post.tags.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600"
-                      >
+                      <span key={tag} className="journal-tag">
                         {tag}
                       </span>
                     ))}
                   </div>
                 )}
-                <span className="mt-3 inline-block font-semibold text-blue-600">
-                  {t("blog_read_more")} →
+                <span className="journal-link">
+                  {t("blog_read_more")} <span aria-hidden="true">↗</span>
                 </span>
               </Link>
             </article>

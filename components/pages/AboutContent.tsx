@@ -1,123 +1,102 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
-import { skills, experiences, type LocalizedText, type Locale } from "@/constants";
+  skills,
+  experiences,
+  type LocalizedText,
+  type Locale,
+} from "@/constants";
 import CTA from "@/components/CTA";
 
-const AboutContent = () => {
+export default function AboutContent() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
-
-  const translateText = (textObject: LocalizedText) =>
-    textObject[locale] || textObject.en;
+  const translate = (text: LocalizedText) => text[locale] || text.en;
 
   return (
     <section className="max-container">
+      <p className="editorial-kicker mb-6">{t("editorial.about")}</p>
       <h1 className="head-text">
-        {t("greeting_about")}{" "}
-        <span className="gradient_text font-semibold drop-shadow">Chingis</span>
+        {t("greeting_about")} <span className="editorial-accent">Chingis</span>
       </h1>
-
-      <div className="mt-5 flex flex-col gap-3 text-slate-500">
+      <div className="editorial-intro mt-8">
         <p>{t("short_intro")}</p>
       </div>
 
-      <div className="py-10 flex flex-col">
-        <h3 className="subhead-text">{t("my_skills")}</h3>
-
-        <div className="mt-16 flex flex-wrap gap-12 justify-center items-center">
+      <section className="mt-20 border-t border-slate-300 pt-8">
+        <h2 className="subhead-text">{t("my_skills")}</h2>
+        <div className="mt-10 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-4">
           {skills.map((skill) => (
-            <div className="group relative block-container w-20 h-20" key={skill.name}>
-              <div className="btn-back rounded-xl" />
-              <div className="btn-front rounded-xl flex justify-center items-center">
-                <img
-                  src={skill.imageUrl.src}
-                  alt={skill.name}
-                  className="w-1/2 h-1/2 object-contain"
-                />
-              </div>
-              {/* Tooltip */}
-              <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2
-                             border border-slate-200 bg-white/95 px-2 py-1 rounded-md text-sm text-slate-700 shadow-lg
-                             opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                             whitespace-nowrap pointer-events-none">
-                {skill.name}
-              </div>
+            <div
+              key={skill.name}
+              className="flex min-h-[86px] items-center gap-4 border-b border-slate-200 py-4"
+            >
+              <Image
+                src={skill.imageUrl}
+                alt=""
+                width={30}
+                height={30}
+                className="h-[30px] w-[30px] object-contain"
+              />
+              <span className="text-xs tracking-wide">{skill.name}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="py-16">
-        <div className="flex flex-col gap-3 text-slate-500">
+      <section className="py-16">
+        <div className="editorial-intro space-y-4">
           <p>{t("timeline_description1")}</p>
           <p>{t("timeline_description2")}</p>
           <p>{t("timeline_description3")}</p>
         </div>
-        <h3 className="mt-12 subhead-text">{t("timeline")}</h3>
-
-        <div className="flex">
-          <VerticalTimeline>
-            {experiences.map((experience, index) => (
-              <VerticalTimelineElement
-                key={`${translateText(experience.title)}_${index}`}
-                date={translateText(experience.date)}
-                iconStyle={{ background: "white" }}
-                icon={
-                  <div className="flex justify-center items-center w-full h-full">
-                    <img
-                      src={experience.icon.src}
-                      alt={translateText(experience.company_name)}
-                      className="w-[60%] h-[60%] object-contain"
-                    />
+        <h2 className="subhead-text mb-10 mt-16">{t("timeline")}</h2>
+        <ol>
+          {experiences.map((experience, index) => (
+            <li
+              key={`${translate(experience.title)}_${index}`}
+              className="grid gap-5 border-t border-slate-300 py-9 md:grid-cols-[190px_1fr] md:gap-12"
+            >
+              <p className="editorial-kicker pt-2">
+                {translate(experience.date)}
+              </p>
+              <div className="min-w-0">
+                <div className="flex items-start justify-between gap-5">
+                  <div className="min-w-0 break-words">
+                    <h3 className="font-display text-3xl font-semibold leading-tight tracking-[-0.01em]">
+                      {translate(experience.title)}
+                    </h3>
+                    <p className="mt-2 text-xs uppercase tracking-[0.1em] text-slate-500">
+                      {translate(experience.company_name)}
+                    </p>
                   </div>
-                }
-                contentStyle={{
-                  borderBottom: "8px",
-                  borderStyle: "solid",
-                  borderBottomColor: experience.iconBg,
-                  boxShadow: "none",
-                  borderRadius: "30px",
-                }}
-              >
-                <div>
-                  <h3 className="text-black text-xl font-poppins font-semibold">
-                    {translateText(experience.title)}
-                  </h3>
-                  <p
-                    className="text-black-500 font-medium text-base"
-                    style={{ margin: 0 }}
-                  >
-                    {translateText(experience.company_name)}
-                  </p>
+                  <Image
+                    src={experience.icon}
+                    alt=""
+                    width={38}
+                    height={38}
+                    className="h-[38px] w-[38px] shrink-0 object-contain"
+                  />
                 </div>
-
-                <ul className="my-5 list-disc ml-5 space-y-2">
+                <ul className="mt-6 max-w-[660px] space-y-3 text-sm leading-relaxed text-slate-600">
                   {experience.points.map((point, pointIndex) => (
                     <li
-                      key={`experience-point-${pointIndex}`}
-                      className="text-black-500/50 font-normal pl-1 text-sm"
+                      key={pointIndex}
+                      className="border-l border-slate-300 pl-4"
                     >
-                      {translateText(point)}
+                      {translate(point)}
                     </li>
                   ))}
                 </ul>
-              </VerticalTimelineElement>
-            ))}
-          </VerticalTimeline>
-        </div>
-      </div>
-
-      <hr className="border-slate-200" />
-
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+      <hr className="border-slate-300" />
       <CTA />
     </section>
   );
-};
-
-export default AboutContent;
+}

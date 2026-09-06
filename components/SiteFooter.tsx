@@ -1,42 +1,38 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/src/i18n/navigation";
+import { Link } from "@/src/i18n/navigation";
 import { legalConfig } from "@/legal/config";
 
-const SiteFooter = () => {
+export default function SiteFooter() {
   const t = useTranslations();
-  const pathname = usePathname();
-  const year = new Date().getFullYear();
-  const isContactPage = pathname === "/contact";
-
   return (
-    <footer
-      className={`footer text-sm font-poppins relative z-[60] ${
-        isContactPage ? "footer-contact-bg" : "footer-default-bg"
-      }`}
-      role="contentinfo"
-    >
-      <div className="footer-container footer-animated pt-6 font-medium">
-        <p className="text-slate-700 text-sm leading-normal font-semibold tracking-[0.01em]">
-          &copy; {year} {legalConfig.operator.name}
-        </p>
-        <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:w-auto">
+    <footer className="footer" role="contentinfo">
+      <div className="footer-container">
+        <div>
+          <p className="footer-wordmark">
+            Chingis<span className="ml-1 text-accent">/</span>
+          </p>
+          <p className="mt-3 text-[10px] uppercase tracking-[0.12em] text-slate-500">
+            &copy; {new Date().getFullYear()} {legalConfig.operator.name}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[11px] text-slate-600">
           <a
-            className="text-slate-600 font-medium transition-colors hover:text-sky-700"
             href={`mailto:${legalConfig.operator.email}`}
+            className="min-h-11 content-center hover:text-accent"
           >
             {legalConfig.operator.email}
           </a>
           <Link
-            className="font-semibold tracking-[0.01em] text-slate-600 transition-colors hover:text-sky-700"
             href="/rechtliches#impressum"
+            className="min-h-11 content-center hover:text-accent"
           >
             {t("impressum")}
           </Link>
           <Link
-            className="font-semibold tracking-[0.01em] text-slate-600 transition-colors hover:text-sky-700"
             href="/rechtliches#datenschutz"
+            className="min-h-11 content-center hover:text-accent"
           >
             {t("privacy")}
           </Link>
@@ -44,6 +40,4 @@ const SiteFooter = () => {
       </div>
     </footer>
   );
-};
-
-export default SiteFooter;
+}

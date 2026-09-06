@@ -874,17 +874,18 @@ const AudioPlayer = () => {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 sm:right-6 z-50 origin-bottom-right transition-[width,height] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      data-expanded={isExpanded}
+      className={`portfolio-audio fixed bottom-4 right-4 sm:right-6 z-50 origin-bottom-right transition-[width,height] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isExpanded
           ? `w-[calc(100%-2rem)] sm:w-[380px] ${showConsentEmbed ? 'h-[360px]' : 'h-[96px]'}`
           : 'w-14 h-14'
       }${nearFooter ? ' player-hidden' : hasAnimated.current ? ' player-visible' : ''}`}
     >
       <div
-        className={`relative h-full w-full overflow-hidden bg-white/95 backdrop-blur-sm shadow-md transition-[border-radius] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)]${
+        className={`refractive-glass relative h-full w-full overflow-hidden transition-[border-radius] duration-450 ease-[cubic-bezier(0.22,1,0.36,1)]${
           bounce ? ' animate-player-bounce' : ''
         }`}
-        style={{ borderRadius: isExpanded ? '16px' : '9999px' }}
+        style={{ borderRadius: isExpanded ? '3px' : '9999px' }}
       >
         {hasStartedSoundCloud && (
           <iframe
@@ -908,10 +909,10 @@ const AudioPlayer = () => {
           onClick={handlePlayPause}
           aria-label={isPlaying ? 'Pause music player' : 'Play music player'}
           className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
-            isExpanded ? 'pointer-events-none opacity-0' : 'opacity-100'
+            isExpanded ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100'
           }`}
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#2193b0] shadow-md">
+          <span className="flex h-14 w-14 items-center justify-center text-ink">
             {isPlaying ? (
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
@@ -925,7 +926,7 @@ const AudioPlayer = () => {
         </button>
 
         {showConsentEmbed ? (
-          <div className="absolute inset-x-0 top-0 z-20 border-b border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+          <div className="absolute inset-x-0 top-0 z-20 border-b border-slate-300 bg-paper px-4 py-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-sm font-medium text-gray-800">Enable SoundCloud playback</p>
@@ -952,8 +953,8 @@ const AudioPlayer = () => {
           <div
             className={`absolute inset-0 flex flex-col gap-1.5 px-3 py-2.5 transition-all duration-300 delay-75 sm:px-4 sm:py-3 ${
               isExpanded
-                ? 'translate-y-0 opacity-100'
-                : 'pointer-events-none translate-y-4 opacity-0'
+                ? 'visible translate-y-0 opacity-100'
+                : 'invisible pointer-events-none translate-y-4 opacity-0'
             }`}
           >
             {hasStartedSoundCloud && isWidgetReady && !widgetError ? (
@@ -1059,7 +1060,7 @@ const AudioPlayer = () => {
                     onTouchEnd={handleSeek}
                   >
                     <div
-                      className="relative h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-500"
+                      className="relative h-full rounded-full bg-ink"
                       style={{ width: `${Math.min(progress * 100, 100)}%` }}
                     >
                       <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-blue-500 bg-white shadow-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100" />

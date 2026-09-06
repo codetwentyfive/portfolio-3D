@@ -13,11 +13,13 @@ interface Props {
 export async function generateStaticParams() {
   const slugs = await getPostSlugs();
   return routing.locales.flatMap((locale) =>
-    slugs.map((slug) => ({ locale, slug }))
+    slugs.map((slug) => ({ locale, slug })),
   );
 }
 
-export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params: { locale, slug },
+}: Props): Promise<Metadata> {
   const post = await getPost(slug, locale);
   if (!post) return {};
   return {
@@ -45,7 +47,9 @@ const formatDate = (date: string, locale: Locale) =>
     dateStyle: "long",
   }).format(new Date(date));
 
-export default async function BlogPostPage({ params: { locale, slug } }: Props) {
+export default async function BlogPostPage({
+  params: { locale, slug },
+}: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const post = await getPost(slug, locale);
@@ -72,20 +76,35 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-3xl">
-        <Link href="/blog" className="text-sm font-semibold text-blue-600">
+      <article>
+        <Link
+          href="/blog"
+          className="editorial-kicker inline-flex min-h-11 items-center text-ink"
+        >
           ← {t("blog_back")}
         </Link>
-        <p className="mt-6 text-sm text-slate-500">
+        <p className="mt-8 editorial-kicker">
           {post.date ? formatDate(post.date, locale) : null}
         </p>
-        <h1 className="mt-1 head-text">{post.title}</h1>
+        <h1 className="mt-5 max-w-[980px] font-display text-[clamp(2.8rem,6vw,5.8rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-ink">
+          {post.title}
+        </h1>
+        <p className="mt-7 max-w-[660px] text-lg leading-relaxed text-slate-600">
+          {post.description}
+        </p>
+        <div className="mt-10 flex flex-wrap gap-3 border-b border-slate-300 pb-6">
+          {post.tags.map((tag) => (
+            <span key={tag} className="journal-tag">
+              {tag}
+            </span>
+          ))}
+        </div>
         {post.locale !== locale && (
           <p className="mt-4 rounded-lg bg-blue-50 px-4 py-2 text-sm text-blue-700">
             {t("blog_locale_fallback")}
           </p>
         )}
-        <div className="prose-custom mt-10 flex flex-col gap-5 text-slate-600 leading-7 [&_h2]:subhead-text [&_h2]:mt-6 [&_h3]:text-xl [&_h3]:font-poppins [&_h3]:font-semibold [&_h3]:text-slate-900 [&_h3]:mt-4 [&_a]:text-sky-700 [&_a]:underline [&_a]:underline-offset-4 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:bg-slate-900 [&_pre]:p-5 [&_pre]:text-sm [&_pre]:text-slate-100 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:space-y-2">
+        <div className="article-body mt-12">
           <MDXRemote source={post.content} />
         </div>
       </article>

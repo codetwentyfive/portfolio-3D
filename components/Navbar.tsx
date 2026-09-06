@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/src/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -13,55 +13,93 @@ const navItems = [
   { href: "/contact", key: "contact" },
 ] as const;
 
-const Navbar = () => {
+export default function Navbar() {
   const t = useTranslations();
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const header = useRef<HTMLElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(`${href}/`);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !header.current?.contains(event.target)
+      )
+        setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [open]);
 
   return (
-    <header className="header flex justify-between items-center p-4 z-50" role="banner">
+    <header ref={header} className="site-header" data-open={open}>
       <Link
         href="/"
-        className="w-10 h-10 rounded-lg bg-white items-center justify-center flex font-bold shadow-md"
-        aria-label="Home"
+        className="editorial-wordmark"
+        aria-label={t("navigation.home")}
       >
-        <p className="gradient_text font-poppins text-sm tracking-[-0.05em]">Chi</p>
+        <span aria-hidden="true">
+          <span className="wordmark-condensed">c</span>
+          <b>h</b>
+          <span className="wordmark-condensed">i</span>
+          <span className="wordmark-long">ngis</span>
+          <span className="wordmark-slash">/</span>
+        </span>
       </Link>
       <button
-        className="md:hidden bg-white p-2 rounded-lg w-10 h-10 z-50 flex items-center justify-center"
-        onClick={toggleMenu}
-        aria-label="Toggle navigation menu"
-        aria-expanded={isMenuOpen}
+        ref={toggle}
+        type="button"
+        className="menu-toggle refractive-glass"
+        aria-expanded={open}
+        aria-controls="editorial-navigation"
+        aria-label={t(open ? "navigation.close" : "navigation.open")}
+        onClick={() => setOpen((value) => !value)}
       >
-        <span className="gradient_text font-bold">
-          {isMenuOpen ? "✕" : "☰"}
-        </span>
+        <span />
+        <span />
       </button>
       <nav
-        className={`${isMenuOpen ? "flex" : "hidden"} md:flex flex-col md:flex-row text-lg gap-4 md:gap-7 absolute md:relative top-16 md:top-0 right-4 md:right-0 bg-white md:bg-transparent p-4 md:p-0 rounded-lg shadow-md md:shadow-none z-50`}
-        role="navigation"
-        aria-label="Main navigation"
+        id="editorial-navigation"
+        className="editorial-navigation refractive-glass"
+        aria-label={t("navigation.main")}
       >
-        {navItems.map(({ href, key }) => (
-          <Link
-            key={key}
-            href={href}
-            className={isActive(href) ? "nav-link gradient_text" : "nav-link"}
-            onClick={() => setIsMenuOpen(false)}
-            aria-label={t(key)}
-          >
-            {t(key)}
-          </Link>
-        ))}
+        {navItems.map(({ href, key }, index) => {
+          const active = pathname === href || pathname.startsWith(`${href}/`);
+          const label = t(key);
+          return (
+            <Link
+              key={key}
+              href={href}
+              className={`editorial-tab editorial-tab-${index}`}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+              onClick={() => setOpen(false)}
+            >
+              <span className="tab-initial" aria-hidden="true">
+                {label.slice(0, 1)}
+              </span>
+              <span className="tab-rest" aria-hidden="true">
+                <span>{label.slice(1)}</span>
+              </span>
+              <span className="tab-marker" aria-hidden="true" />
+            </Link>
+          );
+        })}
         <LanguageSwitcher />
       </nav>
     </header>
   );
-};
-
-export default Navbar;
+}

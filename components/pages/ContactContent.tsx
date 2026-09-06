@@ -154,10 +154,11 @@ const ContactContent = () => {
       {alert.show && <Alert {...alert} />}
 
       <div className="flex-1 min-w-[50%] flex flex-col">
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col items-start">
+          <p className="editorial-kicker mb-6">{t("editorial.practice")}</p>
           <h1 className="head-text ">
             {t("contact_heading")}
-            <span className="gradient_text">{t("contact_heading_span")}</span>
+            <span className="editorial-accent">{t("contact_heading_span")}</span>
           </h1>
         </div>
 

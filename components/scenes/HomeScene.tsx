@@ -1,130 +1,282 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useState, useEffect } from "react";
-import { useGLTF } from "@react-three/drei";
-import Loader from "@/components/Loader";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import Island from "@/models/Island";
-import Sky from "@/models/Sky";
-import Bird from "@/models/Bird";
-import Plane from "@/models/Plane";
-import HomeInfo from "@/components/HomeInfo";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/src/i18n/navigation";
+import { gerStyles, planets, type GerStyle } from "./planets/planet-data";
+import MobileWorldHUD from "./planets/MobileWorldHUD";
+import { ControlGlyph } from "./planets/WorldGlyph";
 
-const islandScene = "/3d/island.glb";
-const skyScene = "/3d/sky.glb";
-const birdScene = "/3d/bird.glb";
-const planeScene = "/3d/plane.glb";
+const PlanetCanvas = dynamic(() => import("./planets/PlanetCanvas"), {
+  ssr: false,
+});
+const subscribeMotion = (callback: () => void) => {
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  media.addEventListener("change", callback);
+  return () => media.removeEventListener("change", callback);
+};
+const reducedMotionSnapshot = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// drei v9 types don't surface the callback-style loader; runtime supports it.
-const loadGLTF = (
-  useGLTF as unknown as {
-    load: (
-      url: string,
-      onLoad: (gltf: unknown) => void,
-      onProgress: undefined,
-      onError: (error: unknown) => void
-    ) => void;
-  }
-).load;
+export default function HomeScene() {
+  const t = useTranslations("worlds");
+  const a = useTranslations("archive");
+  const locale = useLocale() === "de" ? "de" : "en";
+  const reducedMotion = useSyncExternalStore(
+    subscribeMotion,
+    reducedMotionSnapshot,
+    () => true,
+  );
+  const [selected, setSelected] = useState(0);
+  const [style, setStyle] = useState<GerStyle>("paint");
+  const [cycle, setCycle] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const [held, setHeld] = useState(false);
+  const [onScreen, setOnScreen] = useState(true);
+  const section = useRef<HTMLElement>(null);
+  const motion = !reducedMotion && !paused && visible && onScreen && !held;
+  const planet = planets[selected];
+  const isShop = planet.kind === "shop";
 
-type Triple = [number, number, number];
-
-const HomeScene = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentStage, setCurrentStage] = useState<number | null>(1);
-  const [isRotating, setIsRotating] = useState(false);
-
-  // Preload all models
   useEffect(() => {
-    const loadModels = async () => {
-      const modelPaths = [islandScene, skyScene, birdScene, planeScene];
-
-      try {
-        await Promise.all(
-          modelPaths.map(
-            (path) =>
-              new Promise((resolve, reject) => {
-                loadGLTF(path, (gltf) => resolve(gltf), undefined, (error) => reject(error));
-              })
-          )
-        );
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error loading models:", error);
-        setIsLoading(false);
-      }
+    const restore = () => {
+      const kind = new URL(window.location.href).searchParams.get("world");
+      const index = planets.findIndex((item) => item.kind === kind);
+      setSelected(index < 0 ? 0 : index);
     };
-
-    loadModels();
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
   }, []);
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
+  useEffect(() => {
+    const update = () => setVisible(!document.hidden);
+    document.addEventListener("visibilitychange", update);
+    update();
+    return () => document.removeEventListener("visibilitychange", update);
+  }, []);
 
-  const isSmallScreen = typeof window !== "undefined" && window.innerWidth < 768;
+  useEffect(() => {
+    if (!section.current) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setOnScreen(entry.isIntersecting),
+    );
+    observer.observe(section.current);
+    return () => observer.disconnect();
+  }, []);
 
-  const adjustPlaneForScreenSize = (): [Triple, Triple] => {
-    if (isSmallScreen) {
-      return [[1.5, 1.5, 1.5], [0, -1.5, 0]];
-    }
-    return [[3, 3, 3], [0, -4, -4]];
+  useEffect(() => {
+    if (!cycle || !motion || !isShop) return;
+    const timer = window.setInterval(() => {
+      setStyle(
+        (current) =>
+          gerStyles[(gerStyles.indexOf(current) + 1) % gerStyles.length],
+      );
+    }, 7200);
+    return () => window.clearInterval(timer);
+  }, [cycle, motion, isShop]);
+
+  const selectWorld = (index: number) => {
+    const next = (index + planets.length) % planets.length;
+    setSelected(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("world", planets[next].kind);
+    window.history.replaceState(window.history.state, "", url);
   };
-
-  const adjustIslandForScreenSize = (): [Triple, Triple, Triple] => {
-    const screenPosition: Triple = [0, -6.5, -43];
-    const rotation: Triple = [0.1, 4.7, 0];
-    const screenScale: Triple = isSmallScreen ? [0.9, 0.9, 0.9] : [1, 1, 1];
-    return [screenScale, screenPosition, rotation];
+  const selectStyle = (next: GerStyle) => {
+    setStyle(next);
+    setCycle(false);
   };
-
-  const [planeScale, planePosition] = adjustPlaneForScreenSize();
-  const [islandScale, islandPostition, islandRotation] = adjustIslandForScreenSize();
+  const resetView = () => {
+    setZoomed(false);
+    setResetKey(key => key + 1);
+  };
 
   return (
-    <section className="w-full h-screen relative">
-      <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-        {currentStage && <HomeInfo currentStage={currentStage} />}
-      </div>
-      <Canvas
-        className={`w-full h-screen bg-transparent ${
-          isRotating ? "cursor-grabbing" : "cursor-grab"
-        }`}
-        camera={{ near: 0.1, far: 1000 }}
+    <section
+      ref={section}
+      data-held={held}
+      data-world={planet.kind}
+      className="planet-explorer studio-explorer"
+      aria-label={t("label")}
+    >
+      <h1 className="sr-only">{a("heading")}</h1>
+      <aside className="studio-index" aria-label={t("choose")}>
+        <p className="studio-eyebrow">
+          {a("index")} <span>{String(planets.length).padStart(2, "0")}</span>
+        </p>
+        <div className="studio-index-list">
+          {planets.map((item, index) => (
+            <button
+              key={item.kind}
+              type="button"
+              className="studio-project"
+              aria-pressed={index === selected}
+              onClick={() => selectWorld(index)}
+            >
+              <span className="studio-project-number">{item.number}</span>
+              <span>{a(`names.${item.kind}`)}</span>
+              <span className="studio-project-cursor" aria-hidden="true">
+                /
+              </span>
+            </button>
+          ))}
+        </div>
+        <p className="studio-signature">{a("signature")}</p>
+      </aside>
+
+      <div
+        className="planet-stage studio-stage"
+        role="group"
+        aria-label={isShop ? t("sceneDescription") : a(`scenes.${planet.kind}`)}
       >
-        <Suspense fallback={<Loader />}>
-          <directionalLight position={[1, 1, 1]} intensity={1.2} />
-          <ambientLight intensity={0.1} />
-          <pointLight />
-          <spotLight />
-          <hemisphereLight color="#b1e1ff" groundColor="#dbeafe" intensity={1} />
-          <Sky isRotating={isRotating} />
-          <Bird />
-          <Island
-            isRotating={isRotating}
-            setIsRotating={setIsRotating}
-            setCurrentStage={setCurrentStage}
-            position={islandPostition}
-            rotation={islandRotation}
-            scale={islandScale}
-          />
-          <Plane
-            isRotating={isRotating}
-            scale={planeScale}
-            position={planePosition}
-            rotation={[0, 20, 0]}
-          />
-        </Suspense>
-      </Canvas>
+        <PlanetCanvas
+          index={selected}
+          style={style}
+          motion={motion}
+          resetKey={resetKey}
+          orbitStep={0}
+          zoomed={zoomed}
+          fallbackText={t("fallback")}
+          onHoldChange={setHeld}
+          interactionLabel={t("interact")}
+        />
+      </div>
+
+      <div className="studio-view-tools">
+        <span>{held ? a("held") : a("drag")}</span>
+        <button
+          type="button"
+          aria-label={a(zoomed ? "zoomOut" : "zoomIn")}
+          aria-pressed={zoomed}
+          onClick={() => setZoomed((value) => !value)}
+        >
+          <ControlGlyph name="zoom" />
+        </button>
+        <button
+          type="button"
+          aria-label={t("reset")}
+          title={t("reset")}
+          onClick={resetView}
+        >
+          <ControlGlyph name="reset" />
+        </button>
+        <button
+          type="button"
+          aria-label={paused ? t("resume") : t("pause")}
+          title={paused ? t("resume") : t("pause")}
+          aria-pressed={paused || reducedMotion}
+          disabled={reducedMotion}
+          onClick={() => setPaused((value) => !value)}
+        >
+          <ControlGlyph name={paused || reducedMotion ? "play" : "pause"} />
+        </button>
+        {isShop && (
+          <details className="studio-materials">
+            <summary aria-label={t("material")} title={t("material")}>
+              <ControlGlyph name="settings" />
+            </summary>
+            <div className="studio-material-menu refractive-glass">
+              <p className="studio-eyebrow">{t("material")}</p>
+              {gerStyles.map((item) => (
+                <button
+                  type="button"
+                  key={item}
+                  aria-pressed={style === item}
+                  onClick={() => selectStyle(item)}
+                >
+                  {t(item)}
+                  <span aria-hidden="true">{style === item ? "/" : ""}</span>
+                </button>
+              ))}
+              <button
+                type="button"
+                aria-pressed={cycle}
+                onClick={() => setCycle((value) => !value)}
+              >
+                {t("auto")}
+                <ControlGlyph name="cycle" />
+              </button>
+            </div>
+          </details>
+        )}
+      </div>
+
+      <div className="studio-caption">
+        <div
+          key={planet.kind}
+          className="studio-caption-copy planet-copy-enter"
+        >
+          <p className="studio-eyebrow">
+            {planet.number} <span>/ {a(`disciplines.${planet.kind}`)}</span>
+          </p>
+          <h2>{a(`names.${planet.kind}`)}</h2>
+          <p className="studio-description">
+            {a(`descriptions.${planet.kind}`)}
+          </p>
+        </div>
+        <div className="studio-caption-actions">
+          {planet.link && planet.kind !== "portfolio" ? (
+            <a
+              href={planet.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="studio-open"
+            >
+              {a("open")}
+              <ControlGlyph name="enter" />
+            </a>
+          ) : (
+            <Link
+              href={planet.kind === "portfolio" ? "/about" : "/projects"}
+              className="studio-open"
+            >
+              {t("details")}
+              <ControlGlyph name="enter" />
+            </Link>
+          )}
+          <div className="studio-paging">
+            <button
+              type="button"
+              aria-label={t("previous")}
+              onClick={() => selectWorld(selected - 1)}
+            >
+              <ControlGlyph name="left" />
+            </button>
+            <span>
+              {planet.number} / {String(planets.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              aria-label={t("next")}
+              onClick={() => selectWorld(selected + 1)}
+            >
+              <ControlGlyph name="right" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <MobileWorldHUD
+        zoomed={zoomed}
+        onZoom={() => setZoomed((value) => !value)}
+        selected={selected}
+        style={style}
+        cycle={cycle}
+        paused={paused}
+        reducedMotion={reducedMotion}
+        onSelect={selectWorld}
+        onStyle={selectStyle}
+        onCycle={() => setCycle((value) => !value)}
+        onPause={() => setPaused((value) => !value)}
+        onReset={resetView}
+      />
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {t("selected")}: {planet.name[locale]}
+      </span>
     </section>
   );
-};
-
-export default HomeScene;
-
-// Preload all models
-useGLTF.preload(islandScene);
-useGLTF.preload(skyScene);
-useGLTF.preload(birdScene);
-useGLTF.preload(planeScene);
+}

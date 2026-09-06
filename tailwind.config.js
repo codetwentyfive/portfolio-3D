@@ -11,45 +11,73 @@ export default {
   theme: {
     extend: {
       colors: {
+        paper: "#e9eae5",
+        ink: "#202421",
+        accent: "#a34526",
+        slate: {
+          50: "#f4f5f0",
+          100: "#e1e3dc",
+          200: "#cdd0c7",
+          300: "#b0b6ac",
+          400: "#80897e",
+          500: "#626e62",
+          600: "#4b574d",
+          700: "#37433a",
+          800: "#29332b",
+          900: "#202421",
+        },
+        sky: {
+          50: "#f6f2eb",
+          100: "#e8e5db",
+          500: "#92784c",
+          600: "#795631",
+          700: "#754c32",
+          900: "#37291d",
+        },
         gray: {
-          200: "#D5DAE1"
+          200: "#D5DAE1",
         },
         black: {
           DEFAULT: "#000",
-          500: "#1D2235"
+          500: "#1D2235",
         },
         blue: {
-          500: "#2b77e7"
-        }
+          50: "#f1ede4",
+          100: "#e9e3d5",
+          300: "#c4bba5",
+          400: "#98866d",
+          500: "#8a5940",
+          600: "#805039",
+          700: "#633c2b",
+        },
       },
       fontFamily: {
-        worksans: ["var(--font-manrope)", "sans-serif"],
-        poppins: ["var(--font-syne)", "sans-serif"]
+        sans: ["var(--font-archivo)", "sans-serif"],
+        display: ["var(--font-barlow)", "sans-serif"],
+        worksans: ["var(--font-archivo)", "sans-serif"],
+        poppins: ["var(--font-barlow)", "sans-serif"],
       },
       boxShadow: {
-        card: '0px 1px 2px 0px rgba(0, 0, 0, 0.05)'
+        card: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
       },
       animation: {
-        gradient: 'gradient 15s ease infinite',
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'float': 'float 3s ease-in-out infinite',
+        "fade-in": "fadeIn 0.5s ease-out forwards",
+        float: "float 3s ease-in-out infinite",
       },
       keyframes: {
-        gradient: {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
-        },
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px) translateX(-50%)' },
-          '100%': { opacity: '1', transform: 'translateY(0) translateX(-50%)' },
+          "0%": {
+            opacity: "0",
+            transform: "translateY(10px) translateX(-50%)",
+          },
+          "100%": { opacity: "1", transform: "translateY(0) translateX(-50%)" },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0) translateX(-50%)' },
-          '50%': { transform: 'translateY(-10px) translateX(-50%)' },
+          "0%, 100%": { transform: "translateY(0) translateX(-50%)" },
+          "50%": { transform: "translateY(-10px) translateX(-50%)" },
         },
       },
     },
   },
   plugins: [],
-}
+};
