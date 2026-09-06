@@ -2,11 +2,15 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// Next's development runtime uses eval; never permit it in production.
+const isDevelopment = process.env.NODE_ENV === "development";
+const devScriptEval = isDevelopment ? "'unsafe-eval' " : "";
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value:
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://w.soundcloud.com https://*.sndcdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' blob: https://*.soundcloud.com https://*.sndcdn.com https://www.gstatic.com https://static.cloudflareinsights.com https://cloudflareinsights.com; frame-src 'self' https://w.soundcloud.com https://*.soundcloud.com; media-src 'self' https://*.soundcloud.com https://*.sndcdn.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+      `default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' ${devScriptEval}https://static.cloudflareinsights.com https://w.soundcloud.com https://*.sndcdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' blob: https://*.soundcloud.com https://*.sndcdn.com https://www.gstatic.com https://static.cloudflareinsights.com https://cloudflareinsights.com; frame-src 'self' https://w.soundcloud.com https://*.soundcloud.com; media-src 'self' https://*.soundcloud.com https://*.sndcdn.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'${isDevelopment ? "" : "; upgrade-insecure-requests"}`,
   },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Content-Type-Options", value: "nosniff" },

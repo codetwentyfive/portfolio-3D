@@ -37,9 +37,11 @@ interface SCWidget {
   pause(): void;
   next(): void;
   prev(): void;
+  skip(index: number): void;
   seekTo(milliseconds: number): void;
   setVolume(volume: number): void;
   bind(eventName: string, listener: (data: SCWidgetEventData) => void): void;
+  unbind(eventName: string): void;
   getDuration(callback: (durationMs: number) => void): void;
   getSounds(callback: (sounds: SoundCloudSound[]) => void): void;
   getCurrentSound(callback: (sound: SoundCloudSound | null) => void): void;
