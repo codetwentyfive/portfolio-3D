@@ -15,6 +15,7 @@ import ShopPlanet from "./ShopPlanet";
 import ProjectDiorama from "./ProjectDiorama";
 import { planets, type GerStyle } from "./planet-data";
 import WorldTurntable from "./WorldTurntable";
+import WorldPreparation from "./WorldPreparation";
 
 function OriginalIsland() {
   const { scene } = useGLTF("/3d/island.glb");
@@ -91,6 +92,8 @@ export default function PlanetCanvas({
   onHoldChange,
   interactionLabel,
   zoomed,
+  prepareIndex,
+  onPrepared,
 }: {
   index: number;
   style: GerStyle;
@@ -101,6 +104,8 @@ export default function PlanetCanvas({
   onHoldChange: (held: boolean) => void;
   interactionLabel: string;
   zoomed: boolean;
+  prepareIndex: number | null;
+  onPrepared: (index: number) => void;
 }) {
   const [available, setAvailable] = useState<boolean | null>(null);
   useEffect(() => {
@@ -109,6 +114,10 @@ export default function PlanetCanvas({
     setAvailable(Boolean(context));
     context?.getExtension("WEBGL_lose_context")?.loseContext();
   }, []);
+  useEffect(() => {
+    // The text/project navigator must still work when WebGL is unavailable.
+    if (available === false && prepareIndex !== null) onPrepared(prepareIndex);
+  }, [available, prepareIndex, onPrepared]);
   const canvasElement = useRef<HTMLCanvasElement | null>(null);
   const loseContext = useRef((event: Event) => {
     event.preventDefault();
@@ -156,6 +165,9 @@ export default function PlanetCanvas({
         gl.setClearColor(0x000000, 0);
       }}
     >
+      {prepareIndex !== null && (
+        <WorldPreparation index={prepareIndex} onPrepared={onPrepared} />
+      )}
       <ambientLight intensity={0.08} />
       <hemisphereLight args={["#b9d8e8", "#4c513b", 0.55]} />
       <directionalLight

@@ -3,27 +3,25 @@
 import { useRef, type PointerEvent } from "react";
 import { useTranslations } from "next-intl";
 import { planets } from "./planet-data";
-import { ControlGlyph } from "./WorldGlyph";
 import {
   finishWorldSwipe,
   moveWorldSwipe,
   startWorldSwipe,
-  wrapWorld,
   type WorldSwipe,
 } from "./world-navigation";
 
 export default function MobileWorldPager({
   selected,
   onSelect,
+  busy,
 }: {
   selected: number;
   onSelect: (index: number) => void;
+  busy: boolean;
 }) {
   const t = useTranslations("worlds");
   const a = useTranslations("archive");
   const swipe = useRef<WorldSwipe | null>(null);
-  const previous = planets[wrapWorld(selected - 1, planets.length)];
-  const next = planets[wrapWorld(selected + 1, planets.length)];
 
   const cancel = (event: PointerEvent<HTMLDivElement>) => {
     if (swipe.current?.pointer !== event.pointerId) return;
@@ -40,13 +38,16 @@ export default function MobileWorldPager({
         tabIndex={0}
         aria-label={a("mobile.swipeLabel")}
         aria-describedby="world-swipe-hint"
+        aria-disabled={busy}
         onKeyDown={(event) => {
+          if (busy) return;
           if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
           event.preventDefault();
           onSelect(selected + (event.key === "ArrowLeft" ? -1 : 1));
         }}
         onPointerDown={(event) => {
-          if (!event.isPrimary || event.button !== 0 || swipe.current) return;
+          if (busy || !event.isPrimary || event.button !== 0 || swipe.current)
+            return;
           swipe.current = startWorldSwipe(
             event.pointerId,
             event.clientX,
@@ -72,7 +73,7 @@ export default function MobileWorldPager({
             event.clientY,
           );
           cancel(event);
-          if (direction) onSelect(selected + direction);
+          if (direction && !busy) onSelect(selected + direction);
         }}
         onPointerCancel={cancel}
         onLostPointerCapture={cancel}
@@ -90,30 +91,6 @@ export default function MobileWorldPager({
             <span key={planet.kind} data-active={selected === index} />
           ))}
         </div>
-      </div>
-      <div className="studio-world-neighbors">
-        <button
-          type="button"
-          onClick={() => onSelect(selected - 1)}
-          aria-label={`${t("previous")}: ${a(`names.${previous.kind}`)}`}
-        >
-          <ControlGlyph name="left" />
-          <span>
-            <small>{a("mobile.previous")}</small>
-            {a(`names.${previous.kind}`)}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onSelect(selected + 1)}
-          aria-label={`${t("next")}: ${a(`names.${next.kind}`)}`}
-        >
-          <span>
-            <small>{a("mobile.next")}</small>
-            {a(`names.${next.kind}`)}
-          </span>
-          <ControlGlyph name="right" />
-        </button>
       </div>
     </nav>
   );

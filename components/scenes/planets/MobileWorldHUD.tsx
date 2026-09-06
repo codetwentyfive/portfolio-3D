@@ -27,6 +27,7 @@ export default function MobileWorldHUD({
   zoomed,
   onZoom,
   held,
+  busy,
 }: {
   selected: number;
   style: GerStyle;
@@ -41,6 +42,7 @@ export default function MobileWorldHUD({
   zoomed: boolean;
   onZoom: () => void;
   held: boolean;
+  busy: boolean;
 }) {
   const t = useTranslations("worlds");
   const a = useTranslations("archive");
@@ -145,7 +147,7 @@ export default function MobileWorldHUD({
           </Link>
         )}
       </div>
-      <MobileWorldPager selected={selected} onSelect={onSelect} />
+      <MobileWorldPager selected={selected} onSelect={onSelect} busy={busy} />
     </div>
   );
 }

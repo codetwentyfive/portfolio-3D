@@ -47,6 +47,8 @@
       "rotate": "Drag the island to rotate it",
       "view": "3D controls",
       "swipe": "Swipe here to switch worlds",
+      "loading": "Preparing the next world...",
+      "loadFailed": "That world took too long to load. Try the arrow again.",
       "swipeLabel": "World switcher. Swipe left or right, or use the arrow keys.",
       "previous": "Previous",
       "next": "Next",

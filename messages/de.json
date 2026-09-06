@@ -47,6 +47,8 @@
       "rotate": "Zum Drehen an der Insel ziehen",
       "view": "3D-Steuerung",
       "swipe": "Hier wischen, um die Welt zu wechseln",
+      "loading": "Die nächste Welt wird vorbereitet...",
+      "loadFailed": "Das Laden dauert zu lange. Versuche es erneut mit dem Pfeil.",
       "swipeLabel": "Weltauswahl. Nach links oder rechts wischen oder die Pfeiltasten nutzen.",
       "previous": "Zurück",
       "next": "Weiter",

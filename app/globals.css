@@ -382,11 +382,47 @@ html {
   }
 
   /* A model archive: one scene, one index, one caption. Controls are secondary. */
+  body:has(.studio-explorer) {
+    --home-top: max(12px, env(safe-area-inset-top));
+  }
+  main:has(> .studio-explorer) {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+    height: 100svh;
+    height: 100dvh;
+  }
+  body:has(.studio-explorer) .site-header {
+    top: var(--home-top);
+    left: max(20px, env(safe-area-inset-left));
+    right: max(20px, env(safe-area-inset-right));
+  }
+  body:has(.studio-explorer) .portfolio-audio {
+    top: calc(var(--home-top) + 2px);
+    right: calc(max(20px, env(safe-area-inset-right)) + 60px);
+  }
+  main:has(> .studio-explorer) > .footer .footer-container {
+    @apply flex-row items-center px-5 py-0;
+    max-width: none;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  main:has(> .studio-explorer) > .footer .footer-container > div:first-child {
+    display: none;
+  }
+  main:has(> .studio-explorer) > .footer .footer-container > div:last-child {
+    @apply w-full flex-nowrap justify-between gap-2;
+  }
   .studio-explorer {
-    @apply relative isolate grid grid-cols-1 overflow-hidden bg-paper px-5 pt-[100px] text-ink;
-    grid-template-rows: auto minmax(220px, 1fr) auto;
-    min-height: 100svh;
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    @apply relative isolate grid grid-cols-1 overflow-hidden bg-paper px-5 text-ink;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 0;
+    height: 100%;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-top: calc(var(--home-top) + 58px);
+    padding-bottom: clamp(4px, 1dvh, 12px);
   }
   .studio-mobile-intro {
     @apply relative z-10 lg:hidden;
@@ -395,19 +431,21 @@ html {
     @apply mt-1 text-xs text-slate-600;
   }
   .studio-mobile-title {
-    @apply mt-5;
-    min-height: 100px;
+    margin-top: clamp(6px, 1.5dvh, 16px);
     animation: world-title-next 350ms both;
   }
   .studio-explorer[data-direction="previous"] .studio-mobile-title {
     animation-name: world-title-previous;
   }
   .studio-mobile-title h2 {
-    @apply font-display text-[clamp(2rem,7vw,3rem)] font-semibold leading-none tracking-[-0.025em];
+    @apply font-display font-semibold leading-none tracking-[-0.025em];
+    font-size: clamp(1.65rem, min(7vw, 4.7dvh), 2.6rem);
     text-wrap: balance;
   }
   .studio-mobile-title > p {
-    @apply mt-2 max-w-[42ch] text-[13px] leading-relaxed text-slate-600;
+    @apply mt-1 max-w-[42ch] text-slate-600;
+    font-size: clamp(12px, 1.6dvh, 14px);
+    line-height: 1.45;
     text-wrap: pretty;
   }
   .studio-index {
@@ -448,6 +486,49 @@ html {
   }
   .studio-stage {
     @apply relative min-h-0 min-w-0 lg:absolute lg:bottom-[235px] lg:left-[260px] lg:right-8 lg:top-[105px];
+    overflow: hidden;
+  }
+  .studio-canvas {
+    @apply absolute inset-0;
+  }
+  .studio-scene-arrow {
+    @apply absolute top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-ink/40 bg-paper/90 text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-40;
+  }
+  .studio-scene-arrow svg {
+    @apply h-6 w-6;
+  }
+  .studio-scene-arrow:active:not(:disabled) {
+    scale: 0.93;
+  }
+  .studio-scene-previous {
+    left: 0;
+  }
+  .studio-scene-next {
+    right: 0;
+  }
+  .studio-transition-status {
+    @apply pointer-events-none absolute inset-x-10 bottom-1 z-20 text-center text-xs leading-tight text-slate-600;
+  }
+  .studio-explorer[data-transition="exiting"] .studio-canvas {
+    animation: world-depart-next 180ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  .studio-explorer[data-transition="entering"] .studio-canvas {
+    animation: world-arrive-next 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .studio-explorer[data-direction="previous"][data-transition="exiting"]
+    .studio-canvas {
+    animation-name: world-depart-previous;
+  }
+  .studio-explorer[data-direction="previous"][data-transition="entering"]
+    .studio-canvas {
+    animation-name: world-arrive-previous;
+  }
+  .studio-explorer:is([data-transition="exiting"], [data-transition="entering"])
+    .studio-canvas {
+    will-change: transform, opacity;
+  }
+  .studio-explorer:not([data-transition="idle"]) .studio-canvas {
+    pointer-events: none;
   }
   .studio-view-tools {
     @apply absolute bottom-[186px] right-12 z-20 hidden items-center gap-1 lg:flex;
@@ -527,7 +608,7 @@ html {
     @apply mb-1 text-center font-mono text-[10px] text-slate-500;
   }
   .studio-mobile-actions {
-    @apply mb-3 flex items-center justify-between gap-4;
+    @apply mb-1 flex items-center justify-between gap-4;
   }
   .studio-mobile-view {
     @apply relative;
@@ -559,7 +640,7 @@ html {
     @apply border-y border-slate-300;
   }
   .studio-world-swipe {
-    @apply grid min-h-[76px] cursor-ew-resize select-none grid-cols-[1fr_auto] items-center gap-x-4 px-1 pb-3 pt-4;
+    @apply grid min-h-[52px] cursor-ew-resize select-none grid-cols-[1fr_auto] items-center gap-x-4 px-1 py-2;
     touch-action: pan-y pinch-zoom;
   }
   .studio-world-swipe > p {
@@ -572,28 +653,13 @@ html {
     @apply font-medium text-accent;
   }
   .studio-world-progress {
-    @apply col-span-2 mt-3 grid grid-cols-6 gap-1;
+    @apply col-span-2 mt-2 grid grid-cols-6 gap-1;
   }
   .studio-world-progress > span {
     @apply h-0.5 bg-slate-300 transition-colors;
   }
   .studio-world-progress > span[data-active="true"] {
     @apply bg-accent;
-  }
-  .studio-world-neighbors {
-    @apply grid grid-cols-2 border-t border-slate-300;
-  }
-  .studio-world-neighbors > button {
-    @apply flex min-h-[64px] min-w-0 items-center gap-3 py-3 pr-3 text-left text-xs leading-tight hover:text-accent;
-  }
-  .studio-world-neighbors > button:last-child {
-    @apply justify-end border-l border-slate-300 pl-3 pr-0 text-right;
-  }
-  .studio-world-neighbors svg {
-    @apply h-5 w-5 shrink-0;
-  }
-  .studio-world-neighbors small {
-    @apply mb-1 block font-mono text-[9px] uppercase tracking-wide text-slate-500;
   }
   .studio-loader {
     @apply block h-8 w-8 animate-spin rounded-full border border-slate-300 border-t-ink motion-reduce:animate-none;
@@ -705,6 +771,54 @@ html {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+@keyframes world-depart-next {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-24%) scale(0.9);
+  }
+}
+@keyframes world-depart-previous {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(24%) scale(0.9);
+  }
+}
+@keyframes world-arrive-next {
+  from {
+    opacity: 0;
+    transform: translateX(28%) scale(0.9);
+  }
+  75% {
+    opacity: 1;
+    transform: translateX(-0.6%) scale(1.008);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes world-arrive-previous {
+  from {
+    opacity: 0;
+    transform: translateX(-28%) scale(0.9);
+  }
+  75% {
+    opacity: 1;
+    transform: translateX(0.6%) scale(1.008);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 @keyframes world-title-previous {
@@ -874,12 +988,61 @@ html {
 @media (min-width: 1024px) {
   body:has(.studio-explorer) .site-header {
     max-width: none;
+    left: 48px;
+    right: 48px;
   }
   .studio-explorer {
     display: block;
     padding: 0;
-    min-height: 580px;
-    height: max(760px, 100svh);
+    min-height: 0;
+    height: 100%;
+  }
+  body:has(.studio-explorer) .portfolio-audio {
+    top: calc(var(--home-top) + 60px);
+    right: 48px;
+  }
+  .studio-index {
+    top: clamp(116px, 17dvh, 154px);
+  }
+  .studio-project {
+    min-height: clamp(40px, 6dvh, 54px);
+  }
+  .studio-stage {
+    top: 100px;
+    left: 292px;
+    bottom: clamp(156px, 24dvh, 220px);
+  }
+  .studio-caption {
+    bottom: 12px;
+    padding-top: 12px;
+  }
+  .studio-caption h2 {
+    font-size: clamp(1.8rem, 4dvh, 3.4rem);
+  }
+  .studio-view-tools {
+    bottom: clamp(132px, 20dvh, 180px);
+  }
+  .studio-signature {
+    margin-top: 16px;
+  }
+  .studio-scene-arrow {
+    width: 52px;
+    height: 52px;
+  }
+  .studio-canvas {
+    left: 40px;
+    right: 40px;
+  }
+  .studio-project:disabled {
+    cursor: wait;
+  }
+  .studio-paging button:disabled {
+    opacity: 0.4;
+    cursor: wait;
+  }
+  main:has(> .studio-explorer) > .footer .footer-container {
+    padding-left: 48px;
+    padding-right: 48px;
   }
   .editorial-navigation.refractive-glass {
     background: transparent;
@@ -912,6 +1075,10 @@ html {
       opacity 250ms,
       transform 400ms,
       visibility 250ms;
+    max-height: calc(
+      100dvh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+    );
+    overflow-y: auto;
   }
   .site-header[data-open="true"] .editorial-navigation {
     visibility: visible;
@@ -982,6 +1149,75 @@ html {
     max-width: 380px;
     margin-left: auto;
     max-height: calc(100dvh - 104px);
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 560px) {
+  .studio-explorer {
+    display: grid;
+    padding: calc(var(--home-top) + 58px) 48px 4px;
+  }
+  .studio-mobile-intro,
+  .studio-mobile-hud {
+    display: block;
+  }
+  .studio-index,
+  .studio-view-tools,
+  .studio-caption {
+    display: none;
+  }
+  .studio-stage {
+    position: relative;
+    inset: auto;
+  }
+  body:has(.studio-explorer) .portfolio-audio {
+    top: calc(var(--home-top) + 2px);
+    left: 210px;
+    right: auto;
+  }
+  body:has(.studio-explorer) .music-panel {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 1023px) and (max-height: 600px) and (orientation: landscape),
+  (min-width: 1024px) and (max-height: 560px) {
+  .studio-explorer {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 20px;
+  }
+  .studio-mobile-intro {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+  .studio-stage {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .studio-mobile-hud {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .studio-mobile-title {
+    margin-top: 6px;
+  }
+  .studio-mobile-title h2 {
+    font-size: clamp(24px, 6dvh, 30px);
+  }
+  .studio-mobile-context {
+    display: none;
+  }
+  .studio-mobile-gesture {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 700px) {
+  .studio-signature {
+    display: none;
   }
 }
 

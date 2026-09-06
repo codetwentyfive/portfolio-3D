@@ -63,6 +63,8 @@ test("both locales explain all six worlds and expose mobile navigation hints", (
       "swipeLabel",
       "previous",
       "next",
+      "loading",
+      "loadFailed",
     ])
       assert.ok(archive.mobile[key].length > 0);
   }
