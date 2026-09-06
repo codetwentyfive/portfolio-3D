@@ -476,88 +476,11 @@ def potera():
 
 
 def assistant():
-    clear()
-    board=mat("Circuit green",(.035,.105,.074),.75)
-    platform(5.1,4.25,STONE)
-    # A cutaway room, not a generic orbital AI symbol.
-    box("Rear acoustic wall",(0,1.12,-1.63),(4.65,2.22,.11),CREAM,.025)
-    for x in [-2.22,-2.1,-1.98,-1.86,-1.74]:
-        box("Acoustic slat",(x,1.23,-1.53),(.048,1.89,.065),WOOD)
-    for i in range(9):
-        box("Floor board",(0,.07,-1.42+i*.39),(4.74,.045,.37),WOOD if i%3 else WOOD2,.008)
-    # Full rack: rails, patch panel, drive bays, ventilation and connected leads.
-    rx,rz=1.55,-.61
-    box("Rack chassis",(rx,1.11,rz),(1.06,2.08,.87),IRON,.045)
-    for x in [rx-.43,rx+.43]:
-        box("Rack rail",(x,1.1,rz+.45),(.055,1.98,.04),STEEL)
-        for i in range(18):
-            sphere("Rack screw",(x,.23+i*.102,rz+.476),(.012,.012,.009),BRASS)
-    for row in range(6):
-        y=.35+row*.29
-        box("Rack unit",(rx,y,rz+.452),(.79,.245,.054),STONE if row%2 else IRON,.012)
-        for col in range(4):
-            box("Drive sled",(rx-.29+col*.193,y,rz+.49),(.172,.13,.025),IRON,.009)
-            box("Drive handle",(rx-.29+col*.193,y-.055,rz+.51),(.12,.02,.025),STEEL,.004)
-            sphere("Status light",(rx-.34+col*.193,y+.083,rz+.49),(.012,.012,.01),GREEN if col%3 else AMBER)
-    for i in range(7):
-        x=rx-.32+i*.105
-        box("Network port",(x,2.02,rz+.468),(.07,.056,.032),STEEL,.002)
-        cable("Patch lead",[(x,2.02,rz+.52),(x,1.93,rz+.7),(rx+.43,1.82-i*.06,rz+.69),(rx+.48,1.6-i*.08,rz+.46)],.011,TEAL if i%2 else RUST)
-    label("Rack serial","LOCAL / 01",(rx,2.21,rz+.455),.105,CREAM)
-    # Exposed side panel reveals cooling fans, heat sink and motherboard.
-    box("Side service panel",(rx+.54,1.1,rz),(.026,1.6,.63),board)
-    for y in [.62,1.28]:
-        ring("Fan rim",(rx+.57,y,rz),.22,.025,STEEL,"x")
-        fan=pivot(f"fan_{int(y*100)}",(rx+.58,y,rz))
-        rod("Fan hub",(rx+.55,y,rz),(rx+.62,y,rz),.055,IRON,fan)
-        for i in range(7):
-            a=i*math.tau/7
-            rod("Fan blade",(rx+.585,y+math.sin(a)*.06,rz+math.cos(a)*.06),(rx+.585,y+math.sin(a+.4)*.18,rz+math.cos(a+.4)*.18),.032,IRON,fan)
-    # Desk, CRT, keyboard, reel-to-reel field recorder and task lamp.
-    box("Desk top",(-.62,.88,-.53),(2.17,.13,1.12),WOOD2,.04)
-    for x in [-1.55,.28]:
-        for z in [-.96,-.12]:
-            box("Desk leg",(x,.46,z),(.08,.87,.08),IRON)
-    box("CRT enclosure",(-.73,1.38,-.72),(.98,.79,.64),CREAM,.09)
-    box("CRT bezel",(-.73,1.4,-.377),(.86,.61,.07),IRON,.055)
-    box("CRT glass",(-.73,1.42,-.33),(.72,.45,.025),GLASS,.05)
-    for i in range(6):
-        box("Terminal line",(-.93+(.07 if i%2 else 0),1.57-i*.055,-.311),(.25+(i%3)*.095,.012,.003),GREEN,0)
-    box("Cursor",(-.89,1.27,-.308),(.041,.015,.004),GREEN,0)
-    sphere("Monitor dial",(-.4,1.12,-.343),(.031,.031,.023),STEEL)
-    box("Keyboard body",(-.69,.992,-.06),(.9,.07,.27),CREAM,.025)
-    for row in range(4):
-        for col in range(12):
-            box("Keycap",(-1.08+col*.071,1.037,-.15+row*.058),(.056,.025,.044),IRON if col%5==0 else LIGHTSTONE,.004)
-    box("Spacebar",(-.65,1.055,.06),(.29,.016,.025),IRON,.002)
-    sphere("Mouse",(-.02,1.02,-.05),(.07,.04,.11),CREAM)
-    cable("Mouse cable",[(-.02,1.02,-.15),(.04,1,-.36),(-.3,1,-.7)],.009,RUBBER)
-    box("Recorder",(-1.45,1.17,-.6),(.4,.42,.38),TEAL,.02)
-    for x in [-1.55,-1.35]:
-        reel=pivot(f"reel_{x}",(x,1.28,-.386))
-        ring("Tape reel",(x,1.28,-.385),.078,.013,CREAM,"z",reel)
-        for i in range(3):
-            a=i*math.tau/3
-            rod("Reel spoke",(x,1.28,-.383),(x+math.cos(a)*.068,1.28+math.sin(a)*.068,-.383),.008,CREAM,reel)
-    rod("Lamp stem",(.2,.96,-.94),(.08,1.7,-.9),.019,STEEL)
-    rod("Lamp arm",(.08,1.7,-.9),(-.1,1.83,-.5),.017,STEEL)
-    sphere("Lamp shade",(-.1,1.79,-.5),(.19,.08,.16),TEAL)
-    sphere("Lamp light",(-.1,1.745,-.5),(.13,.009,.11),AMBER)
-    # Cable tray and a small chair make the room look used, not staged machinery.
-    for i in range(4):
-        cable("Floor cable",[(rx-.2,.14,.03),(.7,.14,.36),(.6,.14,1.14),(-1.6+i*.07,.14,1.05),(-1.6+i*.07,.17,-.08)],.017,TEAL if i%2 else RUBBER)
-    rod("Chair post",(-.6,.15,.94),(-.6,.64,.94),.045,STEEL)
-    box("Chair cushion",(-.6,.68,.94),(.61,.12,.53),RED,.09)
-    for x in [-.86,-.34]:
-        rod("Back frame",(x,.67,1.14),(x,1.23,1.2),.024,STEEL)
-    box("Chair back",(-.6,1.15,1.22),(.58,.38,.11),RED,.055)
-    for i in range(5):
-        a=i*math.tau/5
-        rod("Chair spoke",(-.6,.18,.94),(-.6+math.sin(a)*.38,.13,.94+math.cos(a)*.38),.025,IRON)
-    box("Wall shelf",(-.4,1.98,-1.34),(2.15,.07,.42),WOOD)
-    for i in range(8):
-        box("Technical manual",(-1.2+i*.1,2.19,-1.35),(.075,.36+(i%3)*.025,.24),[TEAL,CREAM,RUST][i%3],.008)
-    plant((.4,2.01,-1.33),.45)
+    from types import SimpleNamespace
+    if str(ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(ROOT / "scripts"))
+    from home_room import build
+    build(SimpleNamespace(**globals()))
     export("assistant")
 
 

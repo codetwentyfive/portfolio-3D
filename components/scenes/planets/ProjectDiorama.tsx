@@ -7,6 +7,7 @@ import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { PlanetKind } from "./planet-data";
 import worldVersions from "@/assets/world-versions.json";
+import MatrixDisplay from "./MatrixDisplay";
 
 type DioramaKind = Exclude<PlanetKind, "shop" | "portfolio">;
 
@@ -24,7 +25,10 @@ export default function ProjectDiorama({
     const mechanisms: THREE.Object3D[] = [];
     model.traverse((object) => {
       if (object instanceof THREE.Mesh) {
-        object.castShadow = true;
+        object.castShadow = !(
+          !Array.isArray(object.material) &&
+          object.material.name === "Room cabinet glass"
+        );
         object.receiveShadow = true;
       } else if (/^(parcel|fan|reel|cymbal)_/.test(object.name)) {
         mechanisms.push(object);
@@ -52,5 +56,21 @@ export default function ProjectDiorama({
   });
 
   // Loader-owned geometry/materials stay cached; each placement owns its transforms.
-  return <primitive object={model} position={[0, -0.55, 0]} dispose={null} />;
+  return (
+    <group position={[0, kind === "assistant" ? -1.15 : -0.55, 0]}>
+      <primitive object={model} dispose={null} />
+      {kind === "assistant" && (
+        <>
+          <MatrixDisplay model={model} motion={motion} />
+          <pointLight
+            position={[0, 1.6, 0.05]}
+            color="#76efb0"
+            intensity={0.75}
+            distance={3.2}
+            decay={2}
+          />
+        </>
+      )}
+    </group>
+  );
 }

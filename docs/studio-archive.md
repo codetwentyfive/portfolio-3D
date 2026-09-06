@@ -10,7 +10,7 @@ Desktop navigation shows full words; variable-width movement remains a small int
 
 The earlier mobile world marks remain in `WorldGlyph.tsx`, but the mobile selector now uses neighboring project names instead of expecting visitors to decode icons. The models and their visual identity are unchanged by this navigation follow-up.
 
-[Bruno Simon's portfolio](https://bruno-simon.com/) was an interaction reference for an authored 3D environment. These four models are original Blender geometry, not copied assets or representations of the projects' actual premises.
+[Bruno Simon's portfolio](https://bruno-simon.com/) was an interaction reference for an authored 3D environment. The initial four models are original Blender geometry, not copied assets or representations of the projects' actual premises. The September 6 home-room replacement is instead informed by the user's real living-room photograph.
 
 ## Environments
 
@@ -21,9 +21,9 @@ The earlier mobile world marks remain in `WorldGlyph.tsx`, but the mobile select
 | Original portfolio | Retained original island, with corrected runtime lighting | Shared turntable |
 | Strange Seeds | Timber stage, drum kit, guitar, amps, microphone stands, lighting, cables | Restrained cymbal motion |
 | Potera | Townhouse courtyard, paving, ladder, cleaning cart and equipment | Shared turntable |
-| Home lab | Cutaway room, server rack, CRT, keyboard, recorder, desk, chair, cables | Cooling fans and recorder reels |
+| Home lab | Photo-informed living room, antique cabinets, plants, framed prints, TV, hi-fi and wooden PC | Matrix-style digital rain on the TV; see [Home room](home-room.md) |
 
-The four replacement models total about 6.74 MB uncompressed. Each is loaded only when selected, then cached. This is more geometry than the primitive placeholders, not a claim of lower total asset bandwidth. Static geometry is batched into 14-23 material groups per world; named pivots retain independent motion. These are detailed browser-scale miniatures, not film-production assets.
+The initial four replacement models totaled about 6.74 MB uncompressed; the later photo-informed home room is 3.95 MB on its own, so that original total no longer applies. Each world is loaded only when selected, then cached. This is more geometry than the primitive placeholders, not a claim of lower total asset bandwidth. Static geometry is batched into 14-23 material groups per world; named pivots retain independent motion where applicable. These are detailed browser-scale miniatures, not film-production assets.
 
 ## Implementation
 
@@ -49,7 +49,7 @@ From the repository root with Blender 4.0:
 & 'C:/Program Files/Blender Foundation/Blender 4.0/blender.exe' --background --factory-startup --python scripts/render-world-previews.py
 ```
 
-GLBs are in `public/3d/worlds/` and six 720 x 520 transparent previews are in `public/images/worlds/`; Next Image serves responsive optimized versions. `assets/world-versions.json` controls their versions across runtime, generation and tests. Seeds and Potera use v3 with [original project branding](world-branding.md); other assets remain v2. The shop thumbnail assembles the actual shop assets on a simplified base, not the full runtime grass field. Preview lighting is rendered in Blender, so it is not an exact screenshot of the WebGL scene.
+GLBs are in `public/3d/worlds/` and six 720 x 520 transparent previews are in `public/images/worlds/`; Next Image serves responsive optimized versions. `assets/world-versions.json` controls their versions across runtime, generation and tests. Seeds and Potera use v3 with [original project branding](world-branding.md), and the [photo-informed home room](home-room.md) uses v4; other assets remain v2. The shop thumbnail assembles the actual shop assets on a simplified base, not the full runtime grass field. Preview lighting is rendered in Blender, so it is not an exact screenshot of the WebGL scene.
 
 When changing exported models or previews, update their version in `assets/world-versions.json` and regenerate. Both runtime loaders, catalog paths, render scripts and asset tests read this registry. The asset headers are long-lived; overwriting a published URL can leave stale models in visitors' caches. Do not remove or mutate loader-owned buffers when unmounting an instance.
 

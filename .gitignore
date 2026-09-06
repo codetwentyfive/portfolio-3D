@@ -28,3 +28,4 @@ CLAUDE.md
 PROJECT_OVERVIEW.md
 .vercel
 *.tsbuildinfo
+__pycache__/

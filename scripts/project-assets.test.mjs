@@ -8,7 +8,7 @@ const versions = JSON.parse(
   readFileSync(new URL("assets/world-versions.json", root), "utf8"),
 );
 const kinds = ["payments", "seeds", "potera", "assistant"];
-const expectedPivots = { payments: 3, seeds: 3, potera: 0, assistant: 4 };
+const expectedPivots = { payments: 3, seeds: 3, potera: 0, assistant: 0 };
 
 for (const kind of kinds) {
   test(`${kind}: self-contained, detailed GLB stays within web budgets`, () => {
@@ -154,4 +154,50 @@ test("archive UI keys match across both locales", () => {
     readFileSync(new URL("messages/de.json", root), "utf8"),
   ).archive;
   assert.deepEqual(keys(en), keys(de));
+});
+
+test("home room has a dedicated UV-mapped TV and embedded room textures", () => {
+  const file = readFileSync(new URL(`public/3d/worlds/assistant-v${versions.assistant}.glb`, root));
+  const length = file.readUInt32LE(12);
+  const json = JSON.parse(file.subarray(20, 20 + length).toString());
+  const index = json.materials.findIndex((m) => m.name === "Room OLED screen");
+  assert.ok(index >= 0, "runtime must be able to find the OLED material");
+  const screen = json.materials[index];
+  assert.notEqual(screen.emissiveTexture, undefined, "static previews still show digital rain");
+  const primitives = json.meshes.flatMap((mesh) => mesh.primitives).filter((p) => p.material === index);
+  assert.equal(primitives.length, 1);
+  assert.equal(json.accessors[primitives[0].indices].count, 6, "one flat 16:9 screen");
+  assert.notEqual(primitives[0].attributes.TEXCOORD_0, undefined);
+  const textureIndex = screen.pbrMetallicRoughness.baseColorTexture.index;
+  const view = json.bufferViews[json.images[json.textures[textureIndex].source].bufferView];
+  const offset = 28 + length + (view.byteOffset || 0);
+  assert.deepEqual(file.subarray(offset, offset + view.byteLength), readFileSync(new URL("assets/home-room/matrix-still.png", root)));
+  const required = ["Room walnut", "Room oak", "Room rosewood", "Room warm plaster", "Room speaker weave", "Room burgundy upholstery", "Room framed prints"];
+  for (const name of required) {
+    const material = json.materials.find((m) => m.name === name);
+    assert.notEqual(material?.pbrMetallicRoughness.baseColorTexture, undefined, name);
+  }
+  const glass = json.materials.find((m) => m.name === "Room cabinet glass");
+  assert.equal(glass.alphaMode, "BLEND");
+  assert.ok(glass.pbrMetallicRoughness.baseColorFactor[3] < 0.2);
+});
+
+test("home-room shelves contain both Mac minis and a metallic DGX Spark", () => {
+  const file = readFileSync(new URL(`public/3d/worlds/assistant-v${versions.assistant}.glb`, root));
+  const json = JSON.parse(file.subarray(20, 20 + file.readUInt32LE(12)).toString());
+  const primitives = json.meshes.flatMap((mesh) => mesh.primitives);
+  for (const name of ["Room Mac mini aluminum", "Room DGX Spark champagne"]) {
+    const index = json.materials.findIndex((material) => material.name === name);
+    assert.ok(index >= 0, name);
+    const material = json.materials[index].pbrMetallicRoughness;
+    assert.ok(material.metallicFactor > 0.6);
+    assert.ok(material.roughnessFactor > 0.2 && material.roughnessFactor < 0.4);
+    const hardware = primitives.filter((p) => p.material === index);
+    assert.equal(hardware.length, 1, "hardware of one finish shares one batch");
+    if (name === "Room Mac mini aluminum") {
+      const positions = json.accessors[hardware[0].attributes.POSITION];
+      assert.ok(positions.max[0] - positions.min[0] > 0.8, "both separated mini enclosures survive batching");
+    }
+  }
+  assert.equal(json.images.length, 9, "small hardware needs no extra texture downloads");
 });
