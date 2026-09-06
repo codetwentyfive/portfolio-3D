@@ -1,16 +1,21 @@
-"""Original miniature working environments. Blender 4.0+, no downloaded assets.
+"""Original miniature working environments. Blender 4.0+.
 
 Coordinates use the site's Y-up convention. Static geometry is joined by material;
 named mechanical pivots are kept separate for small, meaningful web animations.
+Brand artwork is sourced from the clients' local repositories, not generated.
 """
+import json
 import math
 import random
+import sys
 from pathlib import Path
 
 import bpy
 from mathutils import Vector
 
-OUT = Path(__file__).resolve().parents[1] / "public/3d/worlds"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "public/3d/worlds"
+VERSIONS = json.loads((ROOT / "assets/world-versions.json").read_text())
 OUT.mkdir(parents=True, exist_ok=True)
 random.seed(25)
 
@@ -170,6 +175,38 @@ def label(name, value, p, size, m=CREAM):
     return finish(o,name,m)
 
 
+def brand_material(kind, name):
+    image = bpy.data.images.load(str(ROOT / f"assets/world-branding/{kind}-logo.png"), check_existing=True)
+    image.pack()
+    material = mat(name, (1, 1, 1), .82)
+    material.blend_method = "CLIP"
+    material.alpha_threshold = .08
+    material.use_backface_culling = True
+    texture = material.node_tree.nodes.new("ShaderNodeTexImage")
+    texture.image = image
+    shader = material.node_tree.nodes.get("Principled BSDF")
+    material.node_tree.links.new(texture.outputs["Color"], shader.inputs["Base Color"])
+    material.node_tree.links.new(texture.outputs["Alpha"], shader.inputs["Alpha"])
+    return material, image.size[0] / image.size[1]
+
+
+def brand_decal(name, p, height, artwork):
+    material, aspect = artwork
+    width = height * aspect
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata([xyz((p[0]+x, p[1]+y, p[2])) for x, y in [
+        (-width/2, -height/2), (width/2, -height/2),
+        (width/2, height/2), (-width/2, height/2),
+    ]], [], [(0, 1, 2, 3)])
+    uv = mesh.uv_layers.new(name="Logo UV")
+    for loop, coord in zip(uv.data, [(0, 0), (1, 0), (1, 1), (0, 1)]):
+        loop.uv = coord
+    mesh.update()
+    o = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(o)
+    return finish(o, name, material)
+
+
 def platform(width=5.3, depth=4.2, m=STONE):
     box("Foundation edge",(0,-.27,0),(width,.52,depth),IRON,.2)
     box("Cast surface",(0,-.04,0),(width+.08,.15,depth+.08),m,.16)
@@ -214,7 +251,7 @@ def export(name):
             bpy.ops.object.join()
         bpy.context.object.name=f"{parent.name if parent else name}_{material}"
     bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.export_scene.gltf(filepath=str(OUT/f"{name}-v2.glb"),export_format="GLB",export_yup=True,export_animations=False,export_cameras=False,export_lights=False)
+    bpy.ops.export_scene.gltf(filepath=str(OUT/f"{name}-v{VERSIONS[name]}.glb"),export_format="GLB",export_yup=True,export_animations=False,export_cameras=False,export_lights=False)
     print(f"WORLD {name}: {sum(len(o.data.polygons) for o in bpy.context.scene.objects if o.type=='MESH')} polygons / {len(groups)} material groups")
 
 
@@ -300,7 +337,8 @@ def seeds():
     rod("Kick front skin",(0,.96,-.018),(0,.96,-.01),.365,CREAM,vertices=40)
     for z in [-.64,0]:
         ring("Kick rim",(0,.96,z),.39,.022,STEEL,"z")
-    label("Kick insignia","SS",(0,.87,.017),.24,IRON)
+    seeds_logo = brand_material("seeds", "The Strange Seeds official logo")
+    brand_decal("Kick drum sunflower logo", (0, .96, .015), .63, seeds_logo)
     for i in range(8):
         a=i*math.tau/8
         rod("Kick lug",(math.sin(a)*.4,.96+math.cos(a)*.4,-.6),(math.sin(a)*.4,.96+math.cos(a)*.4,-.04),.012,STEEL)
@@ -340,7 +378,7 @@ def seeds():
         rod("Guitar string",(gx-.024+i*.009,.71,gz+.064),(gx-.024+i*.009,1.95,gz+.04),.0015,STEEL,vertices=4)
     for i in range(12):
         box("Guitar fret",(gx,1.1+i*.06,gz+.043),(.065,.004,.006),STEEL,0)
-    for x,z in [(-1.05,.65),(.55,.87)]:
+    for x,z in [(-1.05,.65),(.95,.85)]:
         rod("Mic stand",(x,.55,z),(x,1.7,z),.016,IRON)
         rod("Mic boom",(x,1.7,z),(x-.25,1.8,z+.06),.012,STEEL)
         rod("Microphone",(x-.25,1.8,z+.06),(x-.36,1.81,z+.06),.032,IRON)
@@ -415,6 +453,17 @@ def potera():
         rod("Cleaning bottle",(cx+.13+i*.14,.74,cz-.05),(cx+.13+i*.14,.92,cz-.05),.052,m)
         box("Bottle spray head",(cx+.13+i*.14,.96,cz-.03),(.06,.07,.12),IRON,.012)
     box("Folded cloth",(cx+.19,.77,cz+.19),(.29,.055,.18),CREAM,.025)
+    # Brand the contractor's equipment, not the customer's townhouse.
+    potera_logo = brand_material("potera", "Potera Reinigung official logo")
+    box("Cart brand panel", (cx, .48, cz+.32), (.72,.40,.025), PAPER, .018)
+    brand_decal("Cart Potera logo", (cx,.48,cz+.335), .37, potera_logo)
+    # A portable contractor sign makes the identity legible at island scale.
+    sx, sz = 1.10, 1.28
+    for dx in [-.31,.31]:
+        rod("Service sign front leg", (sx+dx,.09,sz+.16), (sx+dx,.99,sz-.12), .025, TEAL)
+        rod("Service sign rear leg", (sx+dx,.09,sz-.47), (sx+dx,.99,sz-.12), .025, TEAL)
+    box("Service sign enamel", (sx,.62,sz), (.67,.72,.04), PAPER, .035)
+    brand_decal("Service sign Potera logo", (sx,.62,sz+.023), .61, potera_logo)
     rod("Squeegee pole",(-.65,.08,.97),(-.33,1.87,.52),.017,STEEL)
     rod("Squeegee blade",(-.55,1.87,.52),(-.11,1.87,.52),.03,RUBBER)
     box("Drain grate",(1.9,.096,.3),(.3,.025,1.25),IRON)
@@ -512,7 +561,7 @@ def assistant():
     export("assistant")
 
 
-payments()
-seeds()
-potera()
-assistant()
+builders = {"payments": payments, "seeds": seeds, "potera": potera, "assistant": assistant}
+requested = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(builders)
+for kind in requested:
+    builders[kind]()

@@ -1,9 +1,12 @@
 """Render catalog thumbnails from the original local GLBs with Blender 4.0."""
 from pathlib import Path
+import json
+import sys
 import bpy
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parents[1]
+VERSIONS=json.loads((ROOT/"assets/world-versions.json").read_text())
 OUT=ROOT/"public/images/worlds"
 OUT.mkdir(parents=True,exist_ok=True)
 
@@ -35,7 +38,8 @@ def area(p,energy,size,color):
     o.rotation_euler=(Vector((0,0,.2))-o.location).to_track_quat("-Z","Y").to_euler()
 
 
-for kind in ["shop","payments","portfolio","seeds","potera","assistant"]:
+requested=sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(VERSIONS)
+for kind in requested:
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
     if kind=="shop":
@@ -60,7 +64,7 @@ for kind in ["shop","payments","portfolio","seeds","potera","assistant"]:
                     if n.type=="BSDF_PRINCIPLED":
                         n.inputs["Emission Strength"].default_value=0
     else:
-        load(ROOT/f"public/3d/worlds/{kind}-v2.glb")
+        load(ROOT/f"public/3d/worlds/{kind}-v{VERSIONS[kind]}.glb")
     bpy.context.view_layer.update()
     meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
     bounds=[o.matrix_world@Vector(c) for o in meshes for c in o.bound_box]
@@ -99,6 +103,6 @@ for kind in ["shop","payments","portfolio","seeds","potera","assistant"]:
     camera.data.ortho_scale=8.15
     camera.rotation_euler=(-camera.location).to_track_quat("-Z","Y").to_euler()
     scene.camera=camera
-    scene.render.filepath=str(OUT/f"{kind}-v2.png")
+    scene.render.filepath=str(OUT/f"{kind}-v{VERSIONS[kind]}.png")
     bpy.ops.render.render(write_still=True)
     print(f"PREVIEW {kind}")

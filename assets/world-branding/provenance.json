@@ -1,0 +1,16 @@
+{
+  "seeds": {
+    "source": "strange-seeds/public/images/_BandLogo.png",
+    "sourceSha256": "6f7dbcd4a14d948ef2d82fe8ddbda6503dfe1f7bb97147e98dc1dbeabafff809",
+    "texture": "seeds-logo.png",
+    "textureSha256": "e878b9081d2c788492649ffe15e30670e79bbbebcf876d8c1e278e396cfb47ce",
+    "preparation": "Trim empty margins; fit inside 512px without changing aspect ratio, colors or transparency."
+  },
+  "potera": {
+    "source": "potera/public/images/logo.svg",
+    "sourceSha256": "aeb146fe10d1ab9aed87e550829d1fce5e15860056f02f861445624f05ad1f05",
+    "texture": "potera-logo.png",
+    "textureSha256": "71dcef9a4cc09a629784de2f902f2bb925add83d128faa37529650c88710f27b",
+    "preparation": "Trim empty margins; fit inside 512px without changing aspect ratio, colors or transparency."
+  }
+}

@@ -49,9 +49,9 @@ From the repository root with Blender 4.0:
 & 'C:/Program Files/Blender Foundation/Blender 4.0/blender.exe' --background --factory-startup --python scripts/render-world-previews.py
 ```
 
-GLBs are in `public/3d/worlds/*-v2.glb`. Six 720 x 520 transparent previews are in `public/images/worlds/*-v2.png`; Next Image serves responsive optimized versions. The shop thumbnail assembles the actual shop assets on a simplified base, not the full runtime grass field. Preview lighting is rendered in Blender, so it is not an exact screenshot of the WebGL scene.
+GLBs are in `public/3d/worlds/` and six 720 x 520 transparent previews are in `public/images/worlds/`; Next Image serves responsive optimized versions. `assets/world-versions.json` controls their versions across runtime, generation and tests. Seeds and Potera use v3 with [original project branding](world-branding.md); other assets remain v2. The shop thumbnail assembles the actual shop assets on a simplified base, not the full runtime grass field. Preview lighting is rendered in Blender, so it is not an exact screenshot of the WebGL scene.
 
-When changing exported models or previews, version their filenames and update loaders, catalog paths, render scripts and asset tests together. The asset headers are long-lived; overwriting a published URL can leave stale models in visitors' caches. Do not remove or mutate loader-owned buffers when unmounting an instance.
+When changing exported models or previews, update their version in `assets/world-versions.json` and regenerate. Both runtime loaders, catalog paths, render scripts and asset tests read this registry. The asset headers are long-lived; overwriting a published URL can leave stale models in visitors' caches. Do not remove or mutate loader-owned buffers when unmounting an instance.
 
 ## Verification
 

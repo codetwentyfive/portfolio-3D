@@ -6,6 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { PlanetKind } from "./planet-data";
+import worldVersions from "@/assets/world-versions.json";
 
 type DioramaKind = Exclude<PlanetKind, "shop" | "portfolio">;
 
@@ -16,7 +17,7 @@ export default function ProjectDiorama({
   kind: DioramaKind;
   motion: boolean;
 }) {
-  const { scene } = useGLTF(`/3d/worlds/${kind}-v2.glb`);
+  const { scene } = useGLTF(`/3d/worlds/${kind}-v${worldVersions[kind]}.glb`);
   const elapsed = useRef(0);
   const { model, mechanisms } = useMemo(() => {
     const model = scene.clone(true);

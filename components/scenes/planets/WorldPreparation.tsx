@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { planets } from "./planet-data";
+import worldVersions from "@/assets/world-versions.json";
 
 function Asset({ url }: { url: string }) {
   useGLTF(url);
@@ -33,7 +34,11 @@ export default function WorldPreparation({
       ? ["ger", "craftsman", "sheep", "workbench"].map(
           (name) => `/3d/shop/${name}.glb`,
         )
-      : [kind === "portfolio" ? "/3d/island.glb" : `/3d/worlds/${kind}-v2.glb`];
+      : [
+          kind === "portfolio"
+            ? "/3d/island.glb"
+            : `/3d/worlds/${kind}-v${worldVersions[kind]}.glb`,
+        ];
   // Commit the ready marker only after every asset resolves in the shared GLTF cache.
   // Nothing is rendered, and the outgoing world stays visible while this suspends.
   return (

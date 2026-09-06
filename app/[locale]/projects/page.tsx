@@ -3,6 +3,7 @@ import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/src/i18n/navigation";
 import { planets } from "@/components/scenes/planets/planet-data";
+import worldVersions from "@/assets/world-versions.json";
 import { ControlGlyph } from "@/components/scenes/planets/WorldGlyph";
 import CTA from "@/components/CTA";
 import JsonLd from "@/components/JsonLd";
@@ -48,7 +49,7 @@ export default async function ProjectsPage({ params: { locale } }: Props) {
               aria-label={`${a("inspect")}: ${project.name[locale]}`}
             >
               <Image
-                src={`/images/worlds/${project.kind}-v2.png`}
+                src={`/images/worlds/${project.kind}-v${worldVersions[project.kind]}.png`}
                 alt=""
                 width={720}
                 height={520}
