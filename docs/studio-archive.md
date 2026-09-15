@@ -1,5 +1,7 @@
 # Studio archive
 
+> Current model and logo changes: [Crafted project worlds](world-art-direction.md). The notes below describe the previous release.
+
 Current local design direction, September 5, 2026. Supersedes the concept-world and decorative-control portions of `project-worlds.md` and `editorial-design.md`. Not deployed.
 
 ## Direction

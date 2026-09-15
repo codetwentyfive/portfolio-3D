@@ -1,5 +1,7 @@
 # Original project branding
 
+> Current model and logo changes: [Crafted project worlds](world-art-direction.md). The notes below describe the previous release.
+
 September 6, 2026. The Strange Seeds and Potera worlds use the projects' original artwork, not generated initials or approximations.
 
 ## Sources and placement

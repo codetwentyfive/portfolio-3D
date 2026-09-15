@@ -43,14 +43,14 @@ STEEL = mat("Brushed aluminum", (.38, .43, .42), .32, .75)
 BRASS = mat("Warm brass", (.48, .29, .085), .32, .7)
 RUST = mat("Oxide paint", (.39, .105, .045), .7)
 CREAM = mat("Warm chalk", (.7, .68, .56), .85)
-STONE = mat("Concrete", (.27, .31, .28), .95)
-LIGHTSTONE = mat("Cut limestone", (.48, .51, .43), .88)
+STONE = mat("Concrete", (.23, .28, .31), .95)
+LIGHTSTONE = mat("Cut limestone", (.52, .48, .38), .88)
 WOOD = mat("Oiled timber", (.25, .12, .057), .75)
 WOOD2 = mat("Timber end grain", (.4, .23, .1), .8)
-LEAF = mat("Olive foliage", (.105, .19, .061), .92)
-LEAF2 = mat("Sunlit foliage", (.24, .31, .085), .9)
+LEAF = mat("Olive foliage", (.045, .15, .12), .92)
+LEAF2 = mat("Sunlit foliage", (.24, .32, .16), .9)
 RUBBER = mat("Rubber and cables", (.013, .02, .017), .88)
-TEAL = mat("Petrol enamel", (.025, .18, .175), .38, .2)
+TEAL = mat("Petrol enamel", (.028, .21, .22), .38, .2)
 GLASS = mat("Smoked window", (.045, .105, .095), .12, .65)
 GREEN = mat("Phosphor", (.19, .65, .38), .5, emission=.6)
 AMBER = mat("Amber indicator", (.95, .36, .06), .4, emission=.5)
@@ -98,7 +98,7 @@ def box(name, p, size, m, bevel=.015, parent=None, angle=0):
 
 
 def sphere(name, p, size, m, parent=None):
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=10, location=xyz(p))
+    bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=8, location=xyz(p))
     o = bpy.context.object
     o.scale = (size[0], size[2], size[1])
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -208,24 +208,7 @@ def brand_decal(name, p, height, artwork):
 
 
 def platform(width=5.3, depth=4.2, m=STONE):
-    box("Foundation edge",(0,-.27,0),(width,.52,depth),IRON,.2)
-    box("Cast surface",(0,-.04,0),(width+.08,.15,depth+.08),m,.16)
-    for x in [-width/2+.25,width/2-.25]:
-        for z in [-depth/2+.25,depth/2-.25]:
-            rod("Recessed bolt",(x,.04,z),(x,.053,z),.04,STEEL)
-    for x in [-1.8,-.9,0,.9,1.8]:
-        box("Underside brace",(x,-.46,0),(.1,.14,depth-.35),STEEL,.025)
-
-
-def plant(p, scale=1):
-    x,y,z=p
-    rod("Plant stem",p,(x,y+.6*scale,z),.018*scale,WOOD)
-    for i in range(7):
-        a=i*2.4
-        h=y+(.15+i*.065)*scale
-        q=(x+math.sin(a)*.24*scale,h+.04,z+math.cos(a)*.24*scale)
-        rod("Branch",(x,h-.1,z),q,.009*scale,WOOD)
-        sphere("Leaf",q,(.13*scale,.045*scale,.09*scale),LEAF if i%2 else LEAF2)
+    art.foundation(width, depth, m)
 
 
 def crate(p, scale=1, parent=None):
@@ -238,6 +221,7 @@ def crate(p, scale=1, parent=None):
 
 
 def export(name):
+    art.tint_meshes()
     groups={}
     for o in list(bpy.context.scene.objects):
         if o.type == "MESH":
@@ -260,13 +244,11 @@ def payments():
     platform(m=LIGHTSTONE)
     # A rail-mounted sorting hall, with the roof lifted on slender steel trusses.
     for x in [-1.6,1.6]:
-        for z in [-1.25,.4]:
+        for z in [-1.25,.28]:
             box("Column shoe",(x,.13,z),(.22,.24,.22),IRON)
             box("Steel column",(x,1.12,z),(.085,2,.085),TEAL)
-        rod("Roof diagonal",(x,1.8,-1.25),(x,2.2,.4),.035,STEEL)
+        rod("Roof diagonal",(x,1.8,-1.25),(x,2.2,.28),.035,STEEL)
     box("Canopy fascia",(0,2.18,-.45),(3.6,.14,2.05),TEAL,.04)
-    for i in range(18):
-        box("Standing roof seam",(-1.68+i*.198,2.265,-.45),(.035,.025,2.04),STEEL,.006)
     box("Warehouse rear",(0,.9,-1.3),(3.25,1.8,.1),CREAM,.02)
     box("Loading bay recess",(-.78,.8,-1.23),(1.12,1.5,.06),IRON)
     for y in [.3,.44,.58,.72,.86,1,1.14,1.28,1.42]:
@@ -278,7 +260,7 @@ def payments():
     box("Conveyor chassis",(0,.5,.95),(4.4,.23,.76),IRON,.04)
     for x in [-1.8,-.6,.6,1.8]:
         for z in [.67,1.23]:
-            rod("Belt leg",(x,.06,z),(x,.43,z),.045,STEEL)
+            rod("Belt leg",(x,.04,z),(x,.43,z),.045,STEEL)
     for i in range(25):
         x=-2.12+i*.176
         rod("Conveyor roller",(x,.64,.64),(x,.64,1.26),.065,STEEL,vertices=12)
@@ -288,6 +270,7 @@ def payments():
         moving=pivot(f"parcel_{i}",(x,.91,.95))
         crate((x,.91,.95),1,moving)
     for z in [.48,1.42]:
+        box("Scanner mounting shoe",(.2,.615,z),(.20,.12,.24),IRON,.012)
         box("Scanner arch leg",(.2,1.04,z),(.12,.82,.12),RUST)
     box("Barcode scanner bridge",(.2,1.48,.95),(.16,.12,1.08),RUST)
     box("Sensor lens",(.2,1.4,.95),(.12,.05,.3),GREEN)
@@ -297,11 +280,9 @@ def payments():
     for i in range(3):
         rod("Pushbutton",(1.86+i*.14,1.1,-.45),(1.86+i*.14,1.13,-.45),.038,RUST if i==2 else CREAM)
     for x,y,z in [(-1.7,.27,-.65),(-1.7,.69,-.65),(-2.13,.27,-.1),(.9,.27,-.7)]:
-        crate((x,y,z))
-    cable("Power conduit",[(2,.18,-.85),(2.35,.06,-1),(2.35,.06,1.5),(.4,.06,1.5)],.028,RUBBER)
-    for x in [-2.2,2.2]:
-        rod("Safety bollard",(x,.08,-1.7),(x,.48,-1.7),.07,RUST)
-        ring("Bollard stripe",(x,.35,-1.7),.071,.017,CREAM)
+        crate((x,y-.03,z))
+    cable("Power conduit",[(2,.18,-.85),(2.32,.068,-.99),(2.32,.068,-1.52),(.4,.068,-1.52)],.028,RUBBER)
+    art.dispatch()
     export("payments")
 
 
@@ -318,35 +299,45 @@ def seeds():
         for z in [-1.5,1.1]:
             rod("Plank nail",(x,.535,z),(x,.54,z),.012,IRON,vertices=8)
     for i in range(3):
-        height=.16*(i+1)
-        box("Stage step",(0,height/2,1.76-i*.22),(1.2,height,.25),WOOD2,.02)
-    # Two light towers and a curved cable with actual hanging bulbs.
-    for x in [-2.02,2.02]:
-        box("Tower foot",(x,.57,-1.38),(.3,.13,.3),IRON)
-        rod("Lighting tower",(x,.58,-1.38),(x,2.45,-1.38),.04,IRON)
-        for y in [.9,1.3,1.7,2.1]:
-            rod("Tower diagonal",(x-.08,y,-1.38),(x+.08,y+.3,-1.38),.016,STEEL)
-    cable("Festoon",[(-2.02,2.4,-1.38),(-1,2.12,-1.38),(0,2.03,-1.38),(1,2.12,-1.38),(2.02,2.4,-1.38)],.012,RUBBER)
+        height=.164*(i+1)
+        box("Stage step",(0,.04+height/2,1.76-i*.22),(1.2,height,.25),WOOD2,.02)
+    # Suspend a single festoon from the arch: no duplicate towers through its piers.
+    cable("Festoon",[(-1.72,2.93,-1.42),(-.86,2.64,-1.42),(0,2.55,-1.42),(.86,2.64,-1.42),(1.72,2.93,-1.42)],.012,RUBBER)
+    for x in [-1.72,1.72]:
+        rod("Festoon eyelet mount",(x,2.93,-1.61),(x,2.93,-1.42),.016,IRON,vertices=8)
     for i in range(11):
-        x=-1.9+i*.38
-        y=2.03+.36*(x/2)**2
-        rod("Bulb socket",(x,y,-1.38),(x,y-.075,-1.38),.023,IRON)
-        sphere("Warm bulb",(x,y-.11,-1.38),(.045,.055,.045),AMBER)
+        x=-1.6+i*.32
+        y=2.55+.38*(x/1.72)**2
+        rod("Bulb socket",(x,y,-1.42),(x,y-.075,-1.42),.023,IRON)
+        sphere("Warm bulb",(x,y-.11,-1.42),(.045,.055,.045),AMBER)
     # Bass drum and toms include skins, rims and tension lugs.
     rod("Kick shell",(0,.96,-.62),(0,.96,-.03),.39,RUST,vertices=40)
     rod("Kick front skin",(0,.96,-.018),(0,.96,-.01),.365,CREAM,vertices=40)
     for z in [-.64,0]:
         ring("Kick rim",(0,.96,z),.39,.022,STEEL,"z")
     seeds_logo = brand_material("seeds", "The Strange Seeds official logo")
-    brand_decal("Kick drum sunflower logo", (0, .96, .015), .63, seeds_logo)
+    brand_decal("Kick drum sunflower logo", (0, .96, .027), .49, seeds_logo)
     for i in range(8):
         a=i*math.tau/8
         rod("Kick lug",(math.sin(a)*.4,.96+math.cos(a)*.4,-.6),(math.sin(a)*.4,.96+math.cos(a)*.4,-.04),.012,STEEL)
-    for x,y,z,r in [(-.34,1.43,-.46,.21),(.24,1.48,-.6,.23),(.62,1.04,-.68,.25),(-.59,1.04,-.2,.23)]:
+    for x,y,z,r in [(-.28,1.62,-.48,.19),(.28,1.66,-.62,.20),(.72,1.08,-.78,.23),(-.69,1.05,-.02,.21)]:
         rod("Tom shell",(x,y-.22,z),(x,y,z),r,RUST,vertices=24)
         rod("Drum skin",(x,y,z),(x,y+.01,z),r*.95,CREAM,vertices=24)
         ring("Tom rim",(x,y+.015,z),r,.018,STEEL)
-    for i,(x,z,y,r) in enumerate([(-.95,-.65,1.69,.34),(.9,-.92,1.8,.4),(-.73,.18,1.38,.25)]):
+    # Mounts and legs support every drum without passing through a neighbouring shell.
+    for x,y,z in [(-.28,1.40,-.48),(.28,1.44,-.62)]:
+        box("Rack tom base foot",(x,.5475,-.82),(.17,.03,.23),IRON,.009)
+        rod("Rack tom support",(x,.5485,-.82),(x,y,-.82),.014,STEEL)
+        rod("Rack tom mounting arm",(x,y,-.82),(x,y,z),.014,STEEL)
+    for side in [-1,1]:
+        box("Kick spur foot",(side*.43,.5485,.12),(.10,.032,.11),RUBBER,.008)
+        rod("Kick spur",(side*.29,.715,-.21),(side*.43,.5485,.12),.017,STEEL)
+    box("Kick rear support",(0,.55125,-.55),(.10,.0375,.10),RUBBER,.006)
+    for x,y,z in [(.72,.86,-.78),(-.69,.83,-.02)]:
+        for angle in [0,2.1,4.2]:
+            dx,dz=math.sin(angle)*.16,math.cos(angle)*.16
+            rod("Drum support leg",(x+dx,.54,z+dz),(x+dx,y+.04,z+dz),.013,STEEL)
+    for i,(x,z,y,r) in enumerate([(-.98,-.95,1.83,.29),(.94,-.97,1.91,.31),(-.99,.29,1.38,.22)]):
         rod("Cymbal stand",(x,.55,z),(x,y,z),.014,STEEL)
         for a in [0,2.1,4.2]:
             rod("Tripod",(x,.7,z),(x+math.sin(a)*.22,.54,z+math.cos(a)*.22),.012,STEEL)
@@ -354,19 +345,23 @@ def seeds():
         sphere("Hammered cymbal",(x,y,z),(r,.023,r),BRASS,sway)
         sphere("Cymbal bell",(x,y+.028,z),(.07,.035,.07),BRASS,sway)
     rod("Drummer stool",(0,.55,-1.1),(0,.99,-1.1),.025,IRON)
+    for angle in [math.pi,math.pi+math.tau/3,math.pi+2*math.tau/3]:
+        fx,fz=math.sin(angle)*.20,-1.1+math.cos(angle)*.20
+        box("Stool tripod foot",(fx,.5485,fz),(.08,.032,.08),RUBBER,.007)
+        rod("Stool tripod leg",(0,.68,-1.1),(fx,.5485,fz),.013,STEEL)
     sphere("Stool pad",(0,1.01,-1.1),(.18,.055,.18),RUBBER)
     # Amplifier stacks with woven grilles, knobs and corner protectors.
-    for x in [-1.5,1.5]:
-        box("Amp cabinet",(x,.96,-.43),(.67,.86,.48),IRON,.035)
-        box("Speaker grille",(x,.97,-.18),(.59,.65,.018),STONE,.005)
+    for x in [-1.62,1.62]:
+        box("Amp cabinet",(x,.96,-.8),(.67,.86,.48),IRON,.035)
+        box("Speaker grille",(x,.97,-.55),(.59,.65,.018),STONE,.005)
         for y in [.8,1.14]:
-            rod("Speaker",(x,y,-.15),(x,y,-.14),.145,RUBBER,vertices=24)
-            ring("Speaker surround",(x,y,-.133),.15,.011,STEEL,"z")
-        box("Amp head",(x,1.46,-.42),(.7,.16,.44),IRON,.02)
+            rod("Speaker",(x,y,-.52),(x,y,-.51),.145,RUBBER,vertices=24)
+            ring("Speaker surround",(x,y,-.503),.15,.011,STEEL,"z")
+        box("Amp head",(x,1.46,-.79),(.7,.16,.44),IRON,.02)
         for i in range(5):
-            sphere("Amp dial",(x-.23+i*.115,1.46,-.188),(.025,.025,.025),BRASS)
+            sphere("Amp dial",(x-.23+i*.115,1.46,-.558),(.025,.025,.025),BRASS)
     # A recognisable offset-body electric guitar, neck, pickups and six strings.
-    gx,gz=1.2,.43
+    gx,gz=1.35,.52
     outline=[(-.07,0),(-.24,.07),(-.26,.24),(-.14,.38),(-.19,.51),(-.1,.58),(-.05,.43),(.07,.45),(.14,.6),(.23,.49),(.14,.34),(.26,.19),(.21,.06),(.07,0)]
     profile("Offset guitar body",outline,.08,(gx,.58,gz),RUST)
     box("Guitar neck",(gx,1.44,gz),(.075,.8,.045),WOOD2,.008)
@@ -378,21 +373,25 @@ def seeds():
         rod("Guitar string",(gx-.024+i*.009,.71,gz+.064),(gx-.024+i*.009,1.95,gz+.04),.0015,STEEL,vertices=4)
     for i in range(12):
         box("Guitar fret",(gx,1.1+i*.06,gz+.043),(.065,.004,.006),STEEL,0)
-    for x,z in [(-1.05,.65),(.95,.85)]:
+    for dx in [-.17,.17]:
+        rod("Guitar stand foot",(gx,.55,gz-.1),(gx+dx,.54,gz+.18),.015,IRON)
+    rod("Guitar stand upright",(gx,.54,gz-.1),(gx,.84,gz-.1),.016,IRON)
+    cable("Guitar stand cradle",[(gx-.16,.64,gz+.04),(gx-.12,.60,gz+.08),(gx+.12,.60,gz+.08),(gx+.16,.64,gz+.04)],.012,IRON)
+    for x,z in [(-1.25,.82),(.72,.77)]:
         rod("Mic stand",(x,.55,z),(x,1.7,z),.016,IRON)
+        for angle in [0,math.tau/3,2*math.tau/3]:
+            fx,fz=x+math.sin(angle)*.20,z+math.cos(angle)*.20
+            box("Mic tripod foot",(fx,.5485,fz),(.075,.032,.075),RUBBER,.007)
+            rod("Mic tripod leg",(x,.68,z),(fx,.5485,fz),.012,IRON)
         rod("Mic boom",(x,1.7,z),(x-.25,1.8,z+.06),.012,STEEL)
         rod("Microphone",(x-.25,1.8,z+.06),(x-.36,1.81,z+.06),.032,IRON)
-        cable("Audio cable",[(x-.36,1.81,z+.06),(x-.02,1.2,z),(x,.54,z),(x+.4,.55,z+.14),(x+.65,.54,z-.1)],.012,RUBBER)
-    box("Pedalboard",(.78,.56,.99),(.55,.075,.3),IRON)
+        side=-1 if x<0 else 1
+        cable("Routed microphone cable",[(x-.36,1.81,z+.06),(x,1.6,z),(x,.55,z),(side*1.89,.55,z),(side*1.89,.55,-.49)],.009,RUBBER)
+    box("Pedalboard",(1.35,.57,1.02),(.55,.075,.3),IRON)
     for i,m in enumerate([TEAL,CREAM,RUST]):
-        box("Effects pedal",(.6+i*.17,.64,.99),(.13,.07,.2),m,.015)
-        sphere("Footswitch",(.6+i*.17,.69,1.035),(.019,.015,.019),STEEL)
-    for i in range(30):
-        x=random.uniform(-2.65,2.65)
-        z=random.choice([-1.95,1.95])+random.uniform(-.12,.12)
-        plant((x,.03,z),random.uniform(.35,.75))
-        if i%4==0:
-            sphere("Moss stone",(x,.05,z),(.16,.08,.13),moss)
+        box("Effects pedal",(1.18+i*.17,.6425,1.02),(.13,.07,.2),m,.015)
+        sphere("Footswitch",(1.18+i*.17,.6925,1.065),(.019,.015,.019),STEEL)
+    art.stage()
     export("seeds")
 
 
@@ -413,19 +412,32 @@ def potera():
     box("Roof cap",(0,2.94,-.99),(3.99,.16,.87),IRON,.035)
     for x in [-1.25,0,1.25]:
         for y in [.84,2.06]:
-            box("Window reveal",(x,y,-.698),(.86,.99,.07),CREAM,.015)
-            box("Window pane",(x,y,-.65),(.7,.86,.022),GLASS,.007)
-            for dx in [-.35,0,.35]:
-                box("Window mullion",(x+dx,y,-.624),(.038,.88,.025),CREAM,.003)
-            box("Transom",(x,y+.08,-.615),(.71,.035,.028),CREAM,.003)
-            box("Window sill",(x,y-.53,-.64),(.98,.1,.28),CREAM,.012)
+            if y<1 and x<0:
+                continue  # The doorway replaces this opening; no window behind the door.
+            if y>1:
+                outline=[(-.35,-.43),(.35,-.43)]
+                outline += [(.35*math.cos(i*math.pi/16),.09+.35*math.sin(i*math.pi/16)) for i in range(17)]
+                profile("Arched window glass",outline,.022,(x,y,-.65),GLASS)
+                for dx in [-.395,.395]:
+                    box("Upper window jamb",(x+dx,1.885,-.62),(.09,.53,.10),CREAM,.012)
+                box("Upper window mullion",(x,2.06,-.62),(.035,.87,.026),CREAM,.003)
+                box("Upper window transom",(x,2.10,-.615),(.70,.035,.028),CREAM,.003)
+                box("Window sill",(x,1.57,-.64),(.98,.1,.28),CREAM,.012)
+            else:
+                box("Window reveal",(x,y,-.698),(.86,.99,.07),CREAM,.015)
+                box("Window pane",(x,y,-.65),(.7,.86,.022),GLASS,.007)
+                for dx in [-.35,0,.35]:
+                    box("Window mullion",(x+dx,y,-.624),(.038,.88,.025),CREAM,.003)
+                box("Transom",(x,y+.08,-.615),(.71,.035,.028),CREAM,.003)
+                box("Window sill",(x,y-.53,-.64),(.98,.1,.28),CREAM,.012)
     box("Door frame",(-1.25,.73,-.58),(.89,1.46,.12),CREAM,.018)
     box("Entry door",(-1.25,.71,-.49),(.7,1.36,.045),TEAL,.008)
     for y in [.43,1.05]:
         box("Door inset",(-1.25,y,-.46),(.52,.46,.016),GLASS if y>1 else IRON,.012)
     sphere("Door handle",(-1,.77,-.405),(.028,.028,.028),BRASS)
     box("Door step",(-1.25,.13,-.28),(1.02,.16,.42),CREAM,.02)
-    label("Address","25",(-1.83,1.1,-.62),.12,IRON)
+    box("Address plaque",(-.63,1.055,-.585),(.20,.17,.024),TEAL,.009)
+    label("Address","25",(-.63,1.02,-.566),.095,CREAM)
     # A planted side wall, downpipe, handrail and cleaning access ladder.
     box("Garden wall",(-2.38,.4,.0),(.12,.74,2.85),plaster,.02)
     cable("Downpipe",[(1.96,2.75,-.9),(2.03,2.6,-.66),(2.03,.22,-.66),(2.15,.1,-.55)],.043,TEAL)
@@ -441,37 +453,39 @@ def potera():
     cx,cz=.2,1.27
     for dx in [-.34,.34]:
         for dz in [-.26,.26]:
-            rod("Cart caster",(cx+dx-.045,.14,cz+dz),(cx+dx+.045,.14,cz+dz),.075,RUBBER,vertices=16)
-            rod("Cart upright",(cx+dx,.22,cz+dz),(cx+dx,.94,cz+dz),.025,STEEL)
-    for y in [.25,.69]:
+            rod("Cart caster",(cx+dx-.045,.1585,cz+dz),(cx+dx+.045,.1585,cz+dz),.075,RUBBER,vertices=16)
+            rod("Cart upright",(cx+dx,.2335,cz+dz),(cx+dx,.94,cz+dz),.025,STEEL)
+    for y in [.29,.69]:
         box("Cart shelf",(cx,y,cz),(.78,.075,.62),TEAL,.03)
     cable("Cart handle",[(cx-.35,.93,cz+.26),(cx-.35,1.06,cz+.26),(cx+.35,1.06,cz+.26),(cx+.35,.93,cz+.26)],.025,STEEL)
     rod("Bucket body",(cx-.15,.73,cz),(cx-.15,1.01,cz),.16,TEAL,vertices=24)
     ring("Bucket lip",(cx-.15,1.02,cz),.163,.018,CREAM)
     cable("Bucket handle",[(cx-.31,1,cz),(cx-.27,1.19,cz),(cx-.02,1.19,cz),(cx+.01,1,cz)],.009,STEEL)
     for i,m in enumerate([CREAM,RUST]):
-        rod("Cleaning bottle",(cx+.13+i*.14,.74,cz-.05),(cx+.13+i*.14,.92,cz-.05),.052,m)
+        rod("Cleaning bottle",(cx+.13+i*.14,.7275,cz-.05),(cx+.13+i*.14,.92,cz-.05),.052,m)
         box("Bottle spray head",(cx+.13+i*.14,.96,cz-.03),(.06,.07,.12),IRON,.012)
-    box("Folded cloth",(cx+.19,.77,cz+.19),(.29,.055,.18),CREAM,.025)
+    box("Folded cloth",(cx+.19,.755,cz+.19),(.29,.055,.18),CREAM,.025)
     # Brand the contractor's equipment, not the customer's townhouse.
     potera_logo = brand_material("potera", "Potera Reinigung official logo")
-    box("Cart brand panel", (cx, .48, cz+.32), (.72,.40,.025), PAPER, .018)
-    brand_decal("Cart Potera logo", (cx,.48,cz+.335), .37, potera_logo)
+    box("Cart brand panel", (cx, .48, cz+.32), (.72,.40,.045), PAPER, .018)
+    brand_decal("Cart Potera logo", (cx,.48,cz+.355), .29, potera_logo)
     # A portable contractor sign makes the identity legible at island scale.
     sx, sz = 1.10, 1.28
     for dx in [-.31,.31]:
         rod("Service sign front leg", (sx+dx,.09,sz+.16), (sx+dx,.99,sz-.12), .025, TEAL)
         rod("Service sign rear leg", (sx+dx,.09,sz-.47), (sx+dx,.99,sz-.12), .025, TEAL)
-    box("Service sign enamel", (sx,.62,sz), (.67,.72,.04), PAPER, .035)
-    brand_decal("Service sign Potera logo", (sx,.62,sz+.023), .61, potera_logo)
+    box("Service sign enamel", (sx,.62,sz), (.76,.82,.065), PAPER, .035)
+    for dx in [-.36,.36]:
+        box("Enamel sign side frame",(sx+dx,.62,sz+.026),(.035,.81,.046),TEAL,.008)
+    for dy in [-.39,.39]:
+        box("Enamel sign end frame",(sx,.62+dy,sz+.026),(.74,.035,.046),TEAL,.008)
+    brand_decal("Service sign Potera logo", (sx,.62,sz+.046), .59, potera_logo)
     rod("Squeegee pole",(-.65,.08,.97),(-.33,1.87,.52),.017,STEEL)
     rod("Squeegee blade",(-.55,1.87,.52),(-.11,1.87,.52),.03,RUBBER)
     box("Drain grate",(1.9,.096,.3),(.3,.025,1.25),IRON)
     for i in range(12):
         box("Drain slot",(1.9,.113,-.24+i*.1),(.25,.01,.018),STEEL,0)
-    for x,z in [(-1.75,1.3),(2.15,1.3)]:
-        box("Planter",(x,.23,z),(.49,.37,.49),CREAM,.045)
-        plant((x,.4,z),1.45)
+    art.courtyard()
     export("potera")
 
 
@@ -481,8 +495,15 @@ def assistant():
         sys.path.insert(0, str(ROOT / "scripts"))
     from home_room import build
     build(SimpleNamespace(**globals()))
+    art.room()
     export("assistant")
 
+
+if str(ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(ROOT / "scripts"))
+import world_art as art
+from types import SimpleNamespace
+art.bind(SimpleNamespace(**globals()))
 
 builders = {"payments": payments, "seeds": seeds, "potera": potera, "assistant": assistant}
 requested = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(builders)
