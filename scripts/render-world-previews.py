@@ -1,6 +1,8 @@
 """Render catalog thumbnails from the original local GLBs with Blender 4.0."""
 from pathlib import Path
 import json
+import math
+import random
 import sys
 import bpy
 from mathutils import Vector
@@ -15,7 +17,7 @@ def xyz(p):
     return Vector((p[0],-p[2],p[1]))
 
 
-def load(path,p=(0,0,0),scale=1):
+def load(path,p=(0,0,0),scale=1,rotation=0):
     before=set(bpy.context.scene.objects)
     bpy.ops.import_scene.gltf(filepath=str(path))
     objects=set(bpy.context.scene.objects)-before
@@ -26,6 +28,7 @@ def load(path,p=(0,0,0),scale=1):
             o.parent=root
     root.location=xyz(p)
     root.scale=(scale,)*3
+    root.rotation_euler.z=rotation
 
 
 def area(p,energy,size,color):
@@ -43,19 +46,7 @@ for kind in requested:
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
     if kind=="shop":
-        load(ROOT/"public/3d/shop/ger.glb",(-.65,.11,-.4))
-        load(ROOT/"public/3d/shop/craftsman.glb",(1.13,.12,.14),.93)
-        load(ROOT/"public/3d/shop/workbench.glb",(1.13,.12,.14),.93)
-        for p in [(-1.95,.12,.8),(.05,.12,1.68),(1.98,.12,-.61)]:
-            load(ROOT/"public/3d/shop/sheep.glb",p,.8)
-        bpy.ops.mesh.primitive_uv_sphere_add(segments=64,ring_count=24,location=(0,0,-.5))
-        o=bpy.context.object
-        o.scale=(3.05,2.55,.6)
-        m=bpy.data.materials.new("Meadow")
-        m.diffuse_color=(.22,.34,.1,1)
-        o.data.materials.append(m)
-        for face in o.data.polygons:
-            face.use_smooth=True
+        load(ROOT/f"public/3d/shop/atelier-v{VERSIONS['shop']}.glb")
     elif kind=="portfolio":
         load(ROOT/"public/3d/island.glb")
         for m in bpy.data.materials:
@@ -100,8 +91,16 @@ for kind in requested:
     bpy.ops.object.camera_add(location=(5.8,-8.7,5.1))
     camera=bpy.context.object
     camera.data.type="ORTHO"
-    camera.data.ortho_scale=8.15
     camera.rotation_euler=(-camera.location).to_track_quat("-Z","Y").to_euler()
+    bpy.context.view_layer.update()
+    # Fit the projected bounds, so tall roofs and cornices stay inside the card.
+    camera_inverse=camera.matrix_world.inverted()
+    projected=[camera_inverse @ (o.matrix_world @ Vector(c)) for o in meshes for c in o.bound_box]
+    xmin,xmax=min(p.x for p in projected),max(p.x for p in projected)
+    ymin,ymax=min(p.y for p in projected),max(p.y for p in projected)
+    aspect=scene.render.resolution_x/scene.render.resolution_y
+    camera.data.ortho_scale=max(8.15,(xmax-xmin)/.90,(ymax-ymin)*aspect/.90)
+    camera.location += camera.matrix_world.to_quaternion() @ Vector(((xmin+xmax)/2,(ymin+ymax)/2,0))
     scene.camera=camera
     scene.render.filepath=str(OUT/f"{kind}-v{VERSIONS[kind]}.png")
     bpy.ops.render.render(write_still=True)

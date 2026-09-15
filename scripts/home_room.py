@@ -137,16 +137,21 @@ def build(g):
 
     def trailing_plant(p, scale=1):
         pot(p,.16*scale,.23*scale)
+        # Carry every stem over the front of the cornice before it drops.
+        # Radial vines used to pass through the cabinet top and the adjacent urn.
         for vine in range(5):
-            angle=vine*1.9
-            points=[]
-            for i in range(9):
-                t=i/8
-                q=(p[0]+math.cos(angle)*t*.47*scale,p[1]+.23*scale+math.sin(t*math.pi)*.1-t*t*.62*scale,p[2]+math.sin(angle)*t*.43*scale)
+            spread=(vine-2)*.082*scale
+            drop=(.37+.055*(vine%3))*scale
+            points=[(p[0],p[1]+.20*scale,p[2]),
+                    (p[0]+spread*.5,p[1]+.32*scale,p[2]+.14*scale),
+                    (p[0]+spread,p[1]+.17*scale,p[2]+.39*scale)]
+            for i in range(6):
+                t=i/5
+                q=(p[0]+spread+math.sin(t*math.pi)*.018*scale,
+                   p[1]+.12*scale-t*drop,p[2]+(.43+t*.05)*scale)
                 points.append(q)
-                if i:
-                    side=1 if i%2 else -1
-                    leaf("Pothos leaf",q,(q[0]+side*.14*scale,q[1]-.14*scale,q[2]+.12*scale),.065*scale,leaf_light if i%3==0 else leaf_dark)
+                side=1 if i%2 else -1
+                leaf("Pothos leaf",q,(q[0]+side*.07*scale,q[1]-.085*scale,q[2]+.075*scale),.043*scale,leaf_light if i%3==0 else leaf_dark)
             g.cable("Trailing vine",points,.007*scale,leaf_dark)
 
     def speaker(p, scale=1):
@@ -185,6 +190,27 @@ def build(g):
         bpy.ops.object.modifier_apply(modifier=bevel.name)
         return g.finish(obj,name,material)
 
+    def power_lead(name, points, radius):
+        # These thin rear wires are hidden by the furniture. Eight-sided tubing
+        # and fewer path samples retain their route without ornamental tessellation.
+        curve=bpy.data.curves.new(name,"CURVE")
+        curve.dimensions="3D"
+        curve.resolution_u=3
+        curve.bevel_depth=radius
+        curve.bevel_resolution=1
+        spline=curve.splines.new("BEZIER")
+        spline.bezier_points.add(len(points)-1)
+        for point,p in zip(spline.bezier_points,points):
+            point.co=g.xyz(p)
+            point.handle_left_type=point.handle_right_type="AUTO"
+        bpy.ops.object.select_all(action="DESELECT")
+        obj=bpy.data.objects.new(name,curve)
+        bpy.context.collection.objects.link(obj)
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active=obj
+        bpy.ops.object.convert(target="MESH")
+        return g.finish(obj,name,black)
+
     def mac_mini(x, shelf, z):
         # M4-era proportions, slightly enlarged with the other miniature electronics.
         width, height = .36, .142
@@ -200,7 +226,7 @@ def build(g):
         g.box("Mac mini rear Ethernet",(x-.114,shelf+.073,back),(.030,.025,.004),black,.002)
         g.box("Mac mini rear HDMI",(x-.067,shelf+.070,back),(.032,.009,.004),black,.002)
         g.rod("Mac mini underside power button",(x-.108,shelf+.010,z-.095),(x-.108,shelf+.012,z-.095),.012,black,vertices=12)
-        g.cable("Mac mini rear power lead",[(x+.13,shelf+.065,back),(x+.15,shelf+.04,back-.10),(x+.15,shelf+.022,-.85)],.004,black)
+        power_lead("Mac mini rear power lead",[(x+.13,shelf+.065,back),(x+.15,shelf+.045,back-.10),(x+.15,shelf+.025,-.965),(x+.15,.255,-1.035)],.004)
 
     def dgx_spark(x, shelf, z):
         width, height = .425, .143
@@ -224,7 +250,7 @@ def build(g):
         for dx in [.045,.115]:
             g.box("DGX Spark QSFP cage",(x+dx,shelf+.046,back),(.056,.029,.007),steel,.003)
             g.box("DGX Spark QSFP opening",(x+dx,shelf+.046,back-.004),(.047,.02,.002),black,.002)
-        g.cable("DGX Spark connected power",[(x-.12,shelf+.09,back),(x-.16,shelf+.06,back-.10),(-.24,shelf+.025,-.84)],.005,black)
+        power_lead("DGX Spark connected power",[(x-.12,shelf+.09,back),(x-.16,shelf+.06,back-.10),(x-.16,shelf+.04,-.965),(x-.16,.255,-1.035)],.005)
 
     # Architectural cutaway: oak strip flooring and a real wall, not a server platform.
     g.box("Room subfloor",(0,-.12,.13),(5.85,.22,3.77),walnut,.055)
@@ -254,15 +280,16 @@ def build(g):
     for dx in [-.52,0,.52]: g.box("Glazed door mullion",(cx+dx,1.79,cz+.335),(.036,1.36,.04),walnut,.005)
     for y0 in [1.12,1.56,1.98,2.46]: g.box("Glazed door rail",(cx,y0,cz+.335),(1.09,.035,.04),walnut,.006)
     for dx in [-.26,.26]: face("Cabinet glass pane",(cx+dx,1.79,cz+.32),.47,1.29,glass)
-    for y0 in [1.56,1.99]:
+    for shelf_y in [1.54,1.97]:
+        shelf_top=shelf_y+.0225
         for dx in [-.35,.15,.38]:
             if dx<0:
-                lathe("Cabinet ceramic",(cx+dx,y0+.025,cz+.04),[(0,.052),(.025,.07),(.14,.068),(.20,.035),(.23,.043)],ivory,16)
-                g.ring("Porcelain blue band",(cx+dx,y0+.18,cz+.04),.056,.006,blue)
+                lathe("Cabinet ceramic",(cx+dx,shelf_top,cz+.04),[(0,.052),(.025,.07),(.14,.068),(.20,.035),(.23,.043)],ivory,16)
+                g.ring("Porcelain blue band",(cx+dx,shelf_top+.155,cz+.04),.056,.006,blue)
             else:
-                lathe("China teacup",(cx+dx,y0+.025,cz+.04),[(0,.033),(.015,.039),(.08,.055),(.10,.052),(.10,.046),(.026,.029)],ivory,16)
-                g.ring("Teacup handle",(cx+dx+.054,y0+.085,cz+.04),.027,.006,ivory,"z")
-                g.rod("Porcelain saucer",(cx+dx,y0+.025,cz+.04),(cx+dx,y0+.03,cz+.04),.075,ivory)
+                lathe("China teacup",(cx+dx,shelf_top+.005,cz+.04),[(0,.033),(.015,.039),(.08,.055),(.10,.052),(.10,.046),(.026,.029)],ivory,16)
+                g.ring("Teacup handle",(cx+dx+.054,shelf_top+.065,cz+.04),.027,.006,ivory,"z")
+                g.rod("Porcelain saucer",(cx+dx,shelf_top,cz+.04),(cx+dx,shelf_top+.005,cz+.04),.075,ivory)
     for offset,width in [(0,1.22),(.06,1.29),(.115,1.22)]: g.box("Crown moulding",(cx,2.48+offset,cz),(width,.065,.73),walnut,.02)
     lathe("Decorated lidded urn",(cx-.16,2.63,cz),[(0,.11),(.035,.15),(.13,.19),(.29,.16),(.36,.115),(.39,.14),(.43,.11),(.49,.05)],ivory,32)
     for h,r in [(.06,.164),(.31,.15),(.39,.14)]: g.ring("Cobalt urn band",(cx-.16,2.63+h,cz),r,.009,blue)
@@ -270,7 +297,7 @@ def build(g):
         a=i*math.tau/16
         g.sphere("Urn painted motif",(cx-.16+math.cos(a)*.184,2.83,cz+math.sin(a)*.184),(.018,.033,.018),blue)
     g.sphere("Urn finial",(cx-.16,3.16,cz),(.028,.055,.028),blue)
-    trailing_plant((cx+.29,2.64,cz+.11),.9)
+    trailing_plant((cx+.31,2.6275,cz+.11),.9)
 
     # Low open media console, amplifier, soundbar and a full-size modern screen.
     for x0 in [-1.23,1.23]:
@@ -278,7 +305,14 @@ def build(g):
     for y0 in [.15,.47,.80]: g.box("Media console shelf",(0,y0,-.49),(2.62,.06,.88),walnut,.013)
     for x0 in [-.34,.58]: g.box("Open console divider",(x0,.31,-.49),(.035,.28,.84),walnut,.006)
     for x0 in [-.52,.79]: g.box("Upper console divider",(x0,.64,-.49),(.034,.29,.80),walnut,.005)
-    for x0,y0,w in [(-.87,.31,.59),(.87,.30,.46)]:
+    for x0,w in [(-.87,.59),(.87,.46)]:
+        y0=.282  # .18 shelf surface + .012 feet + half the .18 chassis.
+        for dx in [-w*.34,w*.34]:
+            for dz in [-.17,.17]:
+                foot=g.box("Hi-fi isolation foot",(x0+dx,.186,-.45+dz),(.035,.012,.035),black,0)
+                # The first graphite mesh supplies settings when the exporter
+                # joins this material; retain the hardware's weighted normals.
+                foot.data.use_auto_smooth=True
         g.box("Hi-fi component",(x0,y0,-.45),(w,.18,.49),black,.012)
         g.box("Component brushed face",(x0,y0,-.196),(w-.04,.14,.012),black,.007)
         g.sphere("Volume knob",(x0+w*.30,y0,-.18),(.024,.024,.018),brass)
@@ -290,32 +324,39 @@ def build(g):
     face("OLED picture surface",(0,1.72,-.382),2.89,1.625625,screen)
     g.box("Monitor stand neck",(0,.895,-.47),(.17,.23,.13),black,.017)
     g.box("Monitor pedestal",(0,.842,-.42),(.67,.026,.30),black,.035)
-    g.box("Soundbar",(0,.904,-.045),(.82,.14,.15),black,.027)
-    face("Soundbar woven grille",(0,.904,.033),.77,.10,grille)
-    g.sphere("Wireless mouse",(.81,.85,-.06),(.09,.032,.05),black)
-    g.box("Mouse pad",(.81,.835,-.06),(.29,.008,.20),grille,.02)
-    # The narrow MIDI keyboard leaning beside the console.
-    g.box("Leaning keyboard chassis",(-1.35,.48,-.04),(.15,.88,.15),black,.015,angle=-.08)
+    for x0 in [-.29,.29]: g.box("Soundbar rubber foot",(x0,.832,-.16),(.055,.004,.08),black,0)
+    g.box("Soundbar",(0,.904,-.16),(.82,.14,.15),black,.027)
+    face("Soundbar woven grille",(0,.904,-.082),.77,.10,grille)
+    g.sphere("Wireless mouse",(.81,.870,-.18),(.09,.032,.05),black)
+    g.box("Mouse pad",(.81,.834,-.18),(.29,.008,.20),grille,.02)
+    # The narrow MIDI keyboard sits beside, clear of the console's left edge.
+    g.box("Keyboard resting foot",(-1.46,.039,.04),(.12,.009,.11),black,.002)
+    g.box("Upright keyboard chassis",(-1.46,.48,.04),(.15,.88,.15),black,.015)
     for i in range(25):
         y0=.08+i*.032
-        g.box("Piano ivory key",(-1.35,y0,.043),(.135,.029,.026),ivory,.003)
-        if i%7 in [1,2,4,5,6]: g.box("Piano black key",(-1.31,y0+.014,.062),(.062,.012,.021),black,.002)
+        g.box("Piano ivory key",(-1.46,y0,.123),(.135,.029,.026),ivory,.003)
+        if i%7 in [1,2,4,5,6]: g.box("Piano black key",(-1.42,y0+.014,.142),(.062,.012,.021),black,.002)
 
     # The walnut-slatted desktop case from the reference, with restrained cabling.
     px,pz=1.63,-.04
-    g.box("Desktop PC chassis",(px,.51,pz),(.47,.98,.69),black,.026)
-    for i in range(11): g.box("Walnut ventilation slat",(px-.194+i*.039,.51,pz+.354),(.020,.87,.019),oak,.004)
-    for z0 in [-.23,.23]: g.box("PC rubber foot",(px,.052,pz+z0),(.40,.04,.055),black,.01)
-    g.sphere("PC power button",(px+.13,1.009,pz+.20),(.018,.006,.018),steel)
-    for i in range(3): g.box("PC top IO",(px-.12+i*.075,1.009,pz+.20),(.032,.003,.012),black,.002)
+    g.box("Desktop PC chassis",(px,.5645,pz),(.47,.98,.69),black,.026)
+    for i in range(11): g.box("Walnut ventilation slat",(px-.194+i*.039,.5645,pz+.354),(.020,.87,.019),oak,.004)
+    for z0 in [-.23,.23]: g.box("PC rubber foot",(px,.0545,pz+z0),(.40,.04,.055),black,.01)
+    g.sphere("PC power button",(px+.13,1.055,pz+.20),(.018,.006,.018),steel)
+    for i in range(3): g.box("PC top IO",(px-.12+i*.075,1.055,pz+.20),(.032,.003,.012),black,.002)
+    # A single rear sleeve receives short parallel leads, clear of shelf edges.
+    g.rod("Rear cable management sleeve",(-.4,.255,-1.035),(1.46,.255,-1.035),.028,black,vertices=10)
     for i in range(4):
-        g.cable("Equipment lead",[(px-.1,.14,pz-.32),(1.25,.075,-.74-i*.025),(.5,.066,-1.16-i*.02),(.17+i*.06,.28,-.72)],.009,black)
+        power_lead("Equipment lead",[(px-.12+i*.055,.19+i*.016,pz-.348),(1.40+i*.018,.22+i*.009,-.53),(1.38+i*.022,.255,-.81),(1.38+i*.022,.255,-1.035)],.005)
     for x0 in [.95,1.10]:
         g.box("Wall outlet plate",(x0,.25,-1.571),(.12,.14,.012),ivory,.01)
         g.ring("Recessed outlet",(x0,.25,-1.557),.035,.006,ivory,"z")
+        g.rod("Connected wall plug",(x0,.25,-1.551),(x0,.25,-1.52),.019,black)
+        power_lead("Sleeved wall power lead",[(x0,.255,-1.035),(x0,.235,-1.28),(x0,.25,-1.52)],.006)
 
     # Right-hand chest and the brass clock, phone and snake plant on top.
     rx,rz=2.23,-.99
+    g.box("Chest recessed plinth",(rx,.062,rz),(.96,.055,.49),rosewood,.009)
     g.box("Tall walnut chest",(rx,1.02,rz),(1.12,1.95,.65),rosewood,.029)
     g.box("Chest overhanging top",(rx,2.025,rz),(1.20,.065,.73),walnut,.017)
     for y0,h in [(.42,.62),(1.11,.65),(1.68,.40)]:
@@ -324,20 +365,22 @@ def build(g):
         g.sphere("Chest keyhole escutcheon",(rx,y0+.1,rz+.378),(.017,.026,.005),brass)
     # Dial lies in the frontal XY plane; all details are physical geometry.
     kx,kz=rx+.03,rz+.12
-    g.box("Clock plinth",(kx,2.11,kz),(.35,.07,.19),brass,.012)
-    g.box("Mantel clock case",(kx,2.31,kz),(.29,.37,.14),brass,.04)
-    g.rod("Clock dial",(kx,2.32,kz+.073),(kx,2.32,kz+.081),.127,black,vertices=40)
-    g.ring("Clock bezel",(kx,2.32,kz+.085),.129,.012,brass,"z")
+    chest_top=2.0575
+    dial_y=chest_top+.245
+    g.box("Clock plinth",(kx,chest_top+.035,kz),(.35,.07,.19),brass,.012)
+    g.box("Mantel clock case",(kx,chest_top+.235,kz),(.29,.37,.14),brass,.04)
+    g.rod("Clock dial",(kx,dial_y,kz+.073),(kx,dial_y,kz+.081),.127,black,vertices=40)
+    g.ring("Clock bezel",(kx,dial_y,kz+.085),.129,.012,brass,"z")
     for i in range(12):
         a=i*math.tau/12
-        g.rod("Clock hour marker",(kx+math.sin(a)*.099,2.32+math.cos(a)*.099,kz+.088),(kx+math.sin(a)*.113,2.32+math.cos(a)*.113,kz+.088),.0035,ivory,vertices=8)
-    g.rod("Clock minute hand",(kx,2.32,kz+.092),(kx-.064,2.385,kz+.092),.004,ivory,vertices=8)
-    g.rod("Clock hour hand",(kx,2.32,kz+.096),(kx+.045,2.335,kz+.096),.005,brass,vertices=8)
-    g.cable("Clock carry handle",[(kx-.08,2.51,kz),(kx-.06,2.56,kz),(kx+.06,2.56,kz),(kx+.08,2.51,kz)],.011,brass)
-    g.box("Cordless phone base",(rx+.36,2.094,rz+.1),(.14,.05,.20),black,.024)
-    g.box("Cordless handset",(rx+.36,2.23,rz+.05),(.09,.26,.07),black,.025)
-    face("Telephone display",(rx+.36,2.28,rz+.088),.06,.08,blue)
-    pot((rx-.41,2.06,rz),.13,.22,black)
+        g.rod("Clock hour marker",(kx+math.sin(a)*.099,dial_y+math.cos(a)*.099,kz+.088),(kx+math.sin(a)*.113,dial_y+math.cos(a)*.113,kz+.088),.0035,ivory,vertices=8)
+    g.rod("Clock minute hand",(kx,dial_y,kz+.092),(kx-.064,dial_y+.065,kz+.092),.004,ivory,vertices=8)
+    g.rod("Clock hour hand",(kx,dial_y,kz+.096),(kx+.045,dial_y+.015,kz+.096),.005,brass,vertices=8)
+    g.cable("Clock carry handle",[(kx-.08,chest_top+.42,kz),(kx-.06,chest_top+.47,kz),(kx+.06,chest_top+.47,kz),(kx+.08,chest_top+.42,kz)],.011,brass)
+    g.box("Cordless phone base",(rx+.36,chest_top+.025,rz+.1),(.14,.05,.20),black,.024)
+    g.box("Cordless handset",(rx+.36,chest_top+.16,rz+.05),(.09,.26,.07),black,.025)
+    face("Telephone display",(rx+.36,chest_top+.21,rz+.088),.06,.08,blue)
+    pot((rx-.41,chest_top,rz),.13,.22,black)
     for i in range(11):
         a=i*2.4
         leaf("Snake plant blade",(rx-.41,2.24,rz),(rx-.41+math.sin(a)*.17,2.66+(i%4)*.09,rz+math.cos(a)*.17),.030,leaf_light if i%3==0 else leaf_dark)
@@ -366,9 +409,9 @@ def build(g):
         g.box("Chair upholstered back",(x0,1.00,z0-.267),(.46,.35,.09),upholstered,.06)
         g.cable("Chair carved crest",[(x0-.23,1.18,z0-.28),(x0,1.23,z0-.28),(x0+.23,1.18,z0-.28)],.034,rosewood)
     chair((2.28,.69),velvet)
-    speaker((2.28,.975,.71),1.05)
+    speaker((2.28,.645+.59*1.05/2,.71),1.05)
     chair((-1.90,.43),grille)
-    speaker((-1.90,.98,.45),1.08)
+    speaker((-1.90,.645+.59*1.08/2,.45),1.08)
     pot((-2.52,.04,1.06),.22,.37)
     for i in range(12):
         a=i*2.4
@@ -379,3 +422,17 @@ def build(g):
     for i in range(25):
         x0=-1.56+i*.064
         g.rod("Rug fringe",(x0,.064,1.73),(x0+.012,.06,1.79),.004,ivory,vertices=6)
+
+    # Blender primitives supply UVs even for solid-color materials. Removing
+    # unused maps avoids exporting empty texture coordinates and splitting
+    # otherwise identical vertices at invisible UV seams. Textured wood, cloth,
+    # posters and screens retain every texture coordinate and their full images.
+    for obj in bpy.context.scene.objects:
+        if obj.type != "MESH" or not obj.data.materials:
+            continue
+        if any(material and material.use_nodes and
+               any(node.type == "TEX_IMAGE" for node in material.node_tree.nodes)
+               for material in obj.data.materials):
+            continue
+        while obj.data.uv_layers:
+            obj.data.uv_layers.remove(obj.data.uv_layers[0])

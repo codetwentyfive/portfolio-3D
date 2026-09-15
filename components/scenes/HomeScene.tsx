@@ -12,6 +12,8 @@ import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 import { gerStyles, planets, type GerStyle } from "./planets/planet-data";
+import WorldPlayControls from "./planets/WorldPlayControls";
+import type { StageHandle, StageInstrument } from "./planets/PlayableStage";
 import MobileWorldHUD from "./planets/MobileWorldHUD";
 import { ControlGlyph } from "./planets/WorldGlyph";
 import { wrapWorld } from "./planets/world-navigation";
@@ -55,7 +57,13 @@ export default function HomeScene() {
     [reducedMotion],
   );
   const [style, setStyle] = useState<GerStyle>("paint");
-  const [cycle, setCycle] = useState(true);
+  const [cycle, setCycle] = useState(false);
+  const [stageOpen, setStageOpen] = useState(false);
+  const [extraInstrument, setExtraInstrument] = useState<StageInstrument | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [actionKey, setActionKey] = useState(0);
+  const stageRef = useRef<StageHandle>(null);
+  const stagePlayed = useCallback(() => setStageOpen(true), []);
   const [paused, setPaused] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -64,7 +72,7 @@ export default function HomeScene() {
   const [onScreen, setOnScreen] = useState(true);
   const section = useRef<HTMLElement>(null);
   const motion =
-    !reducedMotion && !paused && visible && onScreen && !held && !busy;
+    !reducedMotion && !paused && visible && onScreen && !held && !busy && !(planets[selected].kind === "seeds" && stageOpen);
   const planet = planets[selected];
   const isShop = planet.kind === "shop";
 
@@ -160,6 +168,7 @@ export default function HomeScene() {
     <section
       ref={section}
       data-held={held}
+      data-play-open={planet.kind === "seeds" && stageOpen}
       data-world={planet.kind}
       data-direction={transition.direction}
       data-transition={transition.phase}
@@ -210,6 +219,12 @@ export default function HomeScene() {
             index={selected}
             style={style}
             motion={motion}
+            animateInteractions={!reducedMotion && visible && onScreen}
+            stageRef={stageRef}
+            extraInstrument={extraInstrument}
+            soundEnabled={soundEnabled}
+            onStagePlayed={stagePlayed}
+            actionKey={actionKey}
             resetKey={resetKey}
             orbitStep={0}
             zoomed={zoomed}
@@ -240,6 +255,13 @@ export default function HomeScene() {
         >
           <ControlGlyph name="right" />
         </button>
+        <WorldPlayControls
+          kind={planet.kind} open={stageOpen} onOpen={(open) => { if (open && !stageOpen) resetView(); setStageOpen(open); }}
+          instrument={extraInstrument} onInstrument={setExtraInstrument}
+          onPlay={(target) => stageRef.current?.play(target)}
+          sound={soundEnabled} onSound={() => setSoundEnabled((value) => !value)}
+          onAction={() => setActionKey((value) => value + 1)} disabled={busy}
+        />
         <p className="studio-transition-status" role="status">
           {transition.phase === "loading"
             ? a("mobile.loading")

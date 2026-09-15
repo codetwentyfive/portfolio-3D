@@ -15,10 +15,16 @@ import {
 export default function MatrixDisplay({
   model,
   motion,
+  replayKey = 0,
+  animateInteractions = true,
 }: {
   model: THREE.Object3D;
   motion: boolean;
+  replayKey?: number;
+  animateInteractions?: boolean;
 }) {
+  const burst = useRef(0);
+  const handledReplay = useRef(replayKey);
   const invalidate = useThree((state) => state.invalidate);
   const display = useRef<{
     texture: THREE.CanvasTexture;
@@ -68,9 +74,27 @@ export default function MatrixDisplay({
     };
   }, [model, invalidate]);
 
+  useEffect(() => {
+    if (handledReplay.current === replayKey || !display.current) return;
+    handledReplay.current = replayKey;
+    burst.current = animateInteractions ? 2.4 : 0;
+    if (!animateInteractions) {
+      advanceMatrixRain(display.current.rain, .15, true);
+      paintMatrixRain(display.current.context, display.current.rain);
+      display.current.texture.needsUpdate = true;
+    }
+    invalidate();
+  }, [replayKey, animateInteractions, invalidate]);
+
+  useEffect(() => {
+    if (!animateInteractions) burst.current = 0;
+  }, [animateInteractions]);
+
   useFrame((_, delta) => {
     const current = display.current;
-    if (!current || !advanceMatrixRain(current.rain, delta, motion)) return;
+    const running = burst.current > 0 && animateInteractions;
+    if (running) { burst.current -= Math.min(delta, .05); invalidate(); }
+    if (!current || !advanceMatrixRain(current.rain, delta * (running ? 3 : 1), motion || running)) return;
     paintMatrixRain(current.context, current.rain);
     current.texture.needsUpdate = true;
   });

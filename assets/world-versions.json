@@ -1,8 +1,8 @@
 {
-  "shop": 2,
-  "payments": 2,
+  "shop": 5,
+  "payments": 4,
   "portfolio": 2,
-  "seeds": 3,
-  "potera": 3,
-  "assistant": 4
+  "seeds": 5,
+  "potera": 5,
+  "assistant": 6
 }

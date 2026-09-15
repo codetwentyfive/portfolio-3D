@@ -1,8 +1,8 @@
 "use client";
 
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Center,
   Environment,
@@ -11,13 +11,24 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
-import ShopPlanet from "./ShopPlanet";
+import ShopAtelier from "./ShopAtelier";
+import type { StageHandle, StageInstrument } from "./PlayableStage";
+import { useSceneAction, type SceneActionProps } from "./useSceneAction";
 import ProjectDiorama from "./ProjectDiorama";
 import { planets, type GerStyle } from "./planet-data";
 import WorldTurntable from "./WorldTurntable";
 import WorldPreparation from "./WorldPreparation";
 
-function OriginalIsland() {
+function OriginalIsland({ actionKey, animateInteractions }: SceneActionProps) {
+  const rotation = useRef<THREE.Group>(null);
+  const action = useSceneAction(actionKey, 2.2);
+  useFrame(() => {
+    if (rotation.current) {
+      const p = action.progress.current;
+      rotation.current.rotation.y = animateInteractions && action.active.current ? (p * p * (3 - 2 * p)) * Math.PI * 2 : 0;
+      rotation.current.scale.setScalar(!animateInteractions && action.active.current ? 1.015 : 1);
+    }
+  });
   const { scene } = useGLTF("/3d/island.glb");
   const island = useMemo(() => {
     const clone = scene.clone(true);
@@ -51,32 +62,42 @@ function OriginalIsland() {
     [island],
   );
   return (
+    <group ref={rotation} {...action.handlers}>
     <Center>
       <Resize scale={6}>
         <primitive object={island.clone} dispose={null} />
       </Resize>
     </Center>
+    </group>
   );
 }
+
+type PlayProps = SceneActionProps & {
+  stageRef: RefObject<StageHandle>;
+  extraInstrument: StageInstrument | null;
+  soundEnabled: boolean;
+  onStagePlayed: () => void;
+};
 
 function World({
   index,
   style,
   motion,
+  ...play
 }: {
   index: number;
   style: GerStyle;
   motion: boolean;
-}) {
+} & PlayProps) {
   const kind = planets[index].kind;
   return (
     <group>
       {kind === "shop" ? (
-        <ShopPlanet style={style} motion={motion} />
+        <ShopAtelier style={style} motion={motion} actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
       ) : kind === "portfolio" ? (
-        <OriginalIsland />
+        <OriginalIsland actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
       ) : (
-        <ProjectDiorama kind={kind} motion={motion} />
+        <ProjectDiorama kind={kind} motion={motion} {...play} />
       )}
     </group>
   );
@@ -94,6 +115,7 @@ export default function PlanetCanvas({
   zoomed,
   prepareIndex,
   onPrepared,
+  ...play
 }: {
   index: number;
   style: GerStyle;
@@ -106,7 +128,7 @@ export default function PlanetCanvas({
   zoomed: boolean;
   prepareIndex: number | null;
   onPrepared: (index: number) => void;
-}) {
+} & PlayProps) {
   const [available, setAvailable] = useState<boolean | null>(null);
   useEffect(() => {
     const probe = document.createElement("canvas");
@@ -216,7 +238,7 @@ export default function PlanetCanvas({
         motion={motion}
         onHoldChange={onHoldChange}
       >
-        <World key={index} index={index} style={style} motion={motion} />
+        <World key={index} index={index} style={style} motion={motion} {...play} />
       </WorldTurntable>
     </Canvas>
   );

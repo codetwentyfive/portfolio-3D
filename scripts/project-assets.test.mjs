@@ -201,3 +201,18 @@ test("home-room shelves contain both Mac minis and a metallic DGX Spark", () => 
   }
   assert.equal(json.images.length, 9, "small hardware needs no extra texture downloads");
 });
+
+test("shop: contemporary atelier is self-contained and preserves product pivots", () => {
+  const file = readFileSync(new URL(`public/3d/shop/atelier-v${versions.shop}.glb`, root));
+  const json = JSON.parse(file.subarray(20, 20 + file.readUInt32LE(12)).toString());
+  assert.ok(file.length < 2_000_000, "atelier download budget");
+  assert.ok(json.buffers.every((buffer) => !buffer.uri));
+  assert.ok((json.images || []).every((image) => !image.uri));
+  assert.ok(json.meshes.flatMap((mesh) => mesh.primitives).length <= 28);
+  for (const name of ["atelier_bag", "atelier_textile"]) {
+    assert.ok(json.nodes.some((node) => node.name === name && node.mesh === undefined), name);
+  }
+  for (const name of ["Atelier_leather", "Atelier_felt", "Atelier_timber"]) {
+    assert.ok(json.materials.some((material) => material.name === name), name);
+  }
+});

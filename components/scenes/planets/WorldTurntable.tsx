@@ -12,6 +12,12 @@ import {
   hold,
   release,
 } from "./turntable-motion";
+import {
+  beginModelGesture,
+  moveModelGesture,
+  endModelGesture,
+  clearModelGesture,
+} from "./model-tap";
 
 export default function WorldTurntable({
   children,
@@ -39,13 +45,13 @@ export default function WorldTurntable({
   useEffect(() => {
     const aspect = size.width / Math.max(size.height, 1);
     const distance = Math.max(
-      10.2,
+      11.8,
       7.2 / (2 * Math.tan(THREE.MathUtils.degToRad(19)) * aspect),
     );
     camera.position
       .set(5.8, 4.15, 8.7)
       .normalize()
-      .multiplyScalar(distance * (zoomed ? 0.76 : 1));
+      .multiplyScalar(distance * (zoomed ? 0.9 : 1));
     camera.lookAt(0, 0.15, 0);
     setDpr(
       Math.min(window.devicePixelRatio || 1, size.width < 768 ? 1.25 : 1.5),
@@ -57,6 +63,7 @@ export default function WorldTurntable({
     const canvas = gl.domElement;
     const finish = (id: number, cancelled = false) => {
       if (!release(state.current, id, performance.now(), cancelled)) return;
+      endModelGesture(canvas, id, cancelled);
       if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
       onHoldChange(false);
       invalidate();
@@ -73,11 +80,13 @@ export default function WorldTurntable({
         )
       )
         return;
+      beginModelGesture(canvas, event.pointerId, event.clientX, event.clientY);
       canvas.setPointerCapture(event.pointerId);
       onHoldChange(true);
       invalidate();
     };
     const move = (event: PointerEvent) => {
+      moveModelGesture(canvas, event.pointerId, event.clientX, event.clientY);
       if (
         drag(
           state.current,
@@ -90,7 +99,10 @@ export default function WorldTurntable({
       )
         invalidate();
     };
-    const up = (event: PointerEvent) => finish(event.pointerId);
+    const up = (event: PointerEvent) => {
+      moveModelGesture(canvas, event.pointerId, event.clientX, event.clientY);
+      finish(event.pointerId);
+    };
     const cancel = (event: PointerEvent) => finish(event.pointerId, true);
     const abandon = () => {
       if (state.current.pointer !== null) finish(state.current.pointer, true);
@@ -139,6 +151,7 @@ export default function WorldTurntable({
       window.removeEventListener("blur", abandon);
       document.removeEventListener("visibilitychange", visibility);
       abandon();
+      clearModelGesture(canvas);
     };
   }, [gl, invalidate, onHoldChange]);
 
@@ -146,6 +159,7 @@ export default function WorldTurntable({
     const id = state.current.pointer;
     state.current = createTurntable();
     time.current = 0;
+    clearModelGesture(gl.domElement);
     if (id !== null && gl.domElement.hasPointerCapture(id))
       gl.domElement.releasePointerCapture(id);
     onHoldChange(false);
