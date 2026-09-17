@@ -8,7 +8,6 @@ Run with Blender 4.0: blender -b --factory-startup --python build-shop-atelier.p
 
 from pathlib import Path
 import math
-import json
 import sys
 import bpy
 import bmesh
@@ -16,7 +15,8 @@ from mathutils import Vector
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = json.loads((ROOT / "assets/world-versions.json").read_text())["shop"]
+# Archived atelier generator. The active shop world is built by build-shop-steppe.py.
+VERSION = 5
 OUTPUT = ROOT / f"public/3d/shop/atelier-v{VERSION}.glb"
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 bpy.ops.object.select_all(action="SELECT")

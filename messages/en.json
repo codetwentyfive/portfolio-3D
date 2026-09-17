@@ -53,7 +53,7 @@
       "previous": "Previous",
       "next": "Next",
       "descriptions": {
-        "shop": "A contemporary atelier for Mongolian leatherwork and textiles.",
+        "shop": "A quiet Mongolian steppe island with grazing sheep, a lamb and a little ger.",
         "payments": "A dispatch depot for the payments and product systems I build for online shops.",
         "portfolio": "The original island that started this interactive portfolio.",
         "seeds": "A miniature stage for the band website I built for The Strange Seeds.",
@@ -152,10 +152,10 @@
     "next": "Next world",
     "selected": "Selected world",
     "fallback": "The 3D view is unavailable in this browser. You can still explore every project below.",
-    "sceneDescription": "A contemporary craft atelier with sculpted leather goods, a textile rail and an orderly making bench on a mineral island. Click to inspect the leatherwork.",
+    "sceneDescription": "A peaceful Mongolian steppe island with six sheep, a little ger, grasses and a spring. Each sheep has its own personality.",
     "play": {
       "stage": "Play the stage",
-      "hint": "Tap an instrument in the scene or play here. The stage stays still while you play.",
+      "hint": "Play an instrument here, or find it in the scene.",
       "kick": "Kick",
       "snare": "Snare",
       "cymbal": "Cymbal",
@@ -170,14 +170,22 @@
       "soundOn": "Sound on",
       "soundOff": "Sound off",
       "tap": "Or tap the model",
+      "tapSheep": "Or tap a sheep",
       "actions": {
-        "shop": "Inspect the leatherwork",
+        "shop": "Meet a sheep",
         "payments": "Run a dispatch",
         "portfolio": "Turn the OG island",
         "potera": "Clean a window",
         "assistant": "Wake the home lab"
       }
-    }
+    },
+    "options": {
+      "title": "Scene options",
+      "close": "Close scene options",
+      "interactions": "Interactions",
+      "sheepKeys": "You can also focus the island and press 1–6 to meet each sheep."
+    },
+    "interactSheep": "Interactive island. Drag or use arrow keys to rotate. Home resets the view. Press 1 through 6 to interact with individual sheep."
   },
   "hi_message": "Hello, I'm",
   "name": "Chingis Zwecker",

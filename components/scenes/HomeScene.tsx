@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 import { gerStyles, planets, type GerStyle } from "./planets/planet-data";
-import WorldPlayControls from "./planets/WorldPlayControls";
+import WorldControls from "./planets/WorldControls";
 import type { StageHandle, StageInstrument } from "./planets/PlayableStage";
 import MobileWorldHUD from "./planets/MobileWorldHUD";
 import { ControlGlyph } from "./planets/WorldGlyph";
@@ -58,12 +58,13 @@ export default function HomeScene() {
   );
   const [style, setStyle] = useState<GerStyle>("paint");
   const [cycle, setCycle] = useState(false);
-  const [stageOpen, setStageOpen] = useState(false);
+  const [controlsOpen, setControlsOpen] = useState(false);
+  const [stageEngaged, setStageEngaged] = useState(false);
   const [extraInstrument, setExtraInstrument] = useState<StageInstrument | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [actionKey, setActionKey] = useState(0);
   const stageRef = useRef<StageHandle>(null);
-  const stagePlayed = useCallback(() => setStageOpen(true), []);
+  const stagePlayed = useCallback(() => setStageEngaged(true), []);
   const [paused, setPaused] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -72,7 +73,7 @@ export default function HomeScene() {
   const [onScreen, setOnScreen] = useState(true);
   const section = useRef<HTMLElement>(null);
   const motion =
-    !reducedMotion && !paused && visible && onScreen && !held && !busy && !(planets[selected].kind === "seeds" && stageOpen);
+    !reducedMotion && !paused && visible && onScreen && !held && !busy && !controlsOpen && !(planets[selected].kind === "seeds" && stageEngaged);
   const planet = planets[selected];
   const isShop = planet.kind === "shop";
 
@@ -115,6 +116,8 @@ export default function HomeScene() {
     if (lastSelected.current === selected) return;
     lastSelected.current = selected;
     setZoomed(false);
+    setControlsOpen(false);
+    setStageEngaged(false);
     const url = new URL(window.location.href);
     url.searchParams.set("world", planets[selected].kind);
     window.history.replaceState(window.history.state, "", url);
@@ -168,7 +171,6 @@ export default function HomeScene() {
     <section
       ref={section}
       data-held={held}
-      data-play-open={planet.kind === "seeds" && stageOpen}
       data-world={planet.kind}
       data-direction={transition.direction}
       data-transition={transition.phase}
@@ -230,7 +232,7 @@ export default function HomeScene() {
             zoomed={zoomed}
             fallbackText={t("fallback")}
             onHoldChange={setHeld}
-            interactionLabel={t("interact")}
+            interactionLabel={t(isShop ? "interactSheep" : "interact")}
             prepareIndex={
               transition.phase === "loading" ? transition.target : null
             }
@@ -240,7 +242,7 @@ export default function HomeScene() {
         <button
           type="button"
           className="studio-scene-arrow studio-scene-previous"
-          aria-label={`${t("previous")}: ${a(`names.${planets[wrapWorld(selected - 1, planets.length)].kind}`)}`}
+          aria-label={t("previous")}
           disabled={busy}
           onClick={() => selectWorld(selected - 1)}
         >
@@ -249,14 +251,18 @@ export default function HomeScene() {
         <button
           type="button"
           className="studio-scene-arrow studio-scene-next"
-          aria-label={`${t("next")}: ${a(`names.${planets[wrapWorld(selected + 1, planets.length)].kind}`)}`}
+          aria-label={t("next")}
           disabled={busy}
           onClick={() => selectWorld(selected + 1)}
         >
           <ControlGlyph name="right" />
         </button>
-        <WorldPlayControls
-          kind={planet.kind} open={stageOpen} onOpen={(open) => { if (open && !stageOpen) resetView(); setStageOpen(open); }}
+        <WorldControls
+          kind={planet.kind} open={controlsOpen} onOpen={setControlsOpen}
+          zoomed={zoomed} onZoom={() => setZoomed((value) => !value)}
+          paused={paused || (planet.kind === "seeds" && stageEngaged)} reducedMotion={reducedMotion}
+          onPause={() => { if (planet.kind === "seeds" && stageEngaged) { setStageEngaged(false); setPaused(false); } else setPaused((value) => !value); }} onReset={resetView}
+          style={style} onStyle={selectStyle} cycle={cycle} onCycle={() => setCycle((value) => !value)}
           instrument={extraInstrument} onInstrument={setExtraInstrument}
           onPlay={(target) => stageRef.current?.play(target)}
           sound={soundEnabled} onSound={() => setSoundEnabled((value) => !value)}
@@ -269,65 +275,6 @@ export default function HomeScene() {
               ? a("mobile.loadFailed")
               : ""}
         </p>
-      </div>
-
-      <div className="studio-view-tools">
-        <span>{held ? a("held") : a("drag")}</span>
-        <button
-          type="button"
-          aria-label={a(zoomed ? "zoomOut" : "zoomIn")}
-          aria-pressed={zoomed}
-          onClick={() => setZoomed((value) => !value)}
-        >
-          <ControlGlyph name="zoom" />
-        </button>
-        <button
-          type="button"
-          aria-label={t("reset")}
-          title={t("reset")}
-          onClick={resetView}
-        >
-          <ControlGlyph name="reset" />
-        </button>
-        <button
-          type="button"
-          aria-label={paused ? t("resume") : t("pause")}
-          title={paused ? t("resume") : t("pause")}
-          aria-pressed={paused || reducedMotion}
-          disabled={reducedMotion}
-          onClick={() => setPaused((value) => !value)}
-        >
-          <ControlGlyph name={paused || reducedMotion ? "play" : "pause"} />
-        </button>
-        {isShop && (
-          <details className="studio-materials">
-            <summary aria-label={t("material")} title={t("material")}>
-              <ControlGlyph name="settings" />
-            </summary>
-            <div className="studio-material-menu refractive-glass">
-              <p className="studio-eyebrow">{t("material")}</p>
-              {gerStyles.map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  aria-pressed={style === item}
-                  onClick={() => selectStyle(item)}
-                >
-                  {t(item)}
-                  <span aria-hidden="true">{style === item ? "/" : ""}</span>
-                </button>
-              ))}
-              <button
-                type="button"
-                aria-pressed={cycle}
-                onClick={() => setCycle((value) => !value)}
-              >
-                {t("auto")}
-                <ControlGlyph name="cycle" />
-              </button>
-            </div>
-          </details>
-        )}
       </div>
 
       <div className="studio-caption">
@@ -386,22 +333,7 @@ export default function HomeScene() {
           </div>
         </div>
       </div>
-      <MobileWorldHUD
-        zoomed={zoomed}
-        onZoom={() => setZoomed((value) => !value)}
-        selected={selected}
-        style={style}
-        cycle={cycle}
-        paused={paused}
-        reducedMotion={reducedMotion}
-        onSelect={selectWorld}
-        onStyle={selectStyle}
-        onCycle={() => setCycle((value) => !value)}
-        onPause={() => setPaused((value) => !value)}
-        onReset={resetView}
-        held={held}
-        busy={busy}
-      />
+      <MobileWorldHUD selected={selected} onSelect={selectWorld} busy={busy} />
       <span className="sr-only" aria-live="polite" aria-atomic="true">
         {t("selected")}: {planet.name[locale]}
       </span>

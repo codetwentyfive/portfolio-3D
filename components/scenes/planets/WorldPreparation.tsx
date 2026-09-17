@@ -31,7 +31,7 @@ export default function WorldPreparation({
   const kind = planets[index].kind;
   const urls =
     kind === "shop"
-      ? [`/3d/shop/atelier-v${worldVersions.shop}.glb`]
+      ? [`/3d/shop/steppe-v${worldVersions.shop}.glb`]
       : [
           kind === "portfolio"
             ? "/3d/island.glb"

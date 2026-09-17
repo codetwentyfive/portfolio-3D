@@ -46,7 +46,7 @@ for kind in requested:
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
     if kind=="shop":
-        load(ROOT/f"public/3d/shop/atelier-v{VERSIONS['shop']}.glb")
+        load(ROOT/f"public/3d/shop/steppe-v{VERSIONS['shop']}.glb")
     elif kind=="portfolio":
         load(ROOT/"public/3d/island.glb")
         for m in bpy.data.materials:

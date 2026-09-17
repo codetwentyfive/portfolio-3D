@@ -53,7 +53,7 @@
       "previous": "Zurück",
       "next": "Weiter",
       "descriptions": {
-        "shop": "Ein zeitgenössisches Atelier für mongolische Lederarbeit und Textilien.",
+        "shop": "Eine ruhige mongolische Steppeninsel mit grasenden Schafen, einem Lamm und einer kleinen Jurte.",
         "payments": "Ein Versanddepot für die Zahlungs- und Produktsysteme, die ich für Onlineshops baue.",
         "portfolio": "Die ursprüngliche Insel, mit der dieses interaktive Portfolio begann.",
         "seeds": "Eine Miniaturbühne für die Bandwebsite, die ich für The Strange Seeds gebaut habe.",
@@ -152,10 +152,10 @@
     "next": "Nächste Welt",
     "selected": "Gewählte Welt",
     "fallback": "Die 3D-Ansicht ist in diesem Browser nicht verfügbar. Du kannst unten trotzdem alle Projekte entdecken.",
-    "sceneDescription": "Ein zeitgenössisches Handwerksatelier mit Lederwaren, Textilien und einer geordneten Werkbank auf einer mineralischen Insel. Klicke, um die Lederarbeit anzusehen.",
+    "sceneDescription": "Eine friedliche mongolische Steppeninsel mit sechs Schafen, einer kleinen Jurte, Gräsern und einer Quelle. Jedes Schaf hat seine eigene Persönlichkeit.",
     "play": {
       "stage": "Spiel die Bühne",
-      "hint": "Tippe ein Instrument an oder spiele hier. Die Bühne bleibt dabei stehen.",
+      "hint": "Spiele hier ein Instrument oder entdecke es in der Szene.",
       "kick": "Kick",
       "snare": "Snare",
       "cymbal": "Becken",
@@ -170,14 +170,22 @@
       "soundOn": "Ton an",
       "soundOff": "Ton aus",
       "tap": "Oder tippe auf das Modell",
+      "tapSheep": "Oder tippe ein Schaf an",
       "actions": {
-        "shop": "Lederarbeit ansehen",
+        "shop": "Ein Schaf kennenlernen",
         "payments": "Versand starten",
         "portfolio": "OG-Insel drehen",
         "potera": "Fenster putzen",
         "assistant": "Home Lab aufwecken"
       }
-    }
+    },
+    "options": {
+      "title": "Szenenoptionen",
+      "close": "Szenenoptionen schließen",
+      "interactions": "Interaktionen",
+      "sheepKeys": "Fokussiere die Insel und drücke 1–6, um jedes Schaf kennenzulernen."
+    },
+    "interactSheep": "Interaktive Insel. Zum Drehen ziehen oder Pfeiltasten verwenden. Pos1 setzt die Ansicht zurück. Mit den Tasten 1 bis 6 interagierst du mit den einzelnen Schafen."
   },
   "hi_message": "Hallo, ich bin",
   "name": "Chingis Zwecker",

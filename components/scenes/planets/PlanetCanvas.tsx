@@ -11,7 +11,7 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
-import ShopAtelier from "./ShopAtelier";
+import ShopSteppe from "./ShopSteppe";
 import type { StageHandle, StageInstrument } from "./PlayableStage";
 import { useSceneAction, type SceneActionProps } from "./useSceneAction";
 import ProjectDiorama from "./ProjectDiorama";
@@ -93,7 +93,7 @@ function World({
   return (
     <group>
       {kind === "shop" ? (
-        <ShopAtelier style={style} motion={motion} actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
+        <ShopSteppe style={style} motion={motion} actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
       ) : kind === "portfolio" ? (
         <OriginalIsland actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
       ) : (
@@ -141,6 +141,9 @@ export default function PlanetCanvas({
     if (available === false && prepareIndex !== null) onPrepared(prepareIndex);
   }, [available, prepareIndex, onPrepared]);
   const canvasElement = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    canvasElement.current?.setAttribute("aria-label", interactionLabel);
+  }, [interactionLabel]);
   const loseContext = useRef((event: Event) => {
     event.preventDefault();
     setAvailable(false);

@@ -3,6 +3,7 @@
 import { useRef, type PointerEvent } from "react";
 import { useTranslations } from "next-intl";
 import { planets } from "./planet-data";
+import { ControlGlyph } from "./WorldGlyph";
 import {
   finishWorldSwipe,
   moveWorldSwipe,
@@ -32,6 +33,10 @@ export default function MobileWorldPager({
 
   return (
     <nav className="studio-mobile-pager" aria-label={t("choose")}>
+      <div className="studio-mobile-pager-buttons">
+        <button type="button" disabled={busy} aria-label={t("previous")} onClick={() => onSelect(selected - 1)}><ControlGlyph name="left" /></button>
+        <button type="button" disabled={busy} aria-label={t("next")} onClick={() => onSelect(selected + 1)}><ControlGlyph name="right" /></button>
+      </div>
       <div
         className="studio-world-swipe"
         role="group"
@@ -81,7 +86,7 @@ export default function MobileWorldPager({
           swipe.current = null;
         }}
       >
-        <p id="world-swipe-hint">{a("mobile.swipe")}</p>
+        <p id="world-swipe-hint" className="sr-only">{a("mobile.swipe")}</p>
         <span className="studio-world-count">
           <b>{planets[selected].number}</b> /{" "}
           {String(planets.length).padStart(2, "0")}

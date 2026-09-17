@@ -45,8 +45,8 @@ export default function WorldTurntable({
   useEffect(() => {
     const aspect = size.width / Math.max(size.height, 1);
     const distance = Math.max(
-      11.8,
-      7.2 / (2 * Math.tan(THREE.MathUtils.degToRad(19)) * aspect),
+      11,
+      6.9 / (2 * Math.tan(THREE.MathUtils.degToRad(19)) * aspect),
     );
     camera.position
       .set(5.8, 4.15, 8.7)
