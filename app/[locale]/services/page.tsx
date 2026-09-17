@@ -5,12 +5,12 @@ import { services, serviceProcess } from "@/constants/services";
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export async function generateMetadata({
-  params: { locale },
-}: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { locale } = await props.params;
+
   const t = await getTranslations({ locale });
   return {
     title: t("services_meta_title"),
@@ -26,7 +26,7 @@ export async function generateMetadata({
   };
 }
 
-const serviceIcons: Record<string, JSX.Element> = {
+const serviceIcons: Record<string, React.JSX.Element> = {
   "web-apps": (
     <svg
       viewBox="0 0 24 24"
@@ -136,7 +136,9 @@ const checkIcon = (
   </svg>
 );
 
-export default async function ServicesPage({ params: { locale } }: Props) {
+export default async function ServicesPage(props: Props) {
+  const { locale } = await props.params;
+
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
 

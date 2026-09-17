@@ -15,14 +15,18 @@ import {
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export function generateMetadata({ params: { locale } }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { locale } = await props.params;
+
   return buildPageMetadata("projects", locale);
 }
 
-export default async function ProjectsPage({ params: { locale } }: Props) {
+export default async function ProjectsPage(props: Props) {
+  const { locale } = await props.params;
+
   setRequestLocale(locale);
   const a = await getTranslations({ locale, namespace: "archive" });
   return (

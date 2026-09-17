@@ -7,7 +7,7 @@ import { routing, type Locale } from "@/src/i18n/routing";
 import { getPost, getPostSlugs } from "@/lib/blog";
 
 interface Props {
-  params: { locale: Locale; slug: string };
+  params: Promise<{ locale: Locale; slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -17,9 +17,9 @@ export async function generateStaticParams() {
   );
 }
 
-export async function generateMetadata({
-  params: { locale, slug },
-}: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { locale, slug } = await props.params;
+
   const post = await getPost(slug, locale);
   if (!post) return {};
   return {
@@ -47,9 +47,9 @@ const formatDate = (date: string, locale: Locale) =>
     dateStyle: "long",
   }).format(new Date(date));
 
-export default async function BlogPostPage({
-  params: { locale, slug },
-}: Props) {
+export default async function BlogPostPage(props: Props) {
+  const { locale, slug } = await props.params;
+
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const post = await getPost(slug, locale);

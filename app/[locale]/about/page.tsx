@@ -7,14 +7,18 @@ import { createWebPageSchema, createBreadcrumbSchema } from "@/seo/structured-da
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export function generateMetadata({ params: { locale } }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { locale } = await props.params;
+
   return buildPageMetadata("about", locale);
 }
 
-export default function AboutPage({ params: { locale } }: Props) {
+export default async function AboutPage(props: Props) {
+  const { locale } = await props.params;
+
   setRequestLocale(locale);
 
   return (

@@ -49,13 +49,16 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default async function LocaleLayout({
-  children,
-  params: { locale },
-}: {
-  children: ReactNode;
-  params: { locale: string };
-}) {
+export default async function LocaleLayout(
+  props: {
+    children: ReactNode;
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const { locale } = await props.params;
+
+  const { children } = props;
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
