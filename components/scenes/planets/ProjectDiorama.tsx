@@ -19,7 +19,7 @@ export default function ProjectDiorama({
 }: {
   kind: DioramaKind;
   motion: boolean;
-  stageRef: RefObject<StageHandle>;
+  stageRef: RefObject<StageHandle | null>;
   extraInstrument: StageInstrument | null;
   soundEnabled: boolean;
   onStagePlayed: () => void;

@@ -5,12 +5,12 @@ import { getAllPosts } from "@/lib/blog";
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export async function generateMetadata({
-  params: { locale },
-}: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { locale } = await props.params;
+
   const t = await getTranslations({ locale });
   return {
     title: t("blog_meta_title"),
@@ -31,7 +31,9 @@ const formatDate = (date: string, locale: Locale) =>
     dateStyle: "long",
   }).format(new Date(date));
 
-export default async function BlogPage({ params: { locale } }: Props) {
+export default async function BlogPage(props: Props) {
+  const { locale } = await props.params;
+
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const posts = await getAllPosts(locale);

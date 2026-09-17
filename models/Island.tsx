@@ -11,13 +11,13 @@ Title: Fox's islands
 
 import { useRef, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame, useThree, GroupProps } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeElements } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import * as THREE from "three";
 
 const islandScene = "/3d/island.glb";
 
-type IslandProps = GroupProps & {
+type IslandProps = ThreeElements["group"] & {
   isRotating: boolean;
   setIsRotating: (isRotating: boolean) => void;
   setCurrentStage: (stage: number | null) => void;
