@@ -14,6 +14,7 @@ import { Link } from "@/src/i18n/navigation";
 import { gerStyles, planets, type GerStyle } from "./planets/planet-data";
 import WorldControls from "./planets/WorldControls";
 import type { StageHandle, StageInstrument } from "./planets/PlayableStage";
+import type { SheepHandle } from "./planets/ShopSteppe";
 import MobileWorldHUD from "./planets/MobileWorldHUD";
 import { ControlGlyph } from "./planets/WorldGlyph";
 import { wrapWorld } from "./planets/world-navigation";
@@ -64,6 +65,7 @@ export default function HomeScene() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [actionKey, setActionKey] = useState(0);
   const stageRef = useRef<StageHandle>(null);
+  const sheepRef = useRef<SheepHandle>(null);
   const stagePlayed = useCallback(() => setStageEngaged(true), []);
   const [paused, setPaused] = useState(false);
   const [zoomed, setZoomed] = useState(false);
@@ -223,6 +225,7 @@ export default function HomeScene() {
             motion={motion}
             animateInteractions={!reducedMotion && visible && onScreen}
             stageRef={stageRef}
+            sheepRef={sheepRef}
             extraInstrument={extraInstrument}
             soundEnabled={soundEnabled}
             onStagePlayed={stagePlayed}
@@ -265,6 +268,7 @@ export default function HomeScene() {
           style={style} onStyle={selectStyle} cycle={cycle} onCycle={() => setCycle((value) => !value)}
           instrument={extraInstrument} onInstrument={setExtraInstrument}
           onPlay={(target) => stageRef.current?.play(target)}
+          onSheepPlay={(index) => sheepRef.current?.play(index)}
           sound={soundEnabled} onSound={() => setSoundEnabled((value) => !value)}
           onAction={() => setActionKey((value) => value + 1)} disabled={busy}
         />

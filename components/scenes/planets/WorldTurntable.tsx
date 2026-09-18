@@ -5,6 +5,7 @@ import { Suspense, useEffect, useRef, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
+import { planets } from "./planet-data";
 import {
   advance,
   createTurntable,
@@ -43,13 +44,15 @@ export default function WorldTurntable({
   const { gl, invalidate, camera, size, setDpr } = useThree();
 
   useEffect(() => {
+    const landscape = planets[index].kind === "shop";
+    const courtyard = planets[index].kind === "potera";
     const aspect = size.width / Math.max(size.height, 1);
     const distance = Math.max(
-      11,
+      landscape || courtyard ? 8.3 : 11,
       6.9 / (2 * Math.tan(THREE.MathUtils.degToRad(19)) * aspect),
     );
     camera.position
-      .set(5.8, 4.15, 8.7)
+      .set(5.8, landscape ? 6.2 : courtyard ? 5.5 : 4.15, 8.7)
       .normalize()
       .multiplyScalar(distance * (zoomed ? 0.9 : 1));
     camera.lookAt(0, 0.15, 0);
@@ -57,7 +60,7 @@ export default function WorldTurntable({
       Math.min(window.devicePixelRatio || 1, size.width < 768 ? 1.25 : 1.5),
     );
     invalidate();
-  }, [camera, size.width, size.height, zoomed, setDpr, invalidate]);
+  }, [camera, index, size.width, size.height, zoomed, setDpr, invalidate]);
 
   useEffect(() => {
     const canvas = gl.domElement;

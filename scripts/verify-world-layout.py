@@ -238,63 +238,81 @@ def seeds_arch():
 
 def potera_door():
     door = named("Entry door", 1)[0]
-    named("Window pane", 2)
-    windows = [obj for stem in ("Window pane", "Window reveal", "Window mullion",
-                               "Transom", "Window sill", "Arched window glass")
-               for obj in named(stem)]
-    for window in windows:
-        assert min(overlap(door, window, 0), overlap(door, window, 1)) <= EPS, (
-            f"{window.name}: window geometry remains behind doorway in front elevation"
-        )
-    return "no window geometry behind the entry door"
+    pane = named("Cleanable picture pane", 1)[0]
+    clear(door, pane, .5)
+    # Keep the full approach to the door free of equipment, not merely its centerline.
+    for obj in bpy.context.scene.objects:
+        if obj.type != "MESH" or not obj.parent or obj.parent.name not in ("potera_equipment", "potera_service_sign"):
+            continue
+        bounds = geometry(obj)
+        assert bounds.low[0] > -1.15, f"{obj.name}: obstructs the entrance corridor"
+    body = geometry(named("Townhouse complete volume", 1)[0])
+    roof = geometry(named("Complete hipped slate roof", 1)[0])
+    assert body.high[2] - body.low[2] >= 1.99, "house must have full depth"
+    assert roof.low[0] < body.low[0] and roof.high[0] > body.high[0], "roof must cover both gables"
+    assert roof.low[2] < body.low[2] and roof.high[2] > body.high[2], "roof must cover front and rear walls"
+    assert len(named("Side window glazing")) == 8 and len(named("Rear window pane")) == 6
+    return "full-depth house and roof; rear/side elevations present; entry approach clear"
 
 
 def potera_glazing():
-    panes = named("Arched window glass", 3)
+    panes = named("Upper arched pane", 3)
     jambs = named("Upper window jamb", 6)
-    cornices = named("Cornice", 3)
+    cornices = named("Townhouse cornice", 2)
     crowns = named("Radial arch stone", 33)
-    gaps = []
     for pane in panes:
         glass = geometry(pane)
         x = center(pane, 0)
-        pair = sorted(sorted(jambs, key=lambda obj: abs(center(obj, 0) - x))[:2],
-                      key=lambda obj: center(obj, 0))
+        pair = sorted(sorted(jambs, key=lambda obj: abs(center(obj, 0) - x))[:2], key=lambda obj: center(obj, 0))
         left, right = (geometry(obj) for obj in pair)
-        assert left.high[0] <= right.low[0], f"{pane.name}: jambs cross"
-        assert glass.low[0] >= left.high[0] - EPS, f"{pane.name}: escapes left jamb"
-        assert glass.high[0] <= right.low[0] + EPS, f"{pane.name}: escapes right jamb"
-        assert glass.low[1] >= max(left.low[1], right.low[1]) - EPS, (
-            f"{pane.name}: extends below jambs"
-        )
-        overhead = [geometry(obj).low[1] for obj in cornices
-                    if geometry(obj).low[1] > center(pane, 1)]
-        assert overhead, f"{pane.name}: no overhead cornice"
-        gap = min(overhead) - glass.high[1]
-        assert gap >= 0.02, f"{pane.name}: cornice clearance {gap:.4f}"
-        gaps.append(gap)
-        # Derive the spring line from actual jambs and inner radius from arch mesh.
+        assert glass.low[0] >= left.high[0] - .001, f"{pane.name}: escapes left jamb"
+        assert glass.high[0] <= right.low[0] + .001, f"{pane.name}: escapes right jamb"
         spring = min(left.high[1], right.high[1])
-        arch = [obj for obj in crowns if abs(center(obj, 0) - x) < 0.5]
-        assert len(arch) == 11, f"{pane.name}: expected eleven crown stones"
-        inner_radius = min(((point[0] - x)**2 + (point[1] - spring)**2)**0.5
-                           for obj in arch for point in geometry(obj).points)
+        arch = [obj for obj in crowns if abs(center(obj, 0) - x) < .5]
+        assert len(arch) == 11
+        inner = min(((p[0]-x)**2+(p[1]-spring)**2)**.5 for obj in arch for p in geometry(obj).points)
         for point in glass.points:
             if point[1] > spring + EPS:
-                radius = ((point[0] - x)**2 + (point[1] - spring)**2)**0.5
-                assert radius <= inner_radius + EPS, (
-                    f"{pane.name}: glazing radius {radius:.4f} exceeds arch {inner_radius:.4f}"
-                )
-        assert max(geometry(obj).high[1] for obj in arch) < min(overhead) - 0.01, (
-            f"{pane.name}: stone crown intersects cornice"
-        )
-    return f"three arched panes fit jambs/crowns; minimum cornice gap {min(gaps):.3f}"
+                assert ((point[0]-x)**2+(point[1]-spring)**2)**.5 <= inner+EPS
+        overhead = min(geometry(obj).low[1] for obj in cornices if geometry(obj).low[1] > center(pane,1))
+        assert overhead-max(geometry(obj).high[1] for obj in arch) > .015
+    target = geometry(named("Cleanable picture pane", 1)[0])
+    assert abs(target.high[0]-target.low[0]-1.38) < EPS
+    assert abs(target.high[1]-target.low[1]-.94) < EPS
+    for frame in named("Picture window jamb",2)+named("Picture window frame",2):
+        clear(named("Cleanable picture pane",1)[0], frame, 0)
+    # The wipe/shader is attached to this exact authored frame, not a magic world position.
+    anchor = bpy.data.objects.get("potera_cleanable_window")
+    assert anchor is not None and named("Cleanable picture pane",1)[0].parent == anchor
+    return "all arched panes fit stonework; 1.38 by .94 cleaning pane clears its frame"
+
+
+def potera_equipment_support():
+    tiles = [geometry(obj) for obj in named("Terrace paving",56)]
+    for wheel in named("Cart caster",4):
+        shape=geometry(wheel)
+        x,z=center(wheel,0),center(wheel,2)
+        supports=[p.high[1] for p in tiles if p.low[0]-EPS <= x <= p.high[0]+EPS and p.low[2]-EPS <= z <= p.high[2]+EPS]
+        assert supports, f"{wheel.name}: wheel outside terrace paving"
+        assert min(abs(shape.low[1]-top) for top in supports) < .003, f"{wheel.name}: wheel is not grounded"
+    shelves=sorted([geometry(o) for o in named("Cart shelf",2)],key=lambda s:s.high[1])
+    for bottle in named("Cleaning bottle",2):
+        assert abs(geometry(bottle).low[1]-shelves[-1].high[1]) < EPS
+    for foot in named("Bench stone foot",4):
+        assert abs(geometry(foot).low[1]-.065) < .003, "bench foot must meet lawn"
+    handle = named("Parked squeegee handle",1)[0]
+    socket = named("Tool support socket",1)[0]
+    connected(handle, socket)
+    for clip in named("Tool retaining clip",2):
+        connected(handle, clip)
+        assert any(geometry(clip).tree.overlap(geometry(post).tree) for post in named("Cart upright",4)), "tool clip must attach to the cart"
+    return "cart wheels and bottles grounded; bench feet meet lawn; parked tool is supported and clipped to cart"
 
 
 CHECKS = {
     "payments": (payments_piers, payments_scanner, payments_crates, payments_parcels),
     "seeds": (seeds_drums, seeds_supports, seeds_arch),
-    "potera": (potera_door, potera_glazing),
+    "potera": (potera_door, potera_glazing, potera_equipment_support),
 }
 
 

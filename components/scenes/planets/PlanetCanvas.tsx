@@ -11,7 +11,7 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
-import ShopSteppe from "./ShopSteppe";
+import ShopSteppe, { type SheepHandle } from "./ShopSteppe";
 import type { StageHandle, StageInstrument } from "./PlayableStage";
 import { useSceneAction, type SceneActionProps } from "./useSceneAction";
 import ProjectDiorama from "./ProjectDiorama";
@@ -74,6 +74,7 @@ function OriginalIsland({ actionKey, animateInteractions }: SceneActionProps) {
 
 type PlayProps = SceneActionProps & {
   stageRef: RefObject<StageHandle>;
+  sheepRef: RefObject<SheepHandle>;
   extraInstrument: StageInstrument | null;
   soundEnabled: boolean;
   onStagePlayed: () => void;
@@ -93,7 +94,7 @@ function World({
   return (
     <group>
       {kind === "shop" ? (
-        <ShopSteppe style={style} motion={motion} actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
+        <ShopSteppe style={style} motion={motion} sheepRef={play.sheepRef} soundEnabled={play.soundEnabled} animateInteractions={play.animateInteractions} />
       ) : kind === "portfolio" ? (
         <OriginalIsland actionKey={play.actionKey} animateInteractions={play.animateInteractions} />
       ) : (

@@ -11,7 +11,8 @@ import random
 import sys
 import bpy
 import bmesh
-from mathutils import Vector
+from mathutils import Vector, Quaternion
+from mathutils.geometry import delaunay_2d_cdt
 
 ROOT=Path(__file__).resolve().parents[1]
 VERSION=json.loads((ROOT/"assets/world-versions.json").read_text())["shop"]
@@ -35,11 +36,13 @@ def mat(name,color,rough=.8,metal=0,sheen=0):
 
 
 M={
-    "grass":mat("Steppe_meadow",(.29,.40,.16)),
-    "grass_light":mat("Steppe_sunlit_grass",(.40,.49,.215)),
-    "grass_dark":mat("Steppe_sage_grass",(.20,.32,.17)),
+    "grass":mat("Steppe_meadow",(.325,.395,.21)),
+    "grass_light":mat("Steppe_sunlit_grass",(.405,.455,.255)),
+    "grass_dark":mat("Steppe_sage_grass",(.255,.355,.235)),
     "straw":mat("Steppe_seed_heads",(.56,.47,.23)),
-    "soil":mat("Steppe_turf_earth",(.23,.17,.10)),
+    "soil":mat("Steppe_turf_earth",(.31,.285,.20)),
+    "path":mat("Steppe_worn_path",(.45,.395,.27)),
+    "bank":mat("Steppe_river_silt",(.28,.315,.235)),
     "rock":mat("Steppe_slate",(.16,.215,.21)),
     "rock_light":mat("Steppe_weathered_rock",(.25,.30,.265)),
     "rock_dark":mat("Steppe_deep_rock",(.075,.13,.145)),
@@ -55,7 +58,7 @@ M={
     "face":mat("Sheep_face",(.16,.14,.10),.88),
     "ear":mat("Sheep_ear",(.51,.32,.245)),
     "eye":mat("Sheep_eye",(.009,.017,.016),.27),
-    "water":mat("Steppe_spring_water",(.10,.40,.44),.18,.1),
+    "water":mat("Steppe_river_water",(.105,.29,.285),.30,.06),
     "foam":mat("Steppe_water_glints",(.61,.80,.75),.35),
     "leaf":mat("Steppe_larch_foliage",(.16,.33,.235)),
     "leaf_light":mat("Steppe_larch_tips",(.31,.44,.235)),
@@ -135,14 +138,65 @@ def ring(name,p,radius,thickness,material,parent=None):
     return tube(name,[(p[0]+math.sin(a)*radius,p[1],p[2]+math.cos(a)*radius) for a in [i*math.tau/64 for i in range(65)]],thickness,material,parent,1)
 
 
-GER=(-.97,.66,-.88)
-STREAM=[(1.74,1.32),(1.92,1.60),(1.99,1.97),(2.11,2.42)]
-SHEEP=[(-1.90,1.30,.75,.88,"graze"),(-.62,1.44,-.45,.92,"graze"),
-       (.29,1.81,-.60,.60,"alert"),(1.44,-.43,-.30,.91,"graze"),
-       (.72,-1.76,1.0,.87,"rest"),(-2.57,-.94,-.50,.80,"alert")]
+# The landscape is deliberately broad: architecture and animals occupy only
+# small sheltered pockets, leaving the rolling steppe and river as the main view.
+RADIUS=5.85
+DEPTH=.79
+GER_SCALE=.72
+GER=(-2.13,.43,-.48)
+SHEEP=[(-1.08,1.42,.68,.76,"graze"),(.37,-.37,.38,.78,"alert"),
+       (.55,2.14,-.28,.56,"lamb")]
+PATH=[(-2.06,.39),(-2.15,1.12),(-1.87,2.10),(-.95,2.82),(.22,3.00),(1.02,2.68)]
+# x,z,water-height,half-width. The final wider reach forms a natural little pool.
+RIVER_CONTROLS=[(1.19,-2.91,.71,.015),(1.41,-2.58,.66,.16),
+    (2.01,-2.08,.56,.18),(2.63,-1.56,.43,.19),(2.72,-.86,.34,.215),
+    (2.31,-.11,.26,.21),(2.16,.60,.225,.235),(2.45,1.29,.205,.30),
+    (2.35,1.93,.190,.47),(1.95,2.48,.186,.60),(1.73,2.87,.186,.38),
+    (1.72,3.04,.186,.015)]
 
 
-def edge(a):return 1+.047*math.sin(a*3+.8)+.032*math.sin(a*7-.3)+.020*math.cos(a*11)
+def catmull(a,b,c,d,t):
+    return tuple(.5*((2*b[k])+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t*t+(-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t) for k in range(len(a)))
+
+
+RIVER=[]
+for i in range(len(RIVER_CONTROLS)-1):
+    a=RIVER_CONTROLS[max(0,i-1)];b=RIVER_CONTROLS[i]
+    c=RIVER_CONTROLS[i+1];d=RIVER_CONTROLS[min(len(RIVER_CONTROLS)-1,i+2)]
+    for j in range(8):RIVER.append(catmull(a,b,c,d,j/8))
+RIVER.append(RIVER_CONTROLS[-1])
+RIVER_LENGTH=[0]
+for a,b in zip(RIVER,RIVER[1:]):RIVER_LENGTH.append(RIVER_LENGTH[-1]+math.hypot(a[0]-b[0],a[1]-b[1]))
+
+
+def river_normal(i):
+    a=RIVER[max(0,i-1)];b=RIVER[min(len(RIVER)-1,i+1)]
+    dx,dz=b[0]-a[0],b[1]-a[1];length=math.hypot(dx,dz)
+    return (-dz/length,dx/length)
+
+
+def river_at(x,z):
+    best=(1e6,0,0,0);best_edge=1e6
+    for i,(a,b) in enumerate(zip(RIVER,RIVER[1:])):
+        dx,dz=b[0]-a[0],b[1]-a[1]
+        t=max(0,min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz)))
+        distance=math.hypot(x-a[0]-dx*t,z-a[1]-dz*t)
+        width=a[3]+(b[3]-a[3])*t
+        if distance-width<best_edge:
+            best_edge=distance-width;best=(distance,a[2]+(b[2]-a[2])*t,width,i+t)
+    return best
+
+
+def edge(a):
+    def bump(center,width):
+        delta=math.atan2(math.sin(a-center),math.cos(a-center))
+        return math.exp(-(delta/width)**2)
+    return 1+.050*math.sin(a*3+.8)+.032*math.sin(a*7-.3)+.017*math.cos(a*11)+.10*bump(.28,.30)-.13*bump(-1.06,.26)+.07*bump(1.34,.24)-.09*bump(2.38,.24)
+
+
+def inside(x,z,margin=0):
+    a=math.atan2(x,z/DEPTH)
+    return math.hypot(x,z/DEPTH)<RADIUS*edge(a)-margin
 
 
 def segment_distance(x,z,a,b):
@@ -152,76 +206,118 @@ def segment_distance(x,z,a,b):
 
 
 def terrain_height(x,z):
-    h=.38+.24*math.exp(-((x+1.1)**2/2.8+(z+1.0)**2/1.5))
-    h+=.10*math.sin(x*.9)*math.cos(z*1.1)+.21*math.exp(-((x-1.9)**2/1.5+(z+1.5)**2/.7))
+    # Distant hills belong to the terrain itself; the valley opens toward us.
+    h=.24+.08*math.sin(x*.78+z*.3)*math.cos(z*.7)
+    h+=1.21*math.exp(-((x+3.28)**2/3.4+(z+2.34)**2/1.4))
+    h+=1.61*math.exp(-((x+.80)**2/3.7+(z+3.04)**2/1.15))
+    h+=1.03*math.exp(-((x-3.86)**2/2.8+(z+1.93)**2/2.5))
+    h+=.15*math.exp(-((x+3.90)**2/1.7+(z-1.45)**2/2.5))
     ger=math.hypot(x-GER[0],z-GER[2])
-    if ger<1.33:
-        blend=min(1,max(0,(1.33-ger)/.23));h=h*(1-blend)+GER[1]*blend
-    pond=math.hypot((x-1.72)/.67,(z-1.05)/.50)
-    if pond<1.20:
-        blend=min(1,(1.20-pond)/.19);h=h*(1-blend)+.225*blend
-    stream=min(segment_distance(x,z,a,b) for a,b in zip(STREAM,STREAM[1:]))
-    if stream<.21:
-        blend=min(1,(.21-stream)/.07);h=h*(1-blend)+.258*blend
+    if ger<1.12:
+        blend=min(1,max(0,(1.12-ger)/.24));h=h*(1-blend)+GER[1]*blend
+    distance,level,width,_=river_at(x,z)
+    outer=width+.32
+    if distance<outer:
+        # Smooth damp banks slope into a continuous inset bed. Exact constraints
+        # along both shores keep coarse terrain triangles out of the water.
+        if distance<=width:
+            h=level-.12+.065*(distance/max(.015,width))**2
+        else:
+            t=min(1,(distance-width)/.32);t=t*t*(3-2*t)
+            h=(level-.055)*(1-t)+h*t
     return h
 
 
 def ground(x,z):
     h=terrain_height(x,z)
-    # Tiny level hoof patches blend into the meadow rather than letting feet
-    # hang over the changing terrain height.
     for sx,sz,yaw,scale,pose in SHEEP:
         dx,dz=x-sx,z-sz
         lx=dx*math.cos(yaw)-dz*math.sin(yaw);lz=dx*math.sin(yaw)+dz*math.cos(yaw)
-        distance=math.hypot(lx/(scale*.43),lz/(scale*.82))
-        if distance<1.10:
-            blend=min(1,(1.10-distance)/.25)
+        distance=math.hypot(lx/(scale*.48),lz/(scale*.86))
+        if distance<1.2:
+            blend=min(1,(1.2-distance)/.25)
             h=h*(1-blend)+terrain_height(sx,sz)*blend
     return h
 
 
-# Rolling meadow with an irregular thick turf edge, continuous with its rock crag.
-N=72;R=18;v=[(0,ground(0,0),0)];f=[]
-for j in range(1,R+1):
-    for i in range(N):
-        a=i*math.tau/N;r=j/R*3.54*edge(a);x=math.sin(a)*r;z=math.cos(a)*r*.80
-        v.append((x,ground(x,z),z))
-        k=1+(j-1)*N+i;kn=1+(j-1)*N+(i+1)%N
-        if j==1:f.append((0,k,kn))
-        else:
-            prev=k-N;pn=kn-N
-            if (j+i)%2:f.extend([(prev,k,kn),(prev,kn,pn)])
-            else:f.extend([(prev,k,pn),(k,kn,pn)])
-land=mesh("Continuous rolling steppe",v,f,M["grass"])
-land.data.materials.append(M["grass_light"]);land.data.materials.append(M["grass_dark"])
-for p in land.data.polygons:
-    center=p.center;x,z=center.x,-center.y
-    patch=math.sin(x*1.5+z*.7)+math.cos(z*1.8-x*.5)
-    p.material_index=1 if patch>.75 else 2 if patch<-.85 else 0
+# Constrained triangulation puts the riverbed, shoreline and hoof patches into
+# the topography instead of covering a coarse, intersecting lawn with planes.
+N=112
+boundary=[]
+for i in range(N):
+    a=i*math.tau/N;r=RADIUS*edge(a)
+    boundary.append((math.sin(a)*r,math.cos(a)*r*DEPTH))
+points=list(boundary);constraints=[(i,(i+1)%N) for i in range(N)]
+for iz in range(-15,16):
+    for ix in range(-20,21):
+        x=ix*.30+(.15 if iz%2 else 0);z=iz*.30
+        if inside(x,z,.09):points.append((x,z))
+for factor in [-1.8,-1.22,-1.0,-.55,0,.55,1.0,1.22,1.8]:
+    start=len(points)
+    for i,(x,z,y,width) in enumerate(RIVER):
+        nx,nz=river_normal(i)
+        offset=width*factor if abs(factor)<=1 else math.copysign(width+(abs(factor)-1)*.32,factor)
+        points.append((x+nx*offset,z+nz*offset))
+        if i:constraints.append((start+i-1,start+i))
+for sx,sz,yaw,scale,pose in SHEEP:
+    for lx in [-.30,-.17,0,.17,.30]:
+        for lz in [-.4,-.265,0,.25,.45]:
+            points.append((sx+(lx*math.cos(yaw)+lz*math.sin(yaw))*scale,sz+(-lx*math.sin(yaw)+lz*math.cos(yaw))*scale))
+# Clockwise authoring coordinates become CCW Blender X/Y coordinates after xyz.
+verts2,_,faces,_,_,_=delaunay_2d_cdt([Vector(p) for p in points],constraints,[list(reversed(range(N)))],1,.00001)
+land=mesh("Continuous rolling steppe",[(p.x,ground(p.x,p.y),p.y) for p in verts2],faces,M["grass"],smooth=True)
+# A vertex-painted shore gives a continuous silt-to-meadow transition rather
+# than a serrated boundary made from differently colored terrain triangles.
+terrain_material=mat("Steppe_meadow_terrain",(1,1,1))
+color_node=terrain_material.node_tree.nodes.new("ShaderNodeVertexColor")
+color_node.layer_name="Steppe ground tint"
+terrain_material.node_tree.links.new(color_node.outputs["Color"],terrain_material.node_tree.nodes.get("Principled BSDF").inputs["Base Color"])
+land.data.materials.clear();land.data.materials.append(terrain_material)
+colors=land.data.color_attributes.new(name="Steppe ground tint",type="FLOAT_COLOR",domain="CORNER")
+for poly in land.data.polygons:
+    center=poly.center;x,z=center.x,-center.y
+    patch=math.sin(x*.64+z*.35)+math.cos(z*.88-x*.28)
+    grass=M["grass_light" if patch>.85 else "grass_dark" if patch<-.95 else "grass"].diffuse_color
+    bank=M["bank"].diffuse_color
+    for li in poly.loop_indices:
+        point=land.data.vertices[land.data.loops[li].vertex_index].co
+        distance,_,width,_=river_at(point.x,-point.y)
+        blend=max(0,min(1,(width+.26-distance)/.23))
+        blend=blend*blend*(3-2*blend)
+        colors.data[li].color=tuple(grass[k]*(1-blend)+bank[k]*blend for k in range(3))+(1,)
 
-profiles=[(1,0),(1.015,-.17),(.97,-.43),(.87,-.83),(.77,-1.19),(.60,-1.58),(.41,-1.96),(.20,-2.25),(.045,-2.38)]
+# A thin ochre turf seam, then fractured slate strata. No tall cylindrical soil wall.
+profiles=[(1,0),(1.003,-.065),(.986,-.27),(.94,-.57),(.82,-.96),(.66,-1.30),(.40,-1.59),(.12,-1.70)]
 v=[];f=[]
-for j,(scale,y) in enumerate(profiles):
+for j,(scale,depth) in enumerate(profiles):
     for i in range(N):
-        a=i*math.tau/N;r=3.54*edge(a)*scale
-        r+=0 if j<2 else .13*math.sin(a*5+j*1.9)
-        x=math.sin(a)*r+.12*math.sin(j*.8);z=math.cos(a)*r*.8
-        yy=ground(x,z)-.015 if j==0 else y+math.sin(a*4+j)*(.05 if j<3 else .11)
-        v.append((x,yy,z))
+        a=i*math.tau/N;r=RADIUS*edge(a)*scale
+        if j>1:r+=.14*math.sin(a*7+j*1.3)+.065*math.sin(a*13-j)
+        x=math.sin(a)*r+.06*math.sin(j);z=math.cos(a)*r*DEPTH
+        y=ground(*boundary[i])-.012 if j==0 else ground(*boundary[i])*.45+depth if j<3 else depth+.12*math.sin(a*4+j)+.07*math.cos(a*9)
+        v.append((x,y,z))
         if j<len(profiles)-1:
             k=j*N+i;kn=j*N+(i+1)%N
             f.extend([(k,kn,k+N),(kn,kn+N,k+N)])
 f.append(tuple((len(profiles)-1)*N+i for i in range(N)))
-cliff=mesh("Faceted floating slate crag",v,f,M["soil"])
+cliff=mesh("Fractured slate strata",v,f,M["soil"])
 for key in ["rock_light","rock","rock_dark"]:cliff.data.materials.append(M[key])
-for p in cliff.data.polygons:
-    band=p.index//(N*2)
-    p.material_index=0 if band==0 else 1 if band<3 and p.index%11<7 else 3 if band>=5 else 2
-for x,y,z,s in [(-2.7,-.65,.5,.6),(2.4,-.75,-.55,.56),(-1.3,-1.6,-.9,.43),(1.35,-1.6,.75,.51),(-2.0,-.55,-1.65,.46)]:
-    rock("Embedded weathered crag",(x,y,z),(s,s*.83,s*.70),M["rock_light"])
+for poly in cliff.data.polygons:
+    band=poly.index//(N*2)
+    poly.material_index=0 if band==0 else 1 if (poly.index//3+band)%7<2 and band<4 else 3 if band>4 else 2
+
+# Natural rock outcrops continue the same geology onto the distant hills.
+for cx,cz,size in [(-3.80,-2.34,.70),(-.70,-3.28,.77),(.12,-3.02,.48),(3.85,-1.83,.65),(-4.65,.42,.46)]:
+    for j in range(3):
+        x=cx+(j-1)*size*.44;z=cz+math.sin(j*2)*size*.22
+        rock("Weathered steppe outcrop",(x,ground(x,z)+size*.12,z),(size*(.68+.12*j),size*(.38+.04*j),size*.53),M["rock_light" if j==1 else "rock"])
+
+# Long low stone shelves distinguish the far hill layers from the grassy basin.
+for x,z,rx,rz in [(-3.80,-2.55,.85,.30),(-.80,-3.45,.96,.37),(-.36,-3.13,.75,.30),(3.97,-2.06,.71,.36)]:
+    rock("Ridgeline stone shelf",(x,ground(x,z)+.015,z),(rx,.15,rz),M["rock_light"])
 
 # Little ger: original felt shell and real seams; the carved door has a hinge pivot.
-ger=pivot("ger",GER)
+ger=pivot("ger")
 lathe("Ger timber floor",[(0,.0),(1.105,.0),(1.125,.09),(1.10,.12),(0,.12)],M["wood"],ger)
 lathe("Ivory felt wall",[(1.045,.10),(1.06,.18),(1.064,.50),(1.05,.88)],M["felt"],ger,start=.25,end=math.tau-.25)
 roof_profile=[(1.17,.87),(1.18,.925),(1.08,.985),(.93,1.08),(.74,1.22),(.53,1.385),(.32,1.515),(.22,1.545)]
@@ -252,9 +348,9 @@ oval("Brass latch",(.156,.505,1.126),(.023,.027,.014),M["brass"],door)
 box("Entry timber step",(0,.085,1.245),(.67,.15,.33),M["wood"],.035,ger)
 for side in [-1,1]:
     px,pz=side*1.30,.66
-    gx=GER[0]+px*math.cos(-.07)+pz*math.sin(-.07)
-    gz=GER[2]-px*math.sin(-.07)+pz*math.cos(-.07)
-    py=ground(gx,gz)-GER[1]
+    gx=GER[0]+GER_SCALE*(px*math.cos(-.07)+pz*math.sin(-.07))
+    gz=GER[2]+GER_SCALE*(-px*math.sin(-.07)+pz*math.cos(-.07))
+    py=(ground(gx,gz)-GER[1])/GER_SCALE
     tube("Ger guy rope",[(side*.91,.78,.43),(side*1.12,.43,.57),(px,py+.045,pz)],.011,M["stitch"],ger)
     tube("Ger ground peg",[(px,py-.035,pz),(px-.02*side,py+.16,pz)],.022,M["wood"],ger)
 # All ger geometry above was made in local coordinates; put that group on its rise.
@@ -263,183 +359,206 @@ for child in ger.children:
     child.matrix_parent_inverse.identity()
 ger.location=xyz(GER)
 ger.rotation_euler.z=-.07
+ger.scale=(GER_SCALE,)*3
 
-# Curving stepping stones lead into open grazing space, without bisecting the flock.
-for i,(x,z) in enumerate([(-1.04,.69),(-1.07,1.00)]):
-    rock("Worn entry stepping stone",(x,ground(x,z)+.016,z),(.22,.04,.13),M["rock_light"])
+# The worn path has its own continuous contour, raycast to the actual terrain.
+# This avoids pixel-like triangle material steps or a flat strip cutting hills.
+from mathutils.bvhtree import BVHTree
+land_bvh=BVHTree.FromPolygons([land.matrix_world@v.co for v in land.data.vertices],[tuple(p.vertices) for p in land.data.polygons])
+path_points=[]
+for i in range(len(PATH)-1):
+    for j in range(10):path_points.append(catmull(PATH[max(0,i-1)],PATH[i],PATH[i+1],PATH[min(len(PATH)-1,i+2)],j/10))
+path_points.append(PATH[-1])
+pv=[];pf=[]
+for i,(x,z) in enumerate(path_points):
+    a=path_points[max(0,i-1)];b=path_points[min(len(path_points)-1,i+1)]
+    dx,dz=b[0]-a[0],b[1]-a[1];length=math.hypot(dx,dz)
+    width=.075+.018*math.sin(i*.27)**2
+    if i>len(path_points)-6:width*=max(.06,(len(path_points)-i)/6)
+    for side in [-1,1]:
+        px=x-dz/length*width*side;pz=z+dx/length*width*side
+        hit,_,_,_=land_bvh.ray_cast(Vector((px,-pz,8)),Vector((0,0,-1)),20)
+        assert hit is not None,"Path support"
+        pv.append((px,hit.z+.009,pz))
+    if i<len(path_points)-1:pf.append((i*2,i*2+1,i*2+3,i*2+2))
+mesh("Winding worn footpath",pv,pf,M["path"],smooth=True)
+
+# A couple of weathered stones at the threshold; the narrow footpath simply
+# wears into the topography and winds toward the river.
+for x,z in [(-2.04,.49),(-2.08,.73)]:
+    rock("Worn entry stepping stone",(x,ground(x,z)+.012,z),(.15,.023,.09),M["rock_light"])
 
 
 def sheep(index,x,z,yaw,scale,pose):
     root=pivot(f"sheep_{index}")
-    resting=pose=="rest";body_y=.30 if resting else .48
-    oval("Soft sheep body",(0,body_y,0),(.30,.265,.43),M["wool"],root)
-    for i in range(48):
-        angle=i*2.399963;v=1-2*(i+.5)/48;rr=math.sqrt(1-v*v)
-        p=(math.cos(angle)*rr*.274,body_y+v*.228,math.sin(angle)*rr*.394)
-        if resting and p[1]<.13:continue
-        s=.071+rng.random()*.025
-        curl=rock("Chunky wool curl",p,(s,s*.89,s),M["wool"],root,1)
+    body=pivot(f"sheep_body_{index}",(0,.48,0),root)
+    oval("Soft sheep body",(0,.48,0),(.30,.265,.43),M["wool"],body)
+    for i in range(38):
+        angle=i*2.399963;v=1-2*(i+.5)/38;rr=math.sqrt(1-v*v)
+        p=(math.cos(angle)*rr*.274,.48+v*.228,math.sin(angle)*rr*.394)
+        size=.077+rng.random()*.02
+        curl=rock("Soft sculpted wool",p,(size,size*.86,size),M["wool"],body)
         for face in curl.data.polygons:face.use_smooth=True
-    for lx in [-.17,.17]:
-        for lz in [-.265,.25]:
-            if resting:
-                oval("Tucked sheep hoof",(lx,.09,lz),(.071,.055,.12),M["face"],root)
-            else:
-                tube("Short sheep leg",[(lx,.33,lz),(lx,.068,lz+.015)],.037,M["face"],root)
-                oval("Sheep hoof",(lx,.047,lz+.025),(.050,.047,.062),M["face"],root)
-    oval("Wool tail",(0,body_y,-.43),(.075,.092,.12),M["wool"],root)
-    oval("Soft connected sheep neck",(0,.23 if resting else .37,.33),(.12,.13,.13),M["face"],root)
-    head_y=.25 if resting else .355
-    head=pivot(f"sheep_head_{index}",(0,head_y,.355),root)
+    for side,lx in [("left",-.17),("right",.17)]:
+        for which,lz in [("back",-.265),("front",.25)]:
+            leg=pivot(f"sheep_leg_{index}_{which}_{side}",(lx,.31,lz),root)
+            tube("Short sheep leg",[(lx,.325,lz),(lx,.068,lz+.015)],.037,M["face"],leg)
+            oval("Sheep hoof",(lx,.047,lz+.025),(.050,.047,.062),M["face"],leg)
+    tail=pivot(f"sheep_tail_{index}",(0,.48,-.39),root)
+    oval("Wool tail",(0,.48,-.45),(.068,.082,.115),M["wool"],tail)
+    oval("Soft connected sheep neck",(0,.37,.33),(.12,.13,.13),M["face"],root)
+    head=pivot(f"sheep_head_{index}",(0,.355,.355),root)
+    angle=0 if pose=="graze" else -.67 if pose=="alert" else -.45
     def hp(p):
-        px,py,pz=p;py+=head_y-.355
-        if pose in ["alert","rest"]:
-            a=-.67;dy=py-head_y;dz=pz-.355
-            py=head_y+dy*math.cos(a)-dz*math.sin(a)
-            pz=.355+dy*math.sin(a)+dz*math.cos(a)
-        return (px,py,pz)
+        px,py,pz=p;dy=py-.355;dz=pz-.355
+        return (px,.355+dy*math.cos(angle)-dz*math.sin(angle),.355+dy*math.sin(angle)+dz*math.cos(angle))
     oval("Gentle sheep face",hp((0,.316,.497)),(.146,.173,.157),M["face"],head)
     oval("Connected rounded nose bridge",hp((0,.211,.590)),(.105,.118,.105),M["face"],head)
-    oval("Grazing sheep muzzle",hp((0,.131,.637)),(.110,.080,.100),M["face"],head)
-    for side in [-1,1]:
-        oval("Floppy wool ear",hp((side*.203,.410,.46)),(.117,.034,.061),M["wool"],head)
-        oval("Warm inner ear",hp((side*.225,.422,.467)),(.076,.011,.04),M["ear"],head)
-        oval("Kind eye white",hp((side*.105,.328,.606)),(.033,.036,.016),M["wool"],head)
-        oval("Kind eye",hp((side*.109,.324,.622)),(.017,.022,.009),M["eye"],head)
-        oval("Eye catchlight",hp((side*.109-.005,.334,.630)),(.006,.008,.003),M["wool"],head,12,8)
-        oval("Little nostril",hp((side*.039,.132,.725)),(.009,.008,.005),M["eye"],head,12,8)
-    for i in range(5):
-        curl=rock("Wool forehead curl",hp(((i-2)*.044,.457+math.sin(i)*.012,.512)),(.057,.061,.059),M["wool"],head)
+    jaw=pivot(f"sheep_jaw_{index}",hp((0,.160,.575)),head)
+    oval("Grazing sheep muzzle",hp((0,.131,.637)),(.110,.080,.100),M["face"],jaw)
+    for side,name in [(-1,"left"),(1,"right")]:
+        ear=pivot(f"sheep_ear_{index}_{name}",hp((side*.135,.410,.46)),head)
+        oval("Floppy wool ear",hp((side*.203,.410,.46)),(.117,.034,.061),M["wool"],ear)
+        oval("Warm inner ear",hp((side*.225,.422,.467)),(.076,.011,.04),M["ear"],ear)
+        oval("Kind eye white",hp((side*.105,.328,.606)),(.030,.033,.015),M["wool"],head)
+        oval("Kind eye",hp((side*.109,.324,.622)),(.015,.020,.009),M["eye"],head)
+        oval("Eye catchlight",hp((side*.109-.005,.334,.630)),(.005,.007,.003),M["wool"],head,12,8)
+        oval("Little nostril",hp((side*.039,.132,.725)),(.009,.008,.005),M["eye"],jaw,12,8)
+    for j in range(5):
+        curl=rock("Wool forehead curl",hp(((j-2)*.044,.457+math.sin(j)*.012,.512)),(.055,.059,.057),M["wool"],head)
         for face in curl.data.polygons:face.use_smooth=True
-    root.location=xyz((x,ground(x,z)-(.035*scale if resting else 0),z));root.rotation_euler.z=yaw;root.scale=(scale,)*3
+    root.location=xyz((x,ground(x,z),z));root.rotation_euler.z=yaw;root.scale=(scale,)*3
     return root
 
 
 for i,args in enumerate(SHEEP):sheep(i,*args)
 
-# Clear spring, a small outlet and a short waterfall embedded into the rock edge.
-vertices=[(1.72,.300,1.05)];faces=[]
-for i in range(65):
-    a=i*math.tau/64;r=1+.035*math.sin(a*5)
-    vertices.append((1.72+math.cos(a)*.75*r,.300,1.05+math.sin(a)*.56*r))
-    if i<64:faces.append((0,i+1,i+2))
-mesh("Clear steppe spring",vertices,faces,M["water"])
-v=[];f=[]
-for i,(x,z) in enumerate(STREAM):
-    width=.18 if i<len(STREAM)-1 else .108
-    v.extend([(x-width,.303,z),(x+width,.303,z)])
-    if i<len(STREAM)-1:f.append((i*2,i*2+1,i*2+3,i*2+2))
-mesh("Spring outlet",v,f,M["water"])
-mesh("Small cliffside waterfall",[(2.002,.303,2.39),(2.218,.303,2.39),(2.23,.21,2.52),(2.012,.21,2.52),(2.10,-.75,2.37),(2.245,-.71,2.37),(2.17,-.83,2.35)],[(0,1,2,3),(3,2,5,6,4)],M["water"],smooth=True)
-for d in [-.048,.025,.073]:tube("Waterfall silver thread",[(2.11+d,.25,2.5),(2.12+d,-.15,2.49),(2.17+d,-.74,2.386)],.008,M["foam"])
-for i in range(11):
-    a=i*math.tau/11
-    if .85<a<1.63:continue
-    x=1.72+math.cos(a)*.74;z=1.05+math.sin(a)*.56
-    rock("Spring bank stone",(x,ground(x,z)+.012,z),(.12+rng.random()*.07,.10,.11),M["rock_light"])
-for r in [.25,.38]:
-    tube("Quiet spring ripple",[(1.67+math.sin(a)*r,.308,1.00+math.cos(a)*r*.48) for a in [.35+i*.065 for i in range(26)]],.005,M["foam"],resolution=1)
+# One connected, inset ribbon follows the riverbed into a little natural pool.
+# UV u runs bank to bank [0,1], v is cumulative authored stream length.
+water_vertices=[];water_faces=[];water_uv=[]
+CROSS=8
+for i,(x,z,level,width) in enumerate(RIVER):
+    nx,nz=river_normal(i)
+    for j in range(CROSS+1):
+        u=j/CROSS;offset=(u*2-1)*width
+        water_vertices.append((x+nx*offset,level,z+nz*offset))
+        water_uv.append((u,RIVER_LENGTH[i]))
+        if i<len(RIVER)-1 and j<CROSS:
+            k=i*(CROSS+1)+j
+            water_faces.append((k,k+1,k+CROSS+2,k+CROSS+1))
+water=mesh("Steppe_water_surface",water_vertices,water_faces,M["water"],smooth=True)
+uv=water.data.uv_layers.new(name="River current coordinates")
+for poly in water.data.polygons:
+    for li in poly.loop_indices:uv.data[li].uv=water_uv[water.data.loops[li].vertex_index]
 
-# Practical camp details, aligned on the rear meadow and away from animal paths.
-for x in [.44,1.40]:
-    h=ground(x,-2.25)
-    tube("Wooden hitching post",[(x,h,-2.25),(x,h+.74,-2.25)],.037,M["wood"])
-    rock("Hitch post foot stone",(x,h-.01,-2.25),(.12,.08,.11),M["rock_light"])
-tube("Hitching cross rail",[(.40,ground(.44,-2.25)+.65,-2.25),(1.45,ground(1.40,-2.25)+.65,-2.25)],.032,M["wood"])
-for i in range(3):
-    y=ground(-2.01,-1.90)+.06+i*.085
-    tube("Neat camp firewood",[(-2.31,y,-1.84),(-1.76,y,-1.99)],.046,M["wood"])
-for i,(x,z) in enumerate([(.25,.28),(.55,.23)]):
-    y=ground(x,z)
-    oval("Camp earthenware water vessel",(x,y+.14,z),(.115,.16,.115),M["door"])
-    ring("Vessel lip",(x,y+.282,z),.054,.010,M["wood"])
+# Banks are mostly open silty slopes. A few irregular stone groups describe
+# outside bends and the spring, avoiding a ring of identical pond pebbles.
+for i,side in [(4,-1),(7,1),(14,1),(18,1),(29,-1),(31,-1),(45,1),(60,-1),(66,-1),(77,1)]:
+    x,z,y,width=RIVER[i];nx,nz=river_normal(i)
+    for j in range(2 if i%3 else 3):
+        offset=(width+.105+j*.07)*side
+        px=x+nx*offset+.09*math.sin(j*2.3);pz=z+nz*offset+.09*math.cos(j*2.3)
+        size=.10+j*.035
+        rock("River weathered bank stone",(px,ground(px,pz)+size*.19,pz),(size*1.5,size*.65,size),M["rock_light" if j%2 else "rock"])
+for x,z,size in [(1.16,-2.92,.28),(1.55,-2.91,.25)]:
+    rock("Sheltered spring rock",(x,ground(x,z)+size*.15,z),(size,size*.8,size*.83),M["rock_light"])
 
-# One sheltered larch gives the rear silhouette height without turning steppe into forest.
-tx,tz=2.05,-1.55;ty=ground(tx,tz)
-tube("Weathered larch trunk",[(tx,ty,tz),(tx-.09,ty+.85,tz+.05),(tx+.02,ty+1.65,tz-.05),(tx-.06,ty+2.28,tz)],.055,M["wood"])
-for i in range(7):
-    a=i*2.4;h=.76+i*.18;length=.58-i*.041
-    end=(tx+math.sin(a)*length,ty+h+.10,tz+math.cos(a)*length)
-    tube("Larch branch",[(tx,ty+h,tz),end],.024 if i<3 else .017,M["wood"])
-    rock("Soft larch foliage",(end[0],end[1]+.14,end[2]),(.42-i*.020,.25,.35-i*.017),M["leaf_light" if i%3==0 else "leaf"],subdivisions=1)
-rock("Larch crown",(tx-.06,ty+2.04,tz),(.30,.40,.29),M["leaf_light"])
-for x,z in [(2.49,-1.63),(2.44,-1.19),(-2.5,.35)]:
-    y=ground(x,z)
-    for dx,dz,s in [(-.11,0,.23),(.11,.05,.20),(0,-.12,.18)]:
-        rock("Sheltered dwarf willow",(x+dx,y+.17,z+dz),(s,.23,s*.85),M["leaf"])
+# A modest larch pair on the far left ridge lends depth without crowding the ger.
+for tx,tz,scale in [(-3.39,-1.65,.74),(-3.85,-1.42,.43)]:
+    ty=ground(tx,tz)
+    tube("Steppe larch trunk",[(tx,ty,tz),(tx-.06*scale,ty+.85*scale,tz),(tx,ty+1.64*scale,tz)],.035*scale,M["wood"])
+    for j in range(5):
+        angle=j*2.4;h=.50+j*.23;length=(.47-j*.055)*scale
+        end=(tx+math.sin(angle)*length,ty+(h+.10)*scale,tz+math.cos(angle)*length)
+        tube("Larch branch",[(tx,ty+h*scale,tz),end],.014*scale,M["wood"])
+        rock("Larch foliage",(end[0],end[1]+.12*scale,end[2]),((.38-j*.028)*scale,.23*scale,(.30-j*.018)*scale),M["leaf_light" if j%3==0 else "leaf"])
+    rock("Larch crown",(tx,ty+1.62*scale,tz),(.22*scale,.32*scale,.23*scale),M["leaf_light"])
 
 
 def open_meadow(x,z,margin=0):
-    if math.hypot(x-GER[0],z-GER[2])<1.38+margin:return False
-    dx,dz=x-GER[0],z-GER[2]
-    lx=dx*math.cos(-.07)-dz*math.sin(-.07);lz=dx*math.sin(-.07)+dz*math.cos(-.07)
-    if abs(abs(lx)-1.25)<.21+margin and .35<lz<.86:return False
-    if -.30<z<1.40 and abs(x+1.0)<.30+margin:return False
-    if math.hypot((x-1.72)/.89,(z-1.05)/.67)<1+margin:return False
-    if min(segment_distance(x,z,a,b) for a,b in zip(STREAM,STREAM[1:]))<.25+margin:return False
-    if .20<x<1.62 and -2.44<z<-2.10:return False
-    if math.hypot(x-2.05,z+1.55)<.26+margin:return False
-    if math.hypot(x-.25,z-.28)<.23 or math.hypot(x-.55,z-.23)<.24:return False
+    if not inside(x,z,.13+margin):return False
+    if math.hypot(x-GER[0],z-GER[2])<1.01+margin:return False
+    distance,_,width,_=river_at(x,z)
+    if distance<width+.19+margin:return False
+    if min(segment_distance(x,z,a,b) for a,b in zip(PATH,PATH[1:]))<.19+margin:return False
     for sx,sz,yaw,scale,pose in SHEEP:
         dx,dz=x-sx,z-sz;lx=dx*math.cos(yaw)-dz*math.sin(yaw);lz=dx*math.sin(yaw)+dz*math.cos(yaw)
-        if (lx/(scale*.40+margin))**2+((lz-.09*scale)/(scale*.76+margin))**2<1:return False
+        if (lx/(scale*.43+margin))**2+((lz-.07*scale)/(scale*.78+margin))**2<1:return False
     return True
 
 
-# Broad grassy patches and individual seed heads, with clear contact under all props.
+# Meadow growth occurs in broad patches, with deliberately clear grazing ground
+# and large areas of calm terrain between them. No repeated, uniformly dense lawn.
 grass_v=[[],[],[]];grass_f=[[],[],[]]
-for i in range(1700):
-    a=rng.random()*math.tau;r=math.sqrt(rng.random())*3.44*edge(a)
-    x=math.sin(a)*r;z=math.cos(a)*r*.8
-    if not open_meadow(x,z):continue
-    y=ground(x,z);group=i%3
-    for k in range(3):
-        angle=a+k*2.15;h=rng.uniform(.07,.19);w=.019
-        dx,dz=math.cos(angle)*w,math.sin(angle)*w
-        n=len(grass_v[group]);grass_v[group].extend([(x-dx,y,z-dz),(x+dx,y,z+dz),(x+dx*1.7,y+h,z+dz*1.7)])
-        grass_f[group].append((n,n+1,n+2))
-for i,key in enumerate(["grass","grass_light","grass_dark"]):mesh("Meadow blade clusters",grass_v[i],grass_f[i],M[key])
-for sx,sz,yaw,scale,pose in SHEEP:
-    if pose!="graze":continue
-    v=[];f=[]
-    for i in range(11):
-        lx=(i%4-1.5)*.049;lz=.77+(i//4)*.034
-        x=sx+(lx*math.cos(yaw)+lz*math.sin(yaw))*scale
-        z=sz+(-lx*math.sin(yaw)+lz*math.cos(yaw))*scale;y=ground(x,z)
-        k=len(v);v.extend([(x-.009,y,z),(x+.009,y,z),(x+.005,y+.045+rng.random()*.027,z+.012)]);f.append((k,k+1,k+2))
-    mesh("Freshly grazed small tufts",v,f,M["grass_light"])
-for i in range(46):
-    a=i*2.39996;r=2.4+rng.random()*.7;x=math.sin(a)*r;z=math.cos(a)*r*.8
-    if not open_meadow(x,z,.1):continue
-    y=ground(x,z);h=.18+rng.random()*.13
-    tube("Steppe flowering stem",[(x,y,z),(x+.025,y+h,z+.01)],.005,M["grass_dark"])
-    for k in range(3):
-        color=M["flower"] if i%3==0 else M["straw"]
-        rock("Tiny meadow blossom",(x+.025+(k-1)*.026,y+h+math.sin(k)*.016,z+.01),(.036,.026,.029),color)
-for i in range(14):
-    a=i*2.4;r=3.16;x=math.sin(a)*r;z=math.cos(a)*r*.8
-    if not open_meadow(x,z,.12):continue
-    rock("Meadow edge pebble",(x,ground(x,z)-.022,z),(.10+rng.random()*.08,.09,.10),M["rock_light"])
+patches=[(-4.6,-1.9,.45),(-4.3,.8,.55),(-3.7,2.7,.47),(-2.75,3.55,.5),(-.8,3.7,.43),
+    (1,3.45,.28),(3.05,2.95,.39),(4.35,1.7,.42),(4.5,-.1,.5),(3.6,-2.8,.4),
+    (.4,-3.7,.48),(-2.3,-3.0,.36),(-3.1,-.2,.28),(.5,.85,.23),(.7,-1.9,.33)]
+for px,pz,radius in patches:
+    for j in range(32):
+        angle=rng.random()*math.tau;r=math.sqrt(rng.random())*radius
+        x=px+math.sin(angle)*r;z=pz+math.cos(angle)*r
+        if not open_meadow(x,z):continue
+        y=ground(x,z);group=j%3
+        for k in range(3):
+            a=angle+k*2.15;h=rng.uniform(.06,.13);w=.012
+            dx,dz=math.cos(a)*w,math.sin(a)*w
+            n=len(grass_v[group]);grass_v[group].extend([(x-dx,y,z-dz),(x+dx,y,z+dz),(x+dx*2.1,y+h,z+dz*2.1)])
+            grass_f[group].append((n,n+1,n+2))
+for i,key in enumerate(["grass_light","grass_dark","straw"]):mesh("Sparse steppe tussocks",grass_v[i],grass_f[i],M[key])
+# Taller golden seed heads cluster only near banks and sheltered outcrops.
+for i in range(32):
+    px,pz,radius=patches[i%len(patches)];x=px+rng.uniform(-radius,radius);z=pz+rng.uniform(-radius,radius)
+    if not open_meadow(x,z,.04):continue
+    y=ground(x,z);h=rng.uniform(.13,.22)
+    tube("Dry steppe seed stem",[(x,y,z),(x+.026,y+h,z+.013)],.004,M["grass_dark"])
+    rock("Golden seed head",(x+.026,y+h,z+.013),(.019,.045,.014),M["straw"])
+for x,z,r in [(-3.62,-1.21,.18),(-3.77,-1.05,.15),(3.2,-1.75,.17),(3.41,-1.6,.15),(-4.02,2.14,.14)]:
+    rock("Low sheltered willow",(x,ground(x,z)+r*.4,z),(r,r*.7,r*.9),M["leaf"])
+# A close nibbling patch belongs only to the grazer's reach.
+sx,sz,yaw,scale,_=SHEEP[0]
+for i in range(9):
+    lx=(i%3-1)*.034;lz=.77+(i//3)*.031
+    x=sx+(lx*math.cos(yaw)+lz*math.sin(yaw))*scale
+    z=sz+(-lx*math.sin(yaw)+lz*math.cos(yaw))*scale;y=ground(x,z)
+    mesh("Fresh grazing grass",[(x-.006,y,z),(x+.006,y,z),(x+.01,y+.037,z+.008)],[(0,1,2)],M["grass_light"])
 
-# Deterministic support checks run before batching while each authored part exists.
+# Deterministic support checks run before batching while authored parts exist.
 for a in [i*math.tau/24 for i in range(24)]:
-    assert abs(ground(GER[0]+math.sin(a)*1.08,GER[2]+math.cos(a)*1.08)-GER[1])<.012,"Ger floor must meet the meadow"
+    assert abs(ground(GER[0]+math.sin(a)*1.08*GER_SCALE,GER[2]+math.cos(a)*1.08*GER_SCALE)-GER[1])<.012,"Ger floor must meet meadow"
 for i,(sx,sz,yaw,scale,pose) in enumerate(SHEEP):
-    for lx in [-.17,.17]:
-        for lz in [-.265,.25]:
-            x=sx+(lx*math.cos(yaw)+lz*math.sin(yaw))*scale
-            z=sz+(-lx*math.sin(yaw)+lz*math.cos(yaw))*scale
-            assert abs(ground(sx,sz)-ground(x,z))<.012,f"Sheep {i} hoof support"
+    root=bpy.data.objects[f"sheep_{i}"]
+    bpy.context.view_layer.update()
+    # Check actual exported-surface contact, not just the analytic heightfield.
+    for part in root.children_recursive:
+        if part.type!="MESH" or not part.name.startswith("Sheep hoof"):continue
+        bottom=min((part.matrix_world@v.co for v in part.data.vertices),key=lambda v:v.z)
+        hit,_,_,_=land_bvh.ray_cast(Vector((bottom.x,bottom.y,8)),Vector((0,0,-1)),20)
+        assert hit is not None and abs(bottom.z-hit.z)<.0015,f"Sheep {i} hoof contact"
     head=bpy.data.objects[f"sheep_head_{i}"]
-    for angle in [-.485,0,.035]:
-        head.rotation_euler.x=angle;bpy.context.view_layer.update()
-        for part in head.children:
-            for vertex in part.data.vertices:
-                p=part.matrix_world@vertex.co
-                assert p.z-ground(p.x,-p.y)>-.012,f"Sheep {i} head crosses meadow at {angle}"
-    head.rotation_euler.x=0
-assert ground(1.72,1.05)<.30,"Spring water must sit above its carved bed"
-for x,z in STREAM:assert ground(x,z)<.303,"Stream must sit in its channel"
+    jaw=bpy.data.objects[f"sheep_jaw_{i}"]
+    head.rotation_mode="QUATERNION";jaw.rotation_mode="QUATERNION"
+    pitch_limits=[(-.43,.03),(-.16,.05),(-.22,.025)][i]
+    yaw_limit=[.12,.16,.06][i]
+    minimum=10
+    for pitch in [pitch_limits[0],0,pitch_limits[1]]:
+        for yaw_offset in [-yaw_limit,0,yaw_limit]:
+            head.rotation_quaternion=Quaternion((1,0,0),pitch)@Quaternion((0,0,1),yaw_offset)
+            jaw.rotation_quaternion=Quaternion((1,0,0),.011 if i==0 else 0)@Quaternion((0,0,1),math.copysign(.027,yaw_offset) if i==0 else 0)
+            bpy.context.view_layer.update()
+            for part in head.children_recursive:
+                if part.type!="MESH":continue
+                for vertex in part.data.vertices:
+                    pt=part.matrix_world@vertex.co
+                    hit,_,_,_=land_bvh.ray_cast(Vector((pt.x,pt.y,8)),Vector((0,0,-1)),20)
+                    assert hit is not None,f"Sheep {i} head outside landscape"
+                    clearance=pt.z-hit.z;minimum=min(minimum,clearance)
+                    assert clearance>.020,f"Sheep {i} head crosses meadow at {pitch},{yaw_offset}"
+    head.rotation_quaternion=Quaternion();jaw.rotation_quaternion=Quaternion()
+    print(f"SHEEP {i} combined head/jaw/terrain clearance {minimum:.6f}")
+for i,(x,z,level,width) in enumerate(RIVER):
+    nx,nz=river_normal(i)
+    for u in [-1,-.5,0,.5,1]:
+        assert ground(x+nx*width*u,z+nz*width*u)<level-.025,"River must clear inset bed"
 
 # Apply mesh rotations before joining so rotated boulder bounds cannot enlarge
 # the world framing. Individual animation pivots keep their authored transforms.
@@ -459,7 +578,7 @@ for (parent,names),objects in groups.items():
     for o in objects:o.select_set(True)
     bpy.context.view_layer.objects.active=objects[0]
     if len(objects)>1:bpy.ops.object.join()
-    bpy.context.object.name=f"{parent.name if parent else 'Steppe'}_{names[0]}"
+    bpy.context.object.name="Steppe_water_surface" if names[0]=="Steppe_river_water" else f"{parent.name if parent else 'Steppe'}_{names[0]}"
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=str(OUTPUT),export_format="GLB",export_yup=True,export_animations=False,export_cameras=False,export_lights=False)
 bpy.context.view_layer.update()
@@ -479,8 +598,8 @@ if "--preview" in sys.argv:
         bpy.ops.object.light_add(type="AREA",location=p);o=bpy.context.object
         o.data.energy=energy;o.data.shape="DISK";o.data.size=size;o.data.color=color
         o.rotation_euler=(Vector((0,0,.4))-o.location).to_track_quat("-Z","Y").to_euler()
-    bpy.ops.object.camera_add(location=(6,-10,7));camera=bpy.context.object
-    camera.data.type="ORTHO";camera.data.ortho_scale=9.3
+    bpy.ops.object.camera_add(location=(8,-13,10));camera=bpy.context.object
+    camera.data.type="ORTHO";camera.data.ortho_scale=14.4
     camera.rotation_euler=(Vector((0,0,.15))-camera.location).to_track_quat("-Z","Y").to_euler();scene.camera=camera
-    scene.render.image_settings.file_format="PNG";scene.render.filepath="/tmp/chingis-steppe-v6.png"
+    scene.render.image_settings.file_format="PNG";scene.render.filepath=f"/tmp/chingis-steppe-v{VERSION}.png"
     bpy.ops.render.render(write_still=True)

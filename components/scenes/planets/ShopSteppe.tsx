@@ -1,124 +1,69 @@
 "use client";
 
 /* eslint-disable react/no-unknown-property */
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, type RefObject } from "react";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import worldVersions from "@/assets/world-versions.json";
 import { isModelTap } from "./model-tap";
 import type { GerStyle } from "./planet-data";
-import type { SceneActionProps } from "./useSceneAction";
+import SteppeWater from "./SteppeWater";
+import { SheepAudio, type SheepNote } from "./sheep-audio";
 import {
-  advanceSheepClocks, createSheepClocks, sampleSheepReaction, startSheepReaction,
-  type SheepReaction,
+  SHEEP_COUNT, SHEEP_REACTION_DURATIONS,
+  advanceSheepClocks, createSheepClocks, sampleSheepPose, startSheepReaction,
 } from "./sheep-motion";
 
 function sheepIndex(object: THREE.Object3D | null): number | null {
   while (object) {
     const match = /^sheep_(\d+)$/.exec(object.name);
-    if (match) return Number(match[1]);
+    if (match) {
+      const index = Number(match[1]);
+      return index < SHEEP_COUNT ? index : null;
+    }
     object = object.parent;
   }
   return null;
 }
 
-const REACTION_COLORS = ["#bd887b", "#d5cdb4", "#ccb979", "#8d9e69", "#a4bbc0", "#cfbb88"];
+const REACTION_COLORS = ["#baa78a", "#bcc4ae", "#ceba96"];
+const LEG_NAMES = ["front_left", "front_right", "back_left", "back_right"] as const;
 
-/** Small handmade accents share the sheep's space and never intercept a pick. */
-function createAccent(index: number) {
-  const group = new THREE.Group();
-  group.name = `sheep_reaction_${index}`;
-  group.visible = false;
-  const material = new THREE.MeshBasicMaterial({
-    color: REACTION_COLORS[index], transparent: true, opacity: 0, depthWrite: false,
-  });
-  const geometries: THREE.BufferGeometry[] = [];
-  const pieces: { mesh: THREE.Mesh; position: THREE.Vector3 }[] = [];
-  const mesh = (geometry: THREE.BufferGeometry, x = 0, y = 0, z = 0) => {
-    geometries.push(geometry);
-    const item = new THREE.Mesh(geometry, material);
-    item.position.set(x, y, z);
-    item.raycast = () => {};
-    group.add(item);
-    pieces.push({ mesh: item, position: item.position.clone() });
-    return item;
-  };
-  const stroke = (a: [number, number], b: [number, number], radius = .009) => {
-    const start = new THREE.Vector3(...a, 0), end = new THREE.Vector3(...b, 0);
-    const item = mesh(new THREE.CylinderGeometry(radius, radius, start.distanceTo(end), 5));
-    item.position.copy(start).add(end).multiplyScalar(.5);
-    item.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), end.sub(start).normalize());
-    pieces[pieces.length - 1].position.copy(item.position);
-  };
-  if (index === 0) {
-    const shape = new THREE.Shape();
-    shape.moveTo(0, -.075);
-    shape.bezierCurveTo(-.035, -.045, -.12, .015, -.075, .075);
-    shape.bezierCurveTo(-.04, .115, -.005, .084, 0, .058);
-    shape.bezierCurveTo(.005, .084, .04, .115, .075, .075);
-    shape.bezierCurveTo(.12, .015, .035, -.045, 0, -.075);
-    mesh(new THREE.ExtrudeGeometry(shape, { depth: .017, bevelEnabled: false, curveSegments: 4 }));
-  } else if (index === 1) {
-    for (let i = 0; i < 5; i++) mesh(new THREE.IcosahedronGeometry(.026 - i * .002, 0), (i - 2) * .085, Math.sin(i * 2) * .055);
-  } else if (index === 3) {
-    for (let i = 0; i < 4; i++) {
-      const leaf = mesh(new THREE.OctahedronGeometry(.028, 0), (i - 1.5) * .045, i % 2 * .025);
-      leaf.scale.set(.4, 1, .25);
-      leaf.rotation.z = (i - 1.5) * .45;
-    }
-  } else if (index === 4) {
-    // The sleepy mark is physical line geometry, with no font or emoji asset.
-    stroke([-.07, .06], [.065, .06]);
-    stroke([.065, .06], [-.07, -.055]);
-    stroke([-.07, -.055], [.065, -.055]);
-  } else if (index === 5) {
-    stroke([-.072, -.015], [-.10, .10]);
-    stroke([.042, -.015], [.083, .087]);
-  }
-  group.position.set(0, index === 3 ? .21 : index === 4 ? .76 : .91, index === 3 ? .77 : .36);
-  return { group, material, geometries, pieces, position: group.position.clone() };
+export type SheepHandle = { play(index: number): void };
+
+function bindJoint(model: THREE.Object3D, name: string) {
+  const object = model.getObjectByName(name);
+  return object ? {
+    object, position: object.position.clone(), rotation: object.rotation.clone(), scale: object.scale.clone(),
+  } : null;
 }
 
-function updateAccent(accent: ReturnType<typeof createAccent>, index: number, reaction: SheepReaction) {
-  const { progress: p } = reaction;
-  accent.group.visible = reaction.accent > .005;
-  accent.material.opacity = reaction.accent * .88;
-  accent.group.position.copy(accent.position);
-  accent.group.scale.setScalar(1);
-  if (!accent.group.visible) return;
-  if (index === 0 || index === 4) {
-    accent.group.position.y += p * .19;
-    accent.group.scale.setScalar(.8 + .2 * Math.sin(p * Math.PI));
-  }
-  for (let i = 0; i < accent.pieces.length; i++) {
-    const part = accent.pieces[i];
-    part.mesh.position.copy(part.position);
-    if (index === 1) {
-      part.mesh.position.x += (i - 2) * .095 * p;
-      part.mesh.position.y += Math.sin(p * Math.PI) * .12 + p * .035;
-      part.mesh.rotation.z = p * (i % 2 ? 1 : -1);
-    } else if (index === 3) {
-      const lift = (p * 3 + i * .21) % 1;
-      part.mesh.position.x += (i - 1.5) * lift * .025;
-      part.mesh.position.y += Math.sin(lift * Math.PI) * .075;
-      part.mesh.rotation.z = (i - 1.5) * .45 + lift;
-    }
-  }
+function restoreJoint(joint: ReturnType<typeof bindJoint>) {
+  if (!joint) return;
+  joint.object.position.copy(joint.position);
+  joint.object.rotation.copy(joint.rotation);
+  joint.object.scale.copy(joint.scale);
 }
 
 export default function ShopSteppe({
-  style, motion, actionKey, animateInteractions,
-}: SceneActionProps & { style: GerStyle; motion: boolean }) {
+  style, motion, animateInteractions, soundEnabled, sheepRef,
+}: {
+  style: GerStyle; motion: boolean; animateInteractions: boolean;
+  soundEnabled: boolean; sheepRef: RefObject<SheepHandle>;
+}) {
   const { scene } = useGLTF(`/3d/shop/steppe-v${worldVersions.shop}.glb`);
   const invalidate = useThree((state) => state.invalidate);
   const canvas = useThree((state) => state.gl.domElement);
   const clocks = useRef(createSheepClocks());
+  const feedbackTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const singingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const singing = useRef<(number | null)[]>(Array(SHEEP_COUNT).fill(null));
+  const audio = useRef<SheepAudio | null>(null);
   const elapsed = useRef(0);
+  const idleWeight = useRef(0);
   const hovered = useRef<number | null>(null);
   const hidden = useRef(false);
-  const previousAction = useRef(actionKey);
-  const nextSheep = useRef(0);
   const asset = useMemo(() => {
     const model = scene.clone(true);
     const materialCache = new Map<THREE.MeshStandardMaterial, Map<number | null, THREE.MeshStandardMaterial>>();
@@ -129,7 +74,8 @@ export default function ShopSteppe({
       const sources: THREE.Material[] = Array.isArray(object.material) ? object.material : [object.material];
       // Fine stitching is smaller than a shadow-map texel; omit its self-shadow.
       const fineDetail = sources.every((source) => /flax_seam|felt_seam|water_glints/i.test(source.name));
-      object.castShadow = !fineDetail;
+      const river = sources.every((source) => source.name === "Steppe_river_water");
+      object.castShadow = !fineDetail && !river;
       object.receiveShadow = !fineDetail;
       const clone = (source: THREE.MeshStandardMaterial) => {
         let bySheep = materialCache.get(source);
@@ -144,67 +90,107 @@ export default function ShopSteppe({
       };
       object.material = Array.isArray(object.material) ? object.material.map(clone) : clone(object.material);
     });
-    // Measure authored geometry before adding any temporary accents.
     const bounds = new THREE.Box3().setFromObject(model);
     const size = bounds.getSize(new THREE.Vector3());
-    const sheep = Array.from({ length: 6 }, (_, index) => {
+    const sheep = Array.from({ length: SHEEP_COUNT }, (_, index) => {
       const root = model.getObjectByName(`sheep_${index}`);
-      const head = model.getObjectByName(`sheep_head_${index}`);
-      const wool = model.getObjectByName(`sheep_${index}_Sheep_wool`);
-      if (!root || !head || !wool) return null;
-      const accent = createAccent(index);
-      root.add(accent.group);
+      const head = bindJoint(model, `sheep_head_${index}`);
+      const body = bindJoint(model, `sheep_body_${index}`);
+      if (!root || !head || !body) return null;
+      const ears = [bindJoint(model, `sheep_ear_${index}_left`), bindJoint(model, `sheep_ear_${index}_right`)];
+      const tail = bindJoint(model, `sheep_tail_${index}`);
+      const jaw = bindJoint(model, `sheep_jaw_${index}`);
+      const legs = LEG_NAMES.map((name) => bindJoint(model, `sheep_leg_${index}_${name}`));
       return {
-        index, root, head, wool, accent,
-        position: root.position.clone(), rotation: head.rotation.clone(),
-        woolPosition: wool.position.clone(), woolScale: wool.scale.clone(),
+        index, root, head, body, ears, tail, jaw, legs,
+        position: root.position.clone(),
+        joints: [head, body, ...ears, tail, jaw, ...legs],
         tint: new THREE.Color(REACTION_COLORS[index]),
       };
     }).filter((sheep): sheep is NonNullable<typeof sheep> => sheep !== null);
     return {
-      model, materials, sheep, quaternion: new THREE.Quaternion(),
+      model, materials, sheep,
       center: bounds.getCenter(new THREE.Vector3()),
       // The OG island is also fitted to a longest dimension of six units.
       scale: 6 / Math.max(size.x, size.y, size.z),
     };
   }, [scene]);
 
+  const clearSinging = useCallback(() => {
+    singingTimers.current.forEach(clearTimeout);
+    singingTimers.current = [];
+    singing.current.fill(null);
+    invalidate();
+  }, [invalidate]);
+
+  useEffect(() => {
+    const controller = new SheepAudio();
+    audio.current = controller;
+    return () => { audio.current = null; controller.dispose(); };
+  }, []);
+
+  useEffect(() => {
+    audio.current?.setEnabled(soundEnabled);
+    if (!soundEnabled) clearSinging();
+  }, [soundEnabled, clearSinging]);
+
+  const onNote = useCallback((note: SheepNote) => {
+    const index = note.sheepIndex;
+    clearTimeout(singingTimers.current[index]);
+    singing.current[index] = performance.now();
+    singingTimers.current[index] = setTimeout(() => {
+      singing.current[index] = null;
+      invalidate();
+    }, note.duration * 1000);
+    invalidate();
+  }, [invalidate]);
+
   const reset = useCallback(() => {
+    clearSinging();
+    feedbackTimers.current.forEach(clearTimeout);
+    feedbackTimers.current = [];
     clocks.current.fill(-1);
     elapsed.current = 0;
+    idleWeight.current = 0;
     hovered.current = null;
     for (const sheep of asset.sheep) {
       sheep.root.position.copy(sheep.position);
-      sheep.head.rotation.copy(sheep.rotation);
-      sheep.wool.position.copy(sheep.woolPosition);
-      sheep.wool.scale.copy(sheep.woolScale);
-      sheep.accent.group.visible = false;
+      sheep.joints.forEach(restoreJoint);
     }
     for (const { source, material } of asset.materials) material.emissive.copy(source.emissive);
     canvas.style.cursor = "";
     invalidate();
-  }, [asset, canvas, invalidate]);
+  }, [asset, canvas, clearSinging, invalidate]);
 
   const start = useCallback((index: number) => {
-    if (!document.hidden && startSheepReaction(clocks.current, index)) invalidate();
-  }, [invalidate]);
+    if (document.hidden || !Number.isInteger(index) || index < 0 || index >= SHEEP_COUNT) return;
+    // A sheep can sing the whole tune even while its longer body reaction is active.
+    if (soundEnabled) void audio.current?.play(index, onNote);
+    if (!startSheepReaction(clocks.current, index)) return;
+    if (!animateInteractions) {
+      // A static tint needs only the start/end frames under reduced motion.
+      feedbackTimers.current[index] = setTimeout(() => {
+        clocks.current[index] = -1;
+        invalidate();
+      }, SHEEP_REACTION_DURATIONS[index] * 1000);
+    }
+    invalidate();
+  }, [animateInteractions, soundEnabled, onNote, invalidate]);
+
+  useImperativeHandle(sheepRef, () => ({ play: start }), [start]);
 
   useEffect(() => {
-    if (previousAction.current !== actionKey) {
-      start(nextSheep.current);
-      nextSheep.current = (nextSheep.current + 1) % 6;
-    }
-    previousAction.current = actionKey;
-  }, [actionKey, start]);
+    reset();
+  }, [animateInteractions, reset]);
 
   useEffect(() => {
     const visibility = () => {
       hidden.current = document.hidden;
-      if (hidden.current) reset();
+      if (hidden.current) { audio.current?.stop(); reset(); }
       else invalidate();
     };
     const keydown = (event: KeyboardEvent) => {
-      if (event.target !== canvas || document.activeElement !== canvas || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.repeat || !/^[1-6]$/.test(event.key)) return;
+      if (event.target !== canvas || document.activeElement !== canvas || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.repeat || !/^[1-3]$/.test(event.key)) return;
       event.preventDefault();
       start(Number(event.key) - 1);
     };
@@ -220,10 +206,6 @@ export default function ShopSteppe({
 
   useEffect(() => () => {
     asset.materials.forEach(({ material }) => material.dispose());
-    asset.sheep.forEach(({ accent }) => {
-      accent.material.dispose();
-      accent.geometries.forEach((geometry) => geometry.dispose());
-    });
   }, [asset]);
 
   useEffect(() => {
@@ -247,50 +229,59 @@ export default function ShopSteppe({
     invalidate();
   }, [asset, style, invalidate]);
 
-  useFrame(({ camera }, delta) => {
+  useFrame((_, delta) => {
     if (hidden.current) return;
     const idle = motion && animateInteractions;
-    if (idle) elapsed.current += Math.min(delta, .05);
+    const dt = Math.max(0, Math.min(delta, .05));
+    const target = idle ? 1 : 0;
+    idleWeight.current += (target - idleWeight.current) * (1 - Math.exp(-dt * 8));
+    if (Math.abs(target - idleWeight.current) < .001) idleWeight.current = target;
+    if (idle || idleWeight.current > 0) elapsed.current += dt;
     for (const sheep of asset.sheep) {
-      const reaction = sampleSheepReaction(sheep.index, clocks.current[sheep.index], animateInteractions);
+      const pose = sampleSheepPose(sheep.index, clocks.current[sheep.index], elapsed.current, idleWeight.current, animateInteractions);
       sheep.root.position.copy(sheep.position);
-      sheep.root.position.y += reaction.hop;
-      sheep.head.rotation.copy(sheep.rotation);
-      // An active reaction owns the head; idle movement cannot exceed its envelope.
-      if (idle && !reaction.active) {
-        sheep.head.rotation.x += Math.sin(elapsed.current * .65 + sheep.index * 1.9) * .035;
-        sheep.head.rotation.y += Math.sin(elapsed.current * .34 + sheep.index * 2.3) * .035;
+      sheep.root.position.y += pose.hop * sheep.root.scale.y;
+      sheep.joints.forEach(restoreJoint);
+      sheep.head.object.rotation.x += pose.pitch;
+      sheep.head.object.rotation.y += pose.yaw;
+      if (sheep.jaw) {
+        const began = singing.current[sheep.index];
+        const mouth = began !== null && animateInteractions
+          ? .011 * Math.sin(Math.min(1, (performance.now() - began) / 70) * Math.PI / 2) : 0;
+        // Keep the singing mouth inside the same clearance envelope as grazing.
+        sheep.jaw.object.rotation.x += Math.max(pose.jawPitch, mouth);
+        sheep.jaw.object.rotation.y += pose.jawYaw;
       }
-      sheep.head.rotation.x += reaction.pitch;
-      sheep.head.rotation.y += reaction.yaw;
-      sheep.wool.position.copy(sheep.woolPosition);
-      sheep.wool.scale.copy(sheep.woolScale);
-      sheep.wool.scale.x *= 1 + reaction.wool * .035;
-      sheep.wool.scale.y *= 1 - reaction.wool * .018;
-      sheep.wool.scale.z *= 1 + reaction.wool * .025;
-      updateAccent(sheep.accent, sheep.index, reaction);
-      if (sheep.accent.group.visible) {
-        sheep.root.getWorldQuaternion(asset.quaternion);
-        sheep.accent.group.quaternion.copy(asset.quaternion.invert()).multiply(camera.quaternion);
-      }
+      sheep.body.object.position.y += pose.bodyLift;
+      sheep.body.object.rotation.x += pose.bodyPitch;
+      sheep.body.object.rotation.z += pose.bodyRoll;
+      sheep.body.object.scale.y *= 1 + pose.bodyStretch;
+      sheep.body.object.scale.x *= 1 - pose.bodyStretch * .45;
+      sheep.ears.forEach((ear, index) => {
+        if (ear) ear.object.rotation.z += index === 0 ? pose.earLeft : pose.earRight;
+      });
+      if (sheep.tail) sheep.tail.object.rotation.y += pose.tail;
+      sheep.legs.forEach((leg, index) => {
+        if (leg) leg.object.rotation.x += index < 2 ? pose.frontLeg : pose.backLeg;
+      });
     }
     for (const { material, source, sheep: index } of asset.materials) {
       material.emissive.copy(source.emissive);
       if (index === null) continue;
       const sheep = asset.sheep.find((item) => item.index === index);
       if (!sheep) continue;
-      const active = clocks.current[index] >= 0;
-      const amount = active ? (animateInteractions ? .035 : .18) : hovered.current === index ? .035 : 0;
+      const active = clocks.current[index] >= 0 || singing.current[index] !== null;
+      const amount = active && !animateInteractions ? .18 : hovered.current === index ? .028 : 0;
       if (amount) material.emissive.lerp(sheep.tint, amount);
     }
     const hadActive = clocks.current.some((clock) => clock >= 0);
-    advanceSheepClocks(clocks.current, delta);
-    // The final extra frame restores exact authored transforms after landing.
-    if (hadActive) invalidate();
+    if (animateInteractions) advanceSheepClocks(clocks.current, delta);
+    // Idle breathes only with ambient motion; a last click frame restores the exact rest pose.
+    if (idle || idleWeight.current > 0 || ((hadActive || singing.current.some((start) => start !== null)) && animateInteractions)) invalidate();
   });
 
   const onClick = (event: ThreeEvent<MouseEvent>) => {
-    // The closest landscape mesh occludes sheep behind it, including their accents.
+    // The closest landscape mesh occludes sheep behind it.
     event.stopPropagation();
     if (event.delta > 6 || event.button !== 0 || !isModelTap(canvas)) return;
     const index = sheepIndex(event.object);
@@ -313,6 +304,7 @@ export default function ShopSteppe({
             invalidate();
           }}
         />
+        <SteppeWater model={asset.model} motion={motion && animateInteractions} style={style} />
       </group>
     </group>
   );

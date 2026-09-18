@@ -4,9 +4,15 @@
 
 ## Shop direction — September 17, 2026
 
-The shop scene is a peaceful Mongolian steppe island: grazing sheep and a lamb, a small detailed ger, native grasses and rocky ground. This explicit pastoral request supersedes the earlier atelier direction and the brand-book preference against a ger-led scene. Keep woven and carved details subtle so the landscape and animals remain the focus.
+The shop scene is a peaceful Mongolian steppe island: three articulated sheep, a small detailed ger, broad rolling pasture, a winding river and layered rock outcrops. This explicit pastoral request supersedes the earlier atelier direction and the brand-book preference against a ger-led scene. Keep woven and carved details subtle so the landscape and animals remain the focus.
 
-The current model is `public/3d/shop/steppe-v6.glb`, authored by `scripts/build-shop-steppe.py` and displayed by `ShopSteppe.tsx`. The current catalog image is `public/images/worlds/shop-v6.png`; `shop-v5.png` remains the previous atelier image in the comparison page. The shop project identity and destination remain `chingis.shop`.
+The current model is `public/3d/shop/steppe-v7.glb`, authored by `scripts/build-shop-steppe.py` and displayed by `ShopSteppe.tsx`. The current catalog image is `public/images/worlds/shop-v7.png`; `shop-v5.png` remains the previous atelier image in the comparison page. The shop project identity and destination remain `chingis.shop`.
+
+## Potera courtyard — September 18, 2026
+
+Potera v6 uses a complete customer townhouse and tended garden to express care and professional cleaning. The original navy/cyan artwork remains unchanged on the compact cart panel and enamel contractor placard. Neither the house nor the landscaping carries a company sign. Both logo planes still share one embedded texture and material batch.
+
+`scripts/potera_courtyard.py` generates the model through the existing `build-project-worlds.py -- potera` entry point. The supported cart tool, broad terrace, quiet planting and localized window-cleaning pass replace the old ladder-heavy facade. The current assets are `public/3d/worlds/potera-v6.glb` and `public/images/worlds/potera-v6.png`. Published v5 assets remain available to cached clients.
 
 ## Historical logo release — September 6, 2026
 

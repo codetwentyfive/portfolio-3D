@@ -101,7 +101,7 @@
       "payments": "A miniature dispatch depot with a corrugated canopy, moving parcels, conveyor rollers, a scanner and control terminal. Drag to inspect.",
       "portfolio": "The original floating island and its miniature buildings. Drag to inspect.",
       "seeds": "An outdoor timber stage with a detailed drum kit, electric guitar, amplifiers, microphones, pedals, cables and hanging lights. Drag to inspect.",
-      "potera": "A townhouse courtyard with framed windows, stone paving, a ladder, cleaning trolley, bucket and squeegee. Drag to inspect.",
+      "potera": "A complete townhouse and garden courtyard with lavender, a bench and a cleaning cart with secured tools. Click the picture window or cart to clean the glass. Drag to inspect.",
       "assistant": "A cutaway of my living room: antique wooden cabinets, framed prints, plants, studio speakers, two Mac minis and a DGX Spark on the media shelves, a slatted PC and a large TV playing green digital rain. Drag to inspect."
     }
   },
@@ -152,7 +152,7 @@
     "next": "Next world",
     "selected": "Selected world",
     "fallback": "The 3D view is unavailable in this browser. You can still explore every project below.",
-    "sceneDescription": "A peaceful Mongolian steppe island with six sheep, a little ger, grasses and a spring. Each sheep has its own personality.",
+    "sceneDescription": "A peaceful Mongolian steppe island with three sheep, a small ger, rolling hills and a winding stream.",
     "play": {
       "stage": "Play the stage",
       "hint": "Play an instrument here, or find it in the scene.",
@@ -169,6 +169,9 @@
       "station": "One guest instrument at a time.",
       "soundOn": "Sound on",
       "soundOff": "Sound off",
+      "sheepChoir": "Sheep voices",
+      "sheepSong": "Each tap continues the same tune. Play one sheep or mix all three voices.",
+      "sheepVoices": { "low": "Low", "middle": "Middle", "high": "High" },
       "tap": "Or tap the model",
       "tapSheep": "Or tap a sheep",
       "actions": {
@@ -183,9 +186,9 @@
       "title": "Scene options",
       "close": "Close scene options",
       "interactions": "Interactions",
-      "sheepKeys": "You can also focus the island and press 1–6 to meet each sheep."
+      "sheepKeys": "Focus the island and press 1–3 to play the low, middle and high voices."
     },
-    "interactSheep": "Interactive island. Drag or use arrow keys to rotate. Home resets the view. Press 1 through 6 to interact with individual sheep."
+    "interactSheep": "Interactive island. Drag or use arrow keys to rotate. Home resets the view. Click a sheep or press 1 through 3 to play the next note in its voice."
   },
   "hi_message": "Hello, I'm",
   "name": "Chingis Zwecker",

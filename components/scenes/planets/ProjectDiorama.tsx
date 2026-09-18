@@ -8,6 +8,7 @@ import * as THREE from "three";
 import type { PlanetKind } from "./planet-data";
 import worldVersions from "@/assets/world-versions.json";
 import MatrixDisplay from "./MatrixDisplay";
+import PoteraCleaning from "./PoteraCleaning";
 import PlayableStage, { type StageHandle, type StageInstrument } from "./PlayableStage";
 import { useSceneAction, type SceneActionProps } from "./useSceneAction";
 
@@ -25,12 +26,12 @@ export default function ProjectDiorama({
   onStagePlayed: () => void;
 } & SceneActionProps) {
   const [replayKey, setReplayKey] = useState(0);
-  const action = useSceneAction(actionKey, 2.4, () => setReplayKey((key) => key + 1));
+  const action = useSceneAction(kind === "potera" ? 0 : actionKey, 2.4, () => setReplayKey((key) => key + 1));
   const effect = useRef<THREE.Group>(null);
   const { scene } = useGLTF(`/3d/worlds/${kind}-v${worldVersions[kind]}.glb`);
   const elapsed = useRef(0);
   const gl = useThree((state) => state.gl);
-  const { model, mechanisms, center, artworkMaterials, artworkTextures } = useMemo(() => {
+  const { model, mechanisms, center, scale, artworkMaterials, artworkTextures } = useMemo(() => {
     const model = scene.clone(true);
     const mechanisms: THREE.Object3D[] = [];
     const artworkMaterials: THREE.MeshStandardMaterial[] = [];
@@ -39,7 +40,8 @@ export default function ProjectDiorama({
       if (object instanceof THREE.Mesh) {
         const artwork = !Array.isArray(object.material) &&
           object.material.name.endsWith("official logo");
-        object.castShadow = !artwork && !(
+        const fineSeams = !Array.isArray(object.material) && object.material.name === "Potera fine roof seams";
+        object.castShadow = !artwork && !fineSeams && !(
           !Array.isArray(object.material) &&
           object.material.name === "Room cabinet glass"
         );
@@ -58,13 +60,16 @@ export default function ProjectDiorama({
           artworkMaterials.push(material);
         }
         // Thin printed artwork must not receive biased shadows from its backing.
-        object.receiveShadow = !artwork;
+        object.receiveShadow = !artwork && !fineSeams;
       } else if (/^(parcel|fan|reel|cymbal)_/.test(object.name)) {
         mechanisms.push(object);
       }
     });
-    const center = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
-    return { model, mechanisms, center, artworkMaterials, artworkTextures };
+    const bounds = new THREE.Box3().setFromObject(model);
+    const center = bounds.getCenter(new THREE.Vector3());
+    const size = bounds.getSize(new THREE.Vector3());
+    const scale = 6 / Math.max(size.x, size.y, size.z);
+    return { model, mechanisms, center, scale, artworkMaterials, artworkTextures };
   }, [scene, gl]);
   useEffect(() => () => {
     artworkMaterials.forEach((material) => material.dispose());
@@ -74,7 +79,6 @@ export default function ProjectDiorama({
   useFrame((_, delta) => {
     if (effect.current) {
       effect.current.visible = action.active.current;
-      if (kind === "potera") effect.current.position.y = animateInteractions ? 1.66 + Math.sin(action.progress.current * Math.PI) * .75 : 2.15;
     }
     const burst = action.active.current && animateInteractions;
     if (!motion && !burst) return;
@@ -97,19 +101,16 @@ export default function ProjectDiorama({
 
   // Loader-owned geometry/materials stay cached; each placement owns its transforms.
   return (
-    <group position={[-center.x, -center.y, -center.z]}>
-      <primitive object={model} dispose={null} {...(kind === "seeds" ? {
+    <group scale={kind === "potera" ? scale : 1}>
+      <group position={[-center.x, -center.y, -center.z]}>
+      {kind === "potera" ? <PoteraCleaning model={model} actionKey={actionKey} animateInteractions={animateInteractions} /> : <primitive object={model} dispose={null} {...(kind === "seeds" ? {
         onClick: (event: ThreeEvent<MouseEvent>) => event.stopPropagation(),
         onPointerOver: (event: ThreeEvent<PointerEvent>) => event.stopPropagation(),
-      } : action.handlers)} />
+      } : action.handlers)} />}
       {kind === "seeds" && <PlayableStage model={model} ref={stageRef} motion={animateInteractions} extraInstrument={extraInstrument} soundEnabled={soundEnabled} onPlayed={onStagePlayed} />}
       {kind === "payments" && <group ref={effect} visible={false} position={[.2, 1.02, .95]}>
         <mesh><boxGeometry args={[.016, .55, .64]} /><meshBasicMaterial color="#b0ffcf" transparent opacity={.18} depthWrite={false} /></mesh>
         <pointLight color="#9cffba" intensity={.8} distance={1.4} />
-      </group>}
-      {kind === "potera" && <group ref={effect} visible={false} position={[0, 2.15, -.565]}>
-        <mesh><boxGeometry args={[.64, .038, .023]} /><meshStandardMaterial color="#b9d5c8" metalness={.6} roughness={.3} /></mesh>
-        <mesh position={[0,.035,-.018]}><planeGeometry args={[.61,.08]} /><meshBasicMaterial color="#e1f9ed" transparent opacity={.42} depthWrite={false} /></mesh>
       </group>}
       {kind === "assistant" && (
         <>
@@ -123,6 +124,7 @@ export default function ProjectDiorama({
           />
         </>
       )}
+      </group>
     </group>
   );
 }

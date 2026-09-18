@@ -9,7 +9,7 @@ import type { StageInstrument, StageTarget } from "./PlayableStage";
 
 export default function WorldControls({
   kind, open, onOpen, zoomed, onZoom, paused, reducedMotion, onPause, onReset,
-  style, onStyle, cycle, onCycle, instrument, onInstrument, onPlay, sound, onSound, onAction, disabled,
+  style, onStyle, cycle, onCycle, instrument, onInstrument, onPlay, onSheepPlay, sound, onSound, onAction, disabled,
 }: {
   kind: PlanetKind;
   open: boolean;
@@ -27,6 +27,7 @@ export default function WorldControls({
   instrument: StageInstrument | null;
   onInstrument: (instrument: StageInstrument | null) => void;
   onPlay: (target: StageTarget) => void;
+  onSheepPlay: (index: number) => void;
   sound: boolean;
   onSound: () => void;
   onAction: () => void;
@@ -82,7 +83,7 @@ export default function WorldControls({
           )}
           <div className="scene-options-play">
             <h4>{t("options.interactions")}</h4>
-            <WorldPlayControls kind={kind} instrument={instrument} onInstrument={onInstrument} onPlay={onPlay} sound={sound} onSound={onSound} onAction={onAction} disabled={disabled} />
+            <WorldPlayControls kind={kind} instrument={instrument} onInstrument={onInstrument} onPlay={onPlay} onSheepPlay={onSheepPlay} sound={sound} onSound={onSound} onAction={onAction} disabled={disabled} />
             {kind === "shop" && <p className="scene-options-help">{t("options.sheepKeys")}</p>}
           </div>
         </section>

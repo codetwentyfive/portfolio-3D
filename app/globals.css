@@ -1278,6 +1278,7 @@ html {
 .world-play-body > p { margin:0 0 10px; }
 .world-play-single button { width:100%; text-align:left; padding:9px; min-height:40px; border:1px solid #c2cabb; }
 .world-play-pads { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.world-play-sheep { grid-template-columns:repeat(3,1fr); }
 .world-play-pads button,.world-play-instrument > button { min-height:38px; padding:6px 8px; border:1px solid #c2cabb; }
 .world-play-instrument { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:14px; }
 .world-play-instrument label { flex:1; }

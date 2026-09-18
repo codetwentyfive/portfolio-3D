@@ -5,18 +5,34 @@ import type { PlanetKind } from "./planet-data";
 import type { StageInstrument, StageTarget } from "./PlayableStage";
 
 export default function WorldPlayControls({
-  kind, instrument, onInstrument, onPlay, sound, onSound, onAction, disabled,
+  kind, instrument, onInstrument, onPlay, onSheepPlay, sound, onSound, onAction, disabled,
 }: {
   kind: PlanetKind;
   instrument: StageInstrument | null;
   onInstrument: (instrument: StageInstrument | null) => void;
   onPlay: (target: StageTarget) => void;
+  onSheepPlay: (index: number) => void;
   sound: boolean;
   onSound: () => void;
   onAction: () => void;
   disabled: boolean;
 }) {
   const t = useTranslations("worlds.play");
+  if (kind === "shop") return (
+    <div className="world-play-controls">
+      <div className="world-play-body">
+        <p>{t("sheepSong")}</p>
+        <div className="world-play-pads world-play-sheep" role="group" aria-label={t("sheepChoir")}>
+          {(["low", "middle", "high"] as const).map((voice, index) => (
+            <button type="button" key={voice} disabled={disabled} onClick={() => onSheepPlay(index)}>{t(`sheepVoices.${voice}`)}</button>
+          ))}
+        </div>
+        <div className="world-play-footer">
+          <button type="button" aria-pressed={sound} onClick={onSound}>{t(sound ? "soundOn" : "soundOff")}</button>
+        </div>
+      </div>
+    </div>
+  );
   if (kind !== "seeds") return (
     <div className="world-play-single">
       <button type="button" onClick={onAction} disabled={disabled}>{t(`actions.${kind}`)} <span aria-hidden="true">↗</span></button>
