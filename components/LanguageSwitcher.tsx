@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/src/i18n/navigation";
 import type { Locale } from "@/src/i18n/routing";
 
-const languageFlags: Record<Locale, JSX.Element> = {
+const languageFlags: Record<Locale, React.JSX.Element> = {
   de: (
     <svg
       viewBox="0 0 24 24"

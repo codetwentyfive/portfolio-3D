@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
-import { MeshProps } from "@react-three/fiber";
+import type { ThreeElements } from "@react-three/fiber";
+type MeshProps = ThreeElements["mesh"];
 import * as THREE from "three";
 
 const planeScene = "/3d/plane.glb";

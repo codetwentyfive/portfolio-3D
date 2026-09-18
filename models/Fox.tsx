@@ -10,7 +10,8 @@ Title: Fox
 
 import { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { GroupProps } from "@react-three/fiber";
+import type { ThreeElements } from "@react-three/fiber";
+type GroupProps = ThreeElements["group"];
 import * as THREE from "three";
 
 const scene = "/3d/fox.glb";

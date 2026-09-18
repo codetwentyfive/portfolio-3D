@@ -73,8 +73,8 @@ function OriginalIsland({ actionKey, animateInteractions }: SceneActionProps) {
 }
 
 type PlayProps = SceneActionProps & {
-  stageRef: RefObject<StageHandle>;
-  sheepRef: RefObject<SheepHandle>;
+  stageRef: RefObject<StageHandle | null>;
+  sheepRef: RefObject<SheepHandle | null>;
   extraInstrument: StageInstrument | null;
   soundEnabled: boolean;
   onStagePlayed: () => void;

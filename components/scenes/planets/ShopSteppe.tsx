@@ -50,7 +50,7 @@ export default function ShopSteppe({
   style, motion, animateInteractions, soundEnabled, sheepRef,
 }: {
   style: GerStyle; motion: boolean; animateInteractions: boolean;
-  soundEnabled: boolean; sheepRef: RefObject<SheepHandle>;
+  soundEnabled: boolean; sheepRef: RefObject<SheepHandle | null>;
 }) {
   const { scene } = useGLTF(`/3d/shop/steppe-v${worldVersions.shop}.glb`);
   const invalidate = useThree((state) => state.invalidate);
