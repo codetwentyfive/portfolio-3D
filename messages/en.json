@@ -58,12 +58,13 @@
         "portfolio": "The original island that started this interactive portfolio.",
         "seeds": "A miniature stage for the band website I built for The Strange Seeds.",
         "potera": "A working courtyard for a cleaning company's website.",
-        "assistant": "My living room, my home lab. Local AI and automations on my own hardware."
+        "assistant": "My living room, my home lab. Local AI and automations on my own hardware.",
+        "denkpause": "A web and iOS app for teachers, combining curated learning resources with a knowledge-backed AI assistant."
       }
     },
     "heading": "Selected work by Chingis",
     "index": "Selected work",
-    "signature": "Independent developer.\nKarlsruhe, Germany.",
+    "signature": "Senior Product Engineer\nKarlsruhe, Germany",
     "drag": "Drag to turn",
     "held": "In your hands",
     "zoomIn": "Inspect the model up close",
@@ -79,7 +80,8 @@
       "portfolio": "The original island",
       "seeds": "The Strange Seeds",
       "potera": "Potera Reinigung",
-      "assistant": "The home lab"
+      "assistant": "The home lab",
+      "denkpause": "denk.pause"
     },
     "disciplines": {
       "shop": "Independent venture / E-commerce",
@@ -87,7 +89,8 @@
       "portfolio": "Personal / Creative development",
       "seeds": "Client work / Music",
       "potera": "Client work / Local business",
-      "assistant": "Personal / Self-hosted AI"
+      "assistant": "Personal / Self-hosted AI",
+      "denkpause": "App development · Architecture & AI integration"
     },
     "descriptions": {
       "shop": "A shop for Mongolian craftsmanship. Designed, built, and run by me.",
@@ -95,14 +98,16 @@
       "portfolio": "Where this portfolio started. A small experiment that kept growing.",
       "seeds": "A band's home on the web, from the next show to the latest release.",
       "potera": "A straightforward website for a German cleaning business.",
-      "assistant": "Local models and useful automations, running on my own hardware."
+      "assistant": "Local models and useful automations, running on my own hardware.",
+      "denkpause": "A web and iOS app for teachers, combining curated learning resources with a knowledge-backed AI assistant."
     },
     "scenes": {
       "payments": "A miniature dispatch depot with a corrugated canopy, moving parcels, conveyor rollers, a scanner and control terminal. Drag to inspect.",
       "portfolio": "The original floating island and its miniature buildings. Drag to inspect.",
       "seeds": "An outdoor timber stage with a detailed drum kit, electric guitar, amplifiers, microphones, pedals, cables and hanging lights. Drag to inspect.",
       "potera": "A complete townhouse and garden courtyard with lavender, a bench and a cleaning cart with secured tools. Click the picture window or cart to clean the glass. Drag to inspect.",
-      "assistant": "A cutaway of my living room: antique wooden cabinets, framed prints, plants, studio speakers, two Mac minis and a DGX Spark on the media shelves, a slatted PC and a large TV playing green digital rain. Drag to inspect."
+      "assistant": "A cutaway of my living room: antique wooden cabinets, framed prints, plants, studio speakers, two Mac minis and a DGX Spark on the media shelves, a slatted PC and a large TV playing green digital rain. Drag to inspect.",
+      "denkpause": "A quiet learning courtyard with a timber pavilion, a phone displaying denk.pause, a reading bench and an airy tree."
     }
   },
   "navigation": {
@@ -171,7 +176,11 @@
       "soundOff": "Sound off",
       "sheepChoir": "Sheep voices",
       "sheepSong": "Each tap continues the same tune. Play one sheep or mix all three voices.",
-      "sheepVoices": { "low": "Low", "middle": "Middle", "high": "High" },
+      "sheepVoices": {
+        "low": "Low",
+        "middle": "Middle",
+        "high": "High"
+      },
       "tap": "Or tap the model",
       "tapSheep": "Or tap a sheep",
       "actions": {
@@ -179,7 +188,8 @@
         "payments": "Run a dispatch",
         "portfolio": "Turn the OG island",
         "potera": "Clean a window",
-        "assistant": "Wake the home lab"
+        "assistant": "Wake the home lab",
+        "denkpause": "Preview the app"
       }
     },
     "options": {
@@ -261,5 +271,55 @@
   "not_found_text": "This page does not exist — maybe the island rotated away.",
   "not_found_home": "Back to the island",
   "services_process_heading": "How we'll work",
-  "services_process_heading_span": "together"
+  "services_process_heading_span": "together",
+  "denkpause": {
+    "role": "Senior Product Engineer",
+    "positioning": "AI-enabled applications, from architecture and data integration through production delivery.",
+    "ownership": "Technical design and implementation: app architecture, data integration, AI integration and release workflows.",
+    "purpose": "A digital companion for teachers, with curated impulses and a knowledge-backed AI assistant.",
+    "stage": "Web + iOS · Soft launch",
+    "caseStudy": "Explore case study",
+    "openApp": "Open app",
+    "phoneNote": "Designed for phones.",
+    "interactive": "View interactive scene",
+    "discipline": "App development · Architecture & AI integration",
+    "scene": "A quiet learning courtyard with a timber pavilion, a phone displaying denk.pause, a reading bench and an airy tree."
+  },
+  "denkpauseCase": {
+    "period": "February–September 2026 · beWirken",
+    "reviewed": "Stage recorded 24 September 2026",
+    "problemTitle": "A pause in a demanding school day",
+    "problem": "Teachers need an accessible way to find a useful impulse or think through a situation. I translated that product need into a React Native/Expo application connecting reviewed editorial content, teacher context and AI conversation across web and native workflows. Clear boundaries between screens, state, storage and external services gave the product a foundation that could evolve as its requirements took shape.",
+    "architectureTitle": "Clear contracts between content, app and AI",
+    "architectureNote": "A versioned content pipeline connects editorial exports to application data. The app accesses the knowledge-backed assistant through a dedicated API.",
+    "flow": [
+      "Editorial exports",
+      "Validation & import",
+      "Application data",
+      "React Native / Expo app",
+      "Lotse API & retrieval",
+      "Model provider"
+    ],
+    "decisionsTitle": "Three engineering decisions",
+    "decisions": [
+      {
+        "title": "01 / Turn editorial content into application data",
+        "text": "Content formats evolve as a product develops. I built a versioned import pipeline with schema checks, normalized taxonomy, reference and variant mapping, and publication gates. Import reports make the processing traceable, while validation catches invalid or unapproved content before publication. Format changes become explicit updates to a defined contract. The result is a working path from reviewed editorial exports into Supabase and the app, with clear control over what reaches users."
+      },
+      {
+        "title": "02 / Make AI context a deliberate engineering choice",
+        "text": "Useful AI conversations depend on how instructions, retrieval, history and the answer share a token budget. I integrated streaming conversations, diagnosed provider-limit failures and bounded the client history to the last twelve messages. I also coordinated the grounding-context handoff at the app/API boundary. This makes the client’s contribution to each request predictable, balancing recent conversational context with room for retrieved knowledge and a response. It connects the visible chat experience to the constraints of the underlying service."
+      },
+      {
+        "title": "03 / Make release decisions verifiable",
+        "text": "Native delivery needs more than a successful submission command. I built isolated staging, environment validation and release gates tied to reviewed code, with explicit checks for terminal build status, artifact availability and commit identity. A regression case covers a canceled build returning a successful CLI exit. At the September 2026 review, 67 local delivery-policy checks passed. These controls turn release readiness into something the workflow can verify, with distinct checks for web delivery and native builds."
+      }
+    ],
+    "resultsTitle": "From architecture to web and iOS beta",
+    "results": "By September 2026, denk.pause had reached soft launch with a public web app and an iOS beta. My work connected the application foundation, editorial data pipeline, streaming AI integration and delivery workflows into a working product. I also implemented staging and release controls to support its next phase of development.",
+    "qualityTitle": "Engineering the AI experience",
+    "quality": "My work spans the interaction users see and the service boundaries behind it: streaming responses, grounding-context handoff, bounded conversation history and token-budget diagnosis. I approach AI as part of the product system, where useful answers, responsive interactions and predictable failure handling need to work together.",
+    "contact": "Discuss a product engineering role",
+    "more": "Explore the other projects"
+  }
 }

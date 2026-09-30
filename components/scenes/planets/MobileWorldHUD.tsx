@@ -20,7 +20,7 @@ export default function MobileWorldHUD({ selected, onSelect, busy }: {
   return (
     <div className="studio-mobile-hud">
       <div className="studio-mobile-actions">
-        {planet.link && planet.kind !== "portfolio" ? (
+        {planet.caseStudy ? <Link href={planet.caseStudy} className="studio-mobile-open">{locale === "de" ? "Projekt ansehen" : "Explore case study"}<ControlGlyph name="enter" /></Link> : planet.link && planet.kind !== "portfolio" ? (
           <a
             href={planet.link}
             target="_blank"

@@ -355,3 +355,25 @@ test("shop: hooves and river fit the exported terrain triangles", async () => {
     assert.ok(clearance(point) > 0.015, "terrain triangles do not cut through the river's interior");
   }
 });
+
+test('denkpause: compact original courtyard includes genuine, embedded screen and mark', () => {
+  const file = readFileSync(new URL(`public/3d/worlds/denkpause-v${versions.denkpause}.glb`, root));
+  assert.equal(file.readUInt32LE(8), file.length);
+  assert.ok(file.length < 2_000_000);
+  const json = JSON.parse(file.subarray(20,20+file.readUInt32LE(12)).toString());
+  assert.ok(json.meshes.length <= 16);
+  assert.equal(json.images.length, 2);
+  for (const name of ['screen','logo']) {
+    const material = json.materials.find(m=>m.name===name);
+    const image = json.images[json.textures[material.pbrMetallicRoughness.baseColorTexture.index].source];
+    const view = json.bufferViews[image.bufferView];
+    const start = 28 + file.readUInt32LE(12) + view.byteOffset;
+    const png = file.subarray(start, start+view.byteLength);
+    const source = readFileSync(new URL(`public/images/denkpause/${name==='screen'?'welcome':'mark'}.png`, root));
+    assert.deepEqual(png, source, `${name} embeds its recorded original pixels`);
+  }
+  assert.ok(statSync(new URL('public/images/worlds/denkpause-v1.webp', root)).size < 180_000);
+  const registry = readFileSync(new URL('components/scenes/planets/planet-data.ts', root),'utf8');
+  assert.equal([...registry.matchAll(/kind: "([a-z]+)", projectName/g)][0][1], 'denkpause');
+  assert.equal([...registry.matchAll(/kind: "([a-z]+)", projectName/g)].length, 7);
+});

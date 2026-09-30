@@ -80,6 +80,7 @@ export interface Project {
   name: LocalizedText;
   status?: LocalizedText;
   descriptions: LocalizedText;
+  caseStudy?: string;
   link?: string;
   github?: string;
 }
@@ -413,6 +414,24 @@ export const socialLinks: SocialLink[] = [
 ];
 
 export const projects: Project[] = [
+  {
+    iconUrl: bewirken,
+    "theme": "btn-back-green",
+    "name": {
+      "en": "denk.pause",
+      "de": "denk.pause"
+    },
+    "descriptions": {
+      "en": "A web and iOS app for teachers, combining curated learning resources with a knowledge-backed AI assistant. Technical design and implementation: app architecture, data integration, AI integration and release workflows.",
+      "de": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten. Technische Konzeption und Umsetzung: App-Architektur, Datenintegration, KI-Anbindung und Release-Prozesse."
+    },
+    "status": {
+      "en": "Web + iOS · Soft launch",
+      "de": "Web + iOS · Softlaunch"
+    },
+    "link": "https://web.denkpause.app",
+    "caseStudy": "/projects/denkpause"
+  },
   {
     iconUrl: mountain,
     theme: "btn-back-green",

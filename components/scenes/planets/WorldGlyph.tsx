@@ -13,7 +13,7 @@ export default function WorldGlyph({ kind }: { kind: PlanetKind }) {
       focusable="false"
       className="h-7 w-7"
     >
-      {kind === "shop" ? (
+      {kind === "denkpause" ? (<><path d="M3 11 12 6l9 3M5 10v10h14V10M10 20v-7h5v7" /><path d="M3 20h18" /></>) : kind === "shop" ? (
         <>
           <path d="m3 11 7-6h4l7 6v9H3Z" />
           <path d="M3 11h18M10 5V3h4v2M10 20v-6h4v6" />

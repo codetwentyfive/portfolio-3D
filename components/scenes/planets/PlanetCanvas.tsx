@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Center,
   Environment,
@@ -77,8 +77,16 @@ type PlayProps = SceneActionProps & {
   sheepRef: RefObject<SheepHandle | null>;
   extraInstrument: StageInstrument | null;
   soundEnabled: boolean;
+  onReady: (index: number) => void;
   onStagePlayed: () => void;
 };
+
+function Ready({ index, onReady }: { index: number; onReady: (index: number) => void }) {
+  const frames = useRef(0);
+  const invalidate = useThree((state) => state.invalidate);
+  useFrame(() => { if (++frames.current === 2) onReady(index); else if (frames.current < 2) invalidate(); });
+  return null;
+}
 
 function World({
   index,
@@ -93,6 +101,7 @@ function World({
   const kind = planets[index].kind;
   return (
     <group>
+      <Ready key={index} index={index} onReady={play.onReady} />
       {kind === "shop" ? (
         <ShopSteppe style={style} motion={motion} sheepRef={play.sheepRef} soundEnabled={play.soundEnabled} animateInteractions={play.animateInteractions} />
       ) : kind === "portfolio" ? (
@@ -116,6 +125,7 @@ export default function PlanetCanvas({
   zoomed,
   prepareIndex,
   onPrepared,
+  onFailure,
   ...play
 }: {
   index: number;
@@ -129,14 +139,16 @@ export default function PlanetCanvas({
   zoomed: boolean;
   prepareIndex: number | null;
   onPrepared: (index: number) => void;
+  onFailure: () => void;
 } & PlayProps) {
   const [available, setAvailable] = useState<boolean | null>(null);
   useEffect(() => {
     const probe = document.createElement("canvas");
     const context = probe.getContext("webgl2") || probe.getContext("webgl");
     setAvailable(Boolean(context));
+    if (!context) onFailure();
     context?.getExtension("WEBGL_lose_context")?.loseContext();
-  }, []);
+  }, [onFailure]);
   useEffect(() => {
     // The text/project navigator must still work when WebGL is unavailable.
     if (available === false && prepareIndex !== null) onPrepared(prepareIndex);
@@ -148,6 +160,7 @@ export default function PlanetCanvas({
   const loseContext = useRef((event: Event) => {
     event.preventDefault();
     setAvailable(false);
+    onFailure();
   });
   useEffect(() => {
     const handler = loseContext.current;
@@ -173,7 +186,7 @@ export default function PlanetCanvas({
     <Canvas
       shadows="soft"
       dpr={[1, 1.5]}
-      frameloop={motion ? "always" : "demand"}
+      frameloop={motion && planets[index].kind !== "denkpause" ? "always" : "demand"}
       camera={{ position: [5.8, 4.3, 8.7], fov: 38, near: 0.1, far: 70 }}
       gl={{
         antialias: true,

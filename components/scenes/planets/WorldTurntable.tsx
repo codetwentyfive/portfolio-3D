@@ -45,7 +45,7 @@ export default function WorldTurntable({
 
   useEffect(() => {
     const landscape = planets[index].kind === "shop";
-    const courtyard = planets[index].kind === "potera";
+    const courtyard = planets[index].kind === "potera" || planets[index].kind === "denkpause";
     const aspect = size.width / Math.max(size.height, 1);
     const distance = Math.max(
       landscape || courtyard ? 8.3 : 11,
@@ -177,8 +177,8 @@ export default function WorldTurntable({
 
   useFrame((_, delta) => {
     if (!group.current) return;
-    advance(state.current, delta, motion);
-    if (motion && state.current.pointer === null)
+    advance(state.current, delta, motion && planets[index].kind !== "denkpause");
+    if (motion && planets[index].kind !== "denkpause" && state.current.pointer === null)
       time.current += Math.min(delta, 0.05);
     group.current.rotation.set(
       state.current.pitch,

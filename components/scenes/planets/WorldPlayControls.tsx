@@ -18,6 +18,7 @@ export default function WorldPlayControls({
   disabled: boolean;
 }) {
   const t = useTranslations("worlds.play");
+  if (kind === "denkpause") return null;
   if (kind === "shop") return (
     <div className="world-play-controls">
       <div className="world-play-body">

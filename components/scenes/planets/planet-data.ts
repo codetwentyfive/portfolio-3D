@@ -3,10 +3,11 @@ import { projects } from "@/constants";
 export type GerStyle = "paint" | "blueprint" | "alloy" | "clay";
 export const gerStyles: GerStyle[] = ["paint", "blueprint", "alloy", "clay"];
 export type PlanetKind =
-  "shop" | "payments" | "portfolio" | "seeds" | "potera" | "assistant";
+  "denkpause" | "shop" | "payments" | "portfolio" | "seeds" | "potera" | "assistant";
 
 // Resolve by project identity, never by the catalog's display order.
 const worlds: { projectName: string; kind: PlanetKind }[] = [
+  { kind: "denkpause", projectName: "denk.pause" },
   { kind: "shop", projectName: "chingis.shop" },
   { kind: "payments", projectName: "E-Commerce Data & Payments" },
   { kind: "portfolio", projectName: "3D Portfolio" },

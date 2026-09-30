@@ -64,3 +64,9 @@ Run `npm run build`, then `npm run start -- --hostname 127.0.0.1 --port 3001`. O
 Run the six interaction regressions with `node --test scripts/turntable-motion.test.mjs` on Node 24 (or a Node version supporting direct TypeScript execution). These cover hold/drag/release, cancellation, pointer isolation, pitch limits, paused motion, frame-rate independence, and long-frame clamping. Browser checks supplement these tests; physical mobile hardware is not covered by viewport emulation.
 
 Validation covers the production build and browser checks for project switching, all material choices, automatic cycling, rotation, reset, pause, and narrow layouts. The existing image-optimization lint warnings outside this feature remain. No deployment has been performed.
+
+## denk.pause, 24 September 2026
+
+The default gallery now contains seven worlds, led by `denkpause`. Its copy and
+poster are server-rendered; interactive assets enhance the selected world without
+blocking navigation. See [implementation and provenance](denkpause-world.md).

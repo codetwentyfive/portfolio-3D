@@ -81,11 +81,11 @@ export default function WorldControls({
               <button type="button" aria-pressed={cycle} onClick={onCycle}><ControlGlyph name="cycle" />{t("auto")}</button>
             </div>
           )}
-          <div className="scene-options-play">
+          {kind !== "denkpause" && <div className="scene-options-play">
             <h4>{t("options.interactions")}</h4>
             <WorldPlayControls kind={kind} instrument={instrument} onInstrument={onInstrument} onPlay={onPlay} onSheepPlay={onSheepPlay} sound={sound} onSound={onSound} onAction={onAction} disabled={disabled} />
             {kind === "shop" && <p className="scene-options-help">{t("options.sheepKeys")}</p>}
-          </div>
+          </div>}
         </section>
       )}
     </div>

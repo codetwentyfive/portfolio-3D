@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { planets } from "@/components/scenes/planets/planet-data";
+import { worldIndex } from "@/components/scenes/planets/world-navigation";
 import HomeScene from "@/components/scenes/HomeScene";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/seo/metadata";
@@ -14,6 +16,7 @@ import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{ world?: string }>;
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -26,6 +29,8 @@ export default async function HomePage(props: Props) {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
+  const { world } = await props.searchParams;
+  const initialIndex = worldIndex(world, planets.map((entry) => entry.kind));
 
   return (
     <>
@@ -38,7 +43,7 @@ export default async function HomePage(props: Props) {
           createBreadcrumbSchema("home", locale),
         ]}
       />
-      <HomeScene />
+      <HomeScene key={`${locale}-${initialIndex}`} initialIndex={initialIndex} />
     </>
   );
 }

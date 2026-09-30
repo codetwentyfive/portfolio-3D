@@ -85,3 +85,14 @@ test("a loading timeout keeps the current world and allows a clean retry", () =>
   const exiting = ready(retry);
   assert.equal(step(exiting, { type: "timeout" }), exiting);
 });
+
+test('content-first selection supersedes loading; stale readiness cannot change it', () => {
+  let state = request(initialWorldTransition(), 1);
+  for (const index of [6, 3, 0]) {
+    state = step(state, { type: 'select', index, direction: 'previous' });
+    assert.equal(state.current, index);
+    assert.equal(state.phase, 'idle');
+    assert.equal(state.failed, false);
+    assert.equal(ready(state, false, 1), state);
+  }
+});

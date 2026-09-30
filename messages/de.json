@@ -58,12 +58,13 @@
         "portfolio": "Die ursprüngliche Insel, mit der dieses interaktive Portfolio begann.",
         "seeds": "Eine Miniaturbühne für die Bandwebsite, die ich für The Strange Seeds gebaut habe.",
         "potera": "Ein Innenhof als Miniatur für die Website einer Reinigungsfirma.",
-        "assistant": "Mein Wohnzimmer, mein Homelab. Lokale KI und Automatisierungen auf eigener Hardware."
+        "assistant": "Mein Wohnzimmer, mein Homelab. Lokale KI und Automatisierungen auf eigener Hardware.",
+        "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten."
       }
     },
     "heading": "Ausgewählte Arbeiten von Chingis",
     "index": "Ausgewählte Arbeiten",
-    "signature": "Freier Entwickler.\nKarlsruhe, Deutschland.",
+    "signature": "Senior Product Engineer\nKarlsruhe, Deutschland",
     "drag": "Ziehen zum Drehen",
     "held": "In deiner Hand",
     "zoomIn": "Modell im Detail ansehen",
@@ -79,7 +80,8 @@
       "portfolio": "Die ursprüngliche Insel",
       "seeds": "The Strange Seeds",
       "potera": "Potera Reinigung",
-      "assistant": "Das Homelab"
+      "assistant": "Das Homelab",
+      "denkpause": "denk.pause"
     },
     "disciplines": {
       "shop": "Eigenprojekt / E-Commerce",
@@ -87,7 +89,8 @@
       "portfolio": "Eigenprojekt / Kreative Entwicklung",
       "seeds": "Kundenarbeit / Musik",
       "potera": "Kundenarbeit / Lokales Unternehmen",
-      "assistant": "Eigenprojekt / Selbst gehostete KI"
+      "assistant": "Eigenprojekt / Selbst gehostete KI",
+      "denkpause": "App-Entwicklung · Architektur & KI-Integration"
     },
     "descriptions": {
       "shop": "Ein Shop für mongolische Handwerkskunst. Von mir gestaltet, gebaut und betrieben.",
@@ -95,14 +98,16 @@
       "portfolio": "Hier begann dieses Portfolio. Ein kleines Experiment, das weitergewachsen ist.",
       "seeds": "Der Webauftritt einer Band, vom nächsten Konzert bis zur neuesten Veröffentlichung.",
       "potera": "Eine übersichtliche Website für ein deutsches Reinigungsunternehmen.",
-      "assistant": "Lokale Modelle und nützliche Automatisierungen auf meiner eigenen Hardware."
+      "assistant": "Lokale Modelle und nützliche Automatisierungen auf meiner eigenen Hardware.",
+      "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten."
     },
     "scenes": {
       "payments": "Ein Versanddepot als Miniatur mit Blechdach, bewegten Paketen, Förderrollen, Scanner und Bedienterminal. Zum Erkunden ziehen.",
       "portfolio": "Die ursprüngliche schwebende Insel mit ihren Miniaturgebäuden. Zum Erkunden ziehen.",
       "seeds": "Eine hölzerne Freilichtbühne mit detailliertem Schlagzeug, E-Gitarre, Verstärkern, Mikrofonen, Effektpedalen, Kabeln und Lichterkette. Zum Erkunden ziehen.",
       "potera": "Ein vollständiges Stadthaus mit Gartenhof, Lavendel, Sitzbank und Reinigungswagen mit befestigten Werkzeugen. Klicke das große Fenster oder den Wagen an, um die Scheibe zu reinigen. Zum Erkunden ziehen.",
-      "assistant": "Mein Wohnzimmer als offenes Miniaturmodell: antike Holzschränke, gerahmte Drucke, Pflanzen, Studiolautsprecher, zwei Mac minis und ein DGX Spark im TV-Regal, ein PC mit Holzlamellen und ein großer Fernseher mit grünem Zeichenregen. Zum Erkunden ziehen."
+      "assistant": "Mein Wohnzimmer als offenes Miniaturmodell: antike Holzschränke, gerahmte Drucke, Pflanzen, Studiolautsprecher, zwei Mac minis und ein DGX Spark im TV-Regal, ein PC mit Holzlamellen und ein großer Fernseher mit grünem Zeichenregen. Zum Erkunden ziehen.",
+      "denkpause": "Ein ruhiger Lernhof mit Holzpavillon, einem Smartphone mit denk.pause, einer Lesebank und einem luftigen Baum."
     }
   },
   "navigation": {
@@ -171,7 +176,11 @@
       "soundOff": "Ton aus",
       "sheepChoir": "Schafstimmen",
       "sheepSong": "Jeder Klick setzt dieselbe Melodie fort. Spiele mit einem Schaf oder wechsle frei zwischen allen drei Stimmen.",
-      "sheepVoices": { "low": "Tief", "middle": "Mittel", "high": "Hoch" },
+      "sheepVoices": {
+        "low": "Tief",
+        "middle": "Mittel",
+        "high": "Hoch"
+      },
       "tap": "Oder tippe auf das Modell",
       "tapSheep": "Oder tippe ein Schaf an",
       "actions": {
@@ -179,7 +188,8 @@
         "payments": "Versand starten",
         "portfolio": "OG-Insel drehen",
         "potera": "Fenster putzen",
-        "assistant": "Home Lab aufwecken"
+        "assistant": "Home Lab aufwecken",
+        "denkpause": "App-Vorschau"
       }
     },
     "options": {
@@ -261,5 +271,55 @@
   "not_found_text": "Diese Seite gibt es nicht — vielleicht ist die Insel weitergedreht.",
   "not_found_home": "Zurück zur Insel",
   "services_process_heading": "So arbeiten wir",
-  "services_process_heading_span": "zusammen"
+  "services_process_heading_span": "zusammen",
+  "denkpause": {
+    "role": "Senior Product Engineer",
+    "positioning": "KI-gestützte Anwendungen – von Architektur und Datenintegration bis zur Produktion.",
+    "ownership": "Technische Konzeption und Umsetzung: App-Architektur, Datenintegration, KI-Anbindung und Release-Prozesse.",
+    "purpose": "Ein digitaler Begleiter für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten.",
+    "stage": "Web + iOS · Softlaunch",
+    "caseStudy": "Projekt ansehen",
+    "openApp": "App öffnen",
+    "phoneNote": "Für Smartphones gestaltet.",
+    "interactive": "Interaktive Szene ansehen",
+    "discipline": "App-Entwicklung · Architektur & KI-Integration",
+    "scene": "Ein ruhiger Lernhof mit Holzpavillon, einem Smartphone mit denk.pause, einer Lesebank und einem luftigen Baum."
+  },
+  "denkpauseCase": {
+    "period": "Februar–September 2026 · beWirken",
+    "reviewed": "Produktstand dokumentiert am 24. September 2026",
+    "problemTitle": "Eine Pause im anspruchsvollen Schulalltag",
+    "problem": "Lehrkräfte brauchen einen einfachen Zugang zu hilfreichen Impulsen und Raum, um Situationen zu durchdenken. Ich habe diesen Produktbedarf in eine React-Native-/Expo-Anwendung übersetzt, die geprüfte redaktionelle Inhalte, den Kontext von Lehrkräften und KI-Gespräche über Web und native Geräte verbindet. Klare Grenzen zwischen Screens, Zustand, Speicherung und externen Diensten schaffen eine Grundlage, die mit den Anforderungen des Produkts wachsen kann.",
+    "architectureTitle": "Klare Verträge zwischen Inhalten, App und KI",
+    "architectureNote": "Eine versionierte Content-Pipeline verbindet redaktionelle Exporte mit den Anwendungsdaten. Die App greift über eine eigene API auf den wissensgestützten Assistenten zu.",
+    "flow": [
+      "Redaktionelle Exporte",
+      "Validierung & Import",
+      "Anwendungsdaten",
+      "React-Native-/Expo-App",
+      "Lotse-API & Retrieval",
+      "Modellanbieter"
+    ],
+    "decisionsTitle": "Drei technische Entscheidungen",
+    "decisions": [
+      {
+        "title": "01 / Redaktionelle Inhalte in Anwendungsdaten übersetzen",
+        "text": "Inhaltsformate entwickeln sich mit dem Produkt weiter. Ich habe eine versionierte Import-Pipeline mit Schema-Prüfungen, normalisierter Taxonomie, Zuordnung von Referenzen und Varianten sowie Freigabe-Gates aufgebaut. Importberichte machen die Verarbeitung nachvollziehbar; die Validierung erkennt ungültige oder nicht freigegebene Inhalte vor der Veröffentlichung. Formatänderungen werden zu expliziten Anpassungen eines definierten Vertrags. So entsteht ein funktionierender Weg von geprüften redaktionellen Exporten über Supabase bis in die App – mit klarer Kontrolle darüber, was Nutzer*innen erreicht."
+      },
+      {
+        "title": "02 / KI-Kontext bewusst gestalten",
+        "text": "Hilfreiche KI-Gespräche hängen davon ab, wie Anweisungen, Retrieval, Historie und Antwort das Token-Budget teilen. Ich habe gestreamte Gespräche integriert, Fehler durch Anbieterlimits analysiert und die Client-Historie auf die letzten zwölf Nachrichten begrenzt. Außerdem habe ich die Übergabe des Wissenskontexts an der App-/API-Grenze abgestimmt. Damit wird der Beitrag des Clients zu jeder Anfrage vorhersehbar: Aktueller Gesprächskontext wird mit dem Platz für abgerufenes Wissen und eine Antwort abgewogen. Die sichtbare Chat-Erfahrung ist so mit den technischen Anforderungen des Dienstes verbunden."
+      },
+      {
+        "title": "03 / Auslieferung überprüfbar machen",
+        "text": "Native Auslieferung braucht mehr als einen erfolgreichen Einreichungsbefehl. Ich habe getrenntes Staging, Umgebungsvalidierung und Release-Gates für geprüften Code aufgebaut – einschließlich expliziter Prüfungen von Build-Endstatus, Artefakt und Commit-Identität. Ein Regressionstest erfasst einen abgebrochenen Build trotz erfolgreichem CLI-Exit. Beim Review im September 2026 bestanden 67 lokale Prüfungen der Delivery-Regeln. Diese Kontrollen machen die Auslieferungsbereitschaft im Workflow überprüfbar, mit gezielten Prüfungen für Web-Deployments und native Builds."
+      }
+    ],
+    "resultsTitle": "Von der Architektur zur Web- und iOS-Beta",
+    "results": "Im September 2026 hatte denk.pause den Softlaunch mit einer öffentlichen Web-App und einer iOS-Beta erreicht. Meine Arbeit verbindet App-Fundament, redaktionelle Datenintegration, gestreamte KI-Gespräche und Auslieferungsabläufe zu einem nutzbaren Produkt. Zusätzlich habe ich Staging- und Release-Kontrollen für die nächste Entwicklungsphase implementiert.",
+    "qualityTitle": "Die KI-Erfahrung technisch gestalten",
+    "quality": "Meine Arbeit verbindet die sichtbare Interaktion mit den technischen Schnittstellen dahinter: gestreamte Antworten, Übergabe des Wissenskontexts, begrenzte Gesprächshistorie und Analyse des Token-Budgets. Ich betrachte KI als Teil des Produktsystems, in dem hilfreiche Antworten, flüssige Interaktionen und nachvollziehbare Fehlerbehandlung zusammenwirken müssen.",
+    "contact": "Über eine Product-Engineering-Rolle sprechen",
+    "more": "Weitere Projekte entdecken"
+  }
 }

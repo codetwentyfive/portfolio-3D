@@ -44,3 +44,8 @@ export function finishWorldSwipe(
   if (Math.abs(dx) < 42 || Math.abs(dx) < Math.abs(dy) * 1.5) return 0;
   return dx < 0 ? 1 : -1;
 }
+
+/** Stable URL identity; plain and unknown URLs always select the first world. */
+export function worldIndex(value: unknown, kinds: readonly string[]): number {
+  return typeof value === "string" ? Math.max(0, kinds.indexOf(value)) : 0;
+}

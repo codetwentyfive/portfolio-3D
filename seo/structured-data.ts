@@ -13,7 +13,7 @@ export const personSchema: StructuredData = {
   alternateName: ["Chinggis Zwecker E.", "Chinggis Zwecker", "Chingis Zwecker"],
   url: siteUrl,
   image: ogImage,
-  jobTitle: "AI Engineer, Developer & IT Architect",
+  jobTitle: "Senior Product Engineer",
   worksFor: {
     "@type": "Organization",
     name: "beWirken",
@@ -83,7 +83,7 @@ export const websiteSchema: StructuredData = {
   name: siteName,
   alternateName: ["Chinggis Zwecker E. Portfolio", "Chinggis Dev"],
   description:
-    "Portfolio of Chingis Zwecker E. (also known as Chinggis), a Full Stack Developer based in Karlsruhe, Germany.",
+    "Portfolio of Chingis Zwecker E. (also known as Chinggis), a Senior Product Engineer based in Karlsruhe, Germany.",
   author: { "@id": `${siteUrl}/#person` },
   inLanguage: ["en", "de"],
 };

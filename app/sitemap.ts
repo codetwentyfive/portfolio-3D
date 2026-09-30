@@ -4,7 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 
 const BASE_URL = "https://chingis.dev";
 
-const staticPaths = ["", "/about", "/projects", "/services", "/blog", "/contact", "/rechtliches"];
+const staticPaths = ["", "/about", "/projects", "/projects/denkpause", "/services", "/blog", "/contact", "/rechtliches"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({

@@ -28,6 +28,7 @@ export default async function ProjectsPage(props: Props) {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
+  const d = await getTranslations({locale, namespace: "denkpause"});
   const a = await getTranslations({ locale, namespace: "archive" });
   return (
     <section className="max-container">
@@ -37,7 +38,7 @@ export default async function ProjectsPage(props: Props) {
           createBreadcrumbSchema("projects", locale),
         ]}
       />
-      <p className="editorial-kicker mb-5">Chingis / 01 &ndash; 06</p>
+      <p className="editorial-kicker mb-5">Chingis / 01 &ndash; {String(planets.length).padStart(2, "0")}</p>
       <h1 className="head-text">{a("index")}</h1>
       <p className="editorial-intro mt-7">{a("catalogIntro")}</p>
       <div className="project-catalog">
@@ -53,7 +54,7 @@ export default async function ProjectsPage(props: Props) {
               aria-label={`${a("inspect")}: ${project.name[locale]}`}
             >
               <Image
-                src={`/images/worlds/${project.kind}-v${worldVersions[project.kind]}.png`}
+                src={`/images/worlds/${project.kind}-v${worldVersions[project.kind]}.${project.kind === "denkpause" ? "webp" : "png"}`}
                 alt=""
                 width={720}
                 height={520}
@@ -79,6 +80,7 @@ export default async function ProjectsPage(props: Props) {
               <p>{project.descriptions[locale] || project.descriptions.en}</p>
             </details>
             <div className="catalog-links">
+              {project.caseStudy && <Link href={project.caseStudy}>{d("caseStudy")} <ControlGlyph name="enter" /></Link>}
               {project.link && (
                 <a
                   href={project.link}

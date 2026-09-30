@@ -13,6 +13,7 @@ export interface PageMeta {
 export type PageSeo = { path: string } & Record<SeoLocale, PageMeta>;
 
 export type SeoPageKey =
+  | "denkpause"
   | "home"
   | "about"
   | "projects"
@@ -34,18 +35,15 @@ export const seoConfig: SeoConfig = {
   ogImage: OG_IMAGE,
 
   pages: {
+    denkpause: {
+      path: "/projects/denkpause",
+      en: {title: "denk.pause — Architecture, AI Integration & Product Delivery", description: "Architecture, content integration and AI conversations in a web and iOS app for teachers. An engineering case study of denk.pause."},
+      de: {title: "denk.pause — Architektur, KI-Integration & Produktentwicklung", description: "Architektur, Datenintegration und KI-Gespräche in einer Web- und iOS-App für Lehrkräfte. Ein Einblick in die technische Umsetzung von denk.pause."},
+    },
     home: {
       path: "/",
-      en: {
-        title: "Chingis Zwecker E. | AI Engineer · Developer · IT Architect",
-        description:
-          "I build, fix, and modernize — web apps, e-commerce, payment systems, legacy codebases, native apps, hosting, WordPress, and AI workflows. Based in Karlsruhe, shipping solutions across the full stack and beyond.",
-      },
-      de: {
-        title: "Chingis Zwecker E. | KI-Engineer · Entwickler · IT-Architekt",
-        description:
-          "Ich baue, repariere und modernisiere — Webanwendungen, E-Commerce, Zahlungssysteme, Legacy-Systeme, native Apps, Hosting, WordPress und KI-Workflows. Aus Karlsruhe, Lösungen über den gesamten Stack hinaus.",
-      },
+      en: { title: "Chingis Zwecker E. | Senior Product Engineer", description: "Senior Product Engineer building AI-enabled applications from architecture and data integration through production delivery. Explore denk.pause and my approach to product engineering." },
+      de: { title: "Chingis Zwecker E. | Senior Product Engineer", description: "Senior Product Engineer für KI-gestützte Anwendungen – von Architektur und Datenintegration bis zur Produktion. denk.pause und meine Arbeit im Product Engineering." },
     },
     about: {
       path: "/about",

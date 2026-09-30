@@ -69,3 +69,12 @@ test("both locales explain all six worlds and expose mobile navigation hints", (
       assert.ok(archive.mobile[key].length > 0);
   }
 });
+
+test('URL identity resolves plain, invalid and explicit links across seven worlds', async () => {
+  const { worldIndex } = await import('../components/scenes/planets/world-navigation.ts');
+  const kinds = ['denkpause','shop','payments','portfolio','seeds','potera','assistant'];
+  for (const value of [undefined, null, '', 'unknown', ['shop']]) assert.equal(worldIndex(value, kinds), 0);
+  kinds.forEach((kind, index) => assert.equal(worldIndex(kind, kinds), index));
+  assert.equal(wrapWorld(-1, kinds.length), 6);
+  assert.equal(wrapWorld(7, kinds.length), 0);
+});

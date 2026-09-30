@@ -148,3 +148,12 @@ Earlier test counts, clearance measurements and deployment statements above desc
 - All 90 tests, TypeScript, lint and the production build pass, with the existing `HomeInfo.tsx` image warning. The 18 asset/motion tests also pass against the final export.
 - Browser checks cover direct cleaning, its clean finish, hidden controls, English/German text, reduced motion and responsive framing at 1440×1000, 390×844 and 844×390. No browser errors or horizontal overflow were detected. Potera is normalized to six scene units, with its own closer camera; the shop and other worlds retain their framing.
 - The final model is available in the local production preview on port 3001. No deployment was performed.
+
+## denk.pause — quiet learning courtyard
+
+An original limestone terrace with a curved mineral pavilion wall, a gently
+sloping lilac roof and warm timber. A supported phone carries the genuine welcome
+screen; a bench, two card stands, stepping stones and one airy tree keep the
+courtyard open. The official sign retains its source colours. The island is still
+on arrival and uses the same camera and lighting for its WebP fallback.
+See [asset provenance and generation](denkpause-world.md).

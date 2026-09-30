@@ -10,6 +10,7 @@ export type WorldTransition = {
   failed: boolean;
 };
 export type WorldTransitionAction =
+  | { type: "select"; index: number; direction: WorldTransition["direction"] }
   | { type: "request"; index: number; direction: WorldTransition["direction"] }
   | { type: "prepared"; index: number; reduced: boolean }
   | { type: "advance"; phase: WorldTransition["phase"] }
@@ -32,6 +33,8 @@ export function worldTransition(
   action: WorldTransitionAction,
 ): WorldTransition {
   switch (action.type) {
+    case "select":
+      return { ...initialWorldTransition(action.index), direction: action.direction };
     case "request":
       // One deliberate move at a time; repeated taps cannot skip or tear the scene.
       if (state.phase !== "idle" || action.index === state.current)
