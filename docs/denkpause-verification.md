@@ -1,4 +1,35 @@
-# denk.pause verification — 2 October 2026
+# V3 release verification — 2 October 2026
+
+Release checkout: `~/Documents/ChatGPT/Portfolio/chingis-dev`.
+
+- Fixed the user-reported planter/wall intersection; inspected eight rotations.
+  The procedural builder verifies real transformed base vertices against the
+  wall clearance envelope. The canopy retains its original position.
+- Current asset: `denkpause-v3.glb`, 4,112,592 bytes, 22 material batches,
+  63,732 triangles. Matching actual-render WebP: 61,360 bytes, 1200×760.
+- Production build passes: 28 generated routes, TypeScript and lint, with the
+  pre-existing `HomeInfo.tsx` image warning. New shared SEO checks run before
+  every build. All 98 unit/contract tests passed; asset and SEO suites were
+  rerun after the final model change.
+- Publication acceptance passes locally for 18 indexable pages rendered with
+  JavaScript disabled, four article translations, 20 PNG social cards,
+  reciprocal language links, canonicals, author/date/image schema, sitemap,
+  robots, generated public-text exports, 404s and legal noindex behavior.
+- Both revised articles pass EN/DE at 1440×900 and 390×844: readable text,
+  loaded heroes/captions, no horizontal overflow or browser errors. Opaque
+  header backgrounds keep navigation readable while scrolling.
+- The full 3D browser suite passes across all seven worlds, ten home viewport
+  combinations, rotation/zoom/reset, retry and static fallback policies.
+  Screenshots, eight planter angles and metrics: `/tmp/denkpause-v3-release`.
+- Release publication check: `BASE_URL=https://www.chingis.dev npm run check:publication`.
+  Shared requirements and source references are in `docs/publishing.md`.
+
+The checks are browser/synthetic evidence; physical iOS Safari and search/AI
+rankings are not implied. Git/Vercel deployment metadata records the released SHA.
+
+---
+
+# Historical v2 local verification — 2 October 2026
 
 Local production preview on branch `codex/denkpause-crafted-world`, based on
 `b6f7ce5`. Checkout: `~/Documents/ChatGPT/Portfolio/chingis-dev`. Not deployed.

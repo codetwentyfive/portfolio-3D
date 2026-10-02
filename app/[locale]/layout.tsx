@@ -10,6 +10,9 @@ import Navbar from "@/components/Navbar";
 import AudioPlayer from "@/components/AudioPlayer";
 import SiteFooter from "@/components/SiteFooter";
 import GlassFilters from "@/components/GlassFilters";
+import JsonLd from "@/components/JsonLd";
+import { seoConfig } from "@/seo/config";
+import { personSchema, websiteSchema } from "@/seo/structured-data";
 import "../globals.css";
 
 const archivo = Archivo({
@@ -31,8 +34,8 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chingis.dev"),
-  authors: [{ name: "Chingis Zwecker E.", url: "https://chingis.dev" }],
+  metadataBase: new URL(seoConfig.siteUrl),
+  authors: [{ name: "Chingis Zwecker E.", url: `${seoConfig.siteUrl}/en/about` }],
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "48x48" },
@@ -68,6 +71,7 @@ export default async function LocaleLayout(
   return (
     <html lang={locale} className={`${archivo.variable} ${barlow.variable}`}>
       <body>
+        <JsonLd schemas={[personSchema, websiteSchema]} />
         <GlassFilters />
         <NextIntlClientProvider messages={messages}>
           <AudioProvider>

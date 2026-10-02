@@ -24,12 +24,19 @@ try {
    findings.push({locale,width,height,...layout});
   }
   await page.setViewportSize({width:1440,height:900});
-  await page.goto(`${base}/${locale}/projects/denkpause`);assert.equal(await page.locator('h1').innerText(),'denk.pause');assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),`https://chingis.dev/${locale}/projects/denkpause`);
+  await page.goto(`${base}/${locale}/projects/denkpause`);assert.equal(await page.locator('h1').innerText(),'denk.pause');assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),`https://www.chingis.dev/${locale}/projects/denkpause`);
   const viewer=page.locator('.denkpause-viewer');await viewer.scrollIntoViewIfNeeded();await page.locator('.denkpause-viewer[data-state="ready"]').waitFor({timeout:30000});
   const controls=viewer.locator('.case-viewer-toolbar button');assert.equal(await controls.count(),4);
   const before=await viewer.locator('canvas').screenshot();await controls.nth(1).click();await page.waitForTimeout(100);const rotated=await viewer.locator('canvas').screenshot();assert.notDeepEqual(before,rotated,'case viewer rotation changes the rendered model');
   await controls.nth(2).click();assert.equal(await controls.nth(2).getAttribute('aria-pressed'),'true');await controls.nth(3).click();assert.equal(await controls.nth(2).getAttribute('aria-pressed'),'false');
   await page.screenshot({path:`${out}/${locale}-case.png`,fullPage:true});
+  if(locale==='en') {
+   for(let angle=0;angle<8;angle++) {
+    await viewer.locator('canvas').screenshot({path:`${out}/planter-angle-${angle}.png`});
+    await controls.nth(1).click();await controls.nth(1).click();await page.waitForTimeout(80);
+   }
+   await controls.nth(3).click();
+  }
  }
  await page.setViewportSize({width:1440,height:900});await page.goto(`${base}/en?world=shop`);assert.equal(await page.locator('.studio-caption h2').innerText(),'chingis.shop');
  await page.locator('.studio-project').nth(2).click();assert.ok(page.url().endsWith('world=payments'));await page.goBack();assert.equal(await page.locator('.studio-caption h2').innerText(),'chingis.shop');await page.goForward();assert.equal(await page.locator('.studio-caption h2').innerText(),'Commerce systems');

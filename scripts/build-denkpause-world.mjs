@@ -1,5 +1,5 @@
 /**
- * denk.pause — The Quiet Garden, v2.
+ * denk.pause — The Quiet Garden.
  * Deterministic, original geometry. No external model/texture services.
  * Run: node scripts/build-denkpause-world.mjs
  */
@@ -21,6 +21,8 @@ const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; ret
 const range = (a, b) => a + random() * (b - a);
 const scene = new T.Scene();
 const batches = new Map();
+const assemblyOffset = new T.Vector3();
+const treeBaseGeometry = [];
 const palette = {
   stone: ['#d8cdb9', .88], stoneLight: ['#eee5d1', .81], stoneDark: ['#a39a84', .95],
   earth: ['#716e59', 1], gravel: ['#a8a68f', 1],
@@ -51,6 +53,16 @@ function mesh(name, geometry, material, p = [0, 0, 0], rotation = [0, 0, 0], sca
   }
   const matrix = new T.Matrix4().compose(new T.Vector3(...p), new T.Quaternion().setFromEuler(new T.Euler(...rotation)), new T.Vector3(...scale));
   geometry.applyMatrix4(matrix);
+  // Reanchor the lower trunk without moving the mature canopy into the arch.
+  if (assemblyOffset.lengthSq()) {
+    const points = geometry.attributes.position;
+    for (let i = 0; i < points.count; i++) {
+      const influence = 1 - T.MathUtils.smoothstep(points.getY(i), .6, 1.6);
+      points.setXYZ(i, points.getX(i) + assemblyOffset.x * influence, points.getY(i), points.getZ(i) + assemblyOffset.z * influence);
+    }
+    geometry.computeVertexNormals();
+  }
+  if (["Tree planter bronze reveal", "Tree planter stone", "Earth", "Olive root flare", "Planter river pebble"].includes(name)) treeBaseGeometry.push(geometry);
   if (!geometry.index) geometry.setIndex(Array.from({ length: geometry.attributes.position.count }, (_, i) => i));
   if (!geometry.attributes.uv) geometry.setAttribute('uv', new T.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count * 2), 2));
   if (!['screen', 'logo'].includes(material)) {
@@ -224,10 +236,13 @@ cylinder('Ceramic cup', [-.63, .728, .64], .043, .037, .095, 'linen', 24);
 cylinder('Coffee surface', [-.63, .779, .64], .034, .034, .003, 'bark', 24);
 mesh('Cup handle', new T.TorusGeometry(.026, .009, 6, 16), 'linen', [-.58, .743, .64], [Math.PI / 2, 0, 0]);
 
+// Keep the planter assembly inside the curved wall, including its reveal.
+// Original authored centre: [1.11, -1.28]; installed centre: [.85, -1.23].
+assemblyOffset.set(-.26, 0, .05);
 // Sculptural olive tree with tapered, curved limbs and thousands of distinct leaves.
-cylinder('Tree planter bronze reveal', [1.11, .19, -1.28], .68, .63, .1, 'bronze', 64);
-cylinder('Tree planter stone', [1.11, .295, -1.28], .7, .65, .17, 'stone', 64);
-cylinder('Earth', [1.11, .388, -1.28], .626, .626, .013, 'earth', 64);
+cylinder('Tree planter bronze reveal', [1.11, .19, -1.28], .52, .48, .1, 'bronze', 64);
+cylinder('Tree planter stone', [1.11, .295, -1.28], .54, .50, .17, 'stone', 64);
+cylinder('Earth', [1.11, .388, -1.28], .47, .47, .013, 'earth', 64);
 function branch(points, radius, endRadius) {
   const curve = new T.CatmullRomCurve3(points.map(p => new T.Vector3(...p)));
   const g = new T.TubeGeometry(curve, 12, radius, 7, false);
@@ -271,8 +286,19 @@ for (let i = 0; i < 7; i++) {
   rod('Olive root flare', [1.09, .58, -1.26], [1.11 + Math.cos(a) * .3, .395, -1.28 + Math.sin(a) * .3], .041, 'bark', .006, 7);
 }
 for (let i = 0; i < 46; i++) {
-  const a = range(0, 6.28), r = range(.24, .57);
+  const a = range(0, 6.28), r = range(.23, .37);
   stone('Planter river pebble', [1.11 + Math.cos(a) * r, .416, -1.28 + Math.sin(a) * r], [range(.035, .075), range(.017, .035), range(.03, .06)], i % 4 ? 'gravel' : 'stoneLight');
+}
+assemblyOffset.set(0, 0, 0);
+// Validate actual transformed vertices, not only nominal cylinder radii. The
+// coping reaches 2.08 - .012 after bevel; leave at least .02 units of air.
+const wallClearanceLimit = 2.08 - .012 - .02;
+for (const geometry of treeBaseGeometry) {
+  const positions = geometry.attributes.position;
+  for (let i = 0; i < positions.count; i++) {
+    if (Math.hypot(positions.getX(i), positions.getZ(i)) > wallClearanceLimit)
+      throw new Error("Tree planter intersects the garden wall clearance envelope");
+  }
 }
 // Small plants are geometry rather than opaque foliage blobs.
 function grass(x, y, z, height, mat = 'moss') {

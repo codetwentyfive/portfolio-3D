@@ -6,6 +6,8 @@ const versions = JSON.parse(await fs.readFile(new URL('../assets/world-versions.
 const browser = await chromium.launch({channel:'chrome',headless:true});
 try {
  const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
+ // Render the manifest's model even when the preview server still has the prior build.
+ await page.route('**/3d/worlds/denkpause-v*.glb', async route => route.fulfill({path:path.resolve(import.meta.dirname, `../public/3d/worlds/denkpause-v${versions.denkpause}.glb`),contentType:'model/gltf-binary'}));
  await page.goto(`${process.env.PREVIEW_URL || 'http://localhost:3100'}/en`);
  await page.locator('.world-enhancement[data-ready="true"]').waitFor({timeout:60000});
  // Capture the actual WebGL composition, lighting and camera, never substitute artwork.

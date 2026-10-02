@@ -1,14 +1,20 @@
-import { seoConfig, type SeoLocale, type SeoPageKey } from "./config";
+import type { Post } from "@/lib/blog";
+import { PERSON_ID, seoConfig, type SeoLocale, type SeoPageKey } from "./config";
+import { absoluteUrl, localizedUrl } from "./urls";
 
 const { siteUrl, siteName, ogImage } = seoConfig;
 
 /** Generic JSON-LD structured data object. */
 export type StructuredData = Record<string, unknown>;
 
+/** Prevent an authored string from closing the JSON-LD script element. */
+export const serializeStructuredData = (schema: StructuredData) =>
+  JSON.stringify(schema).replace(/</g, "\\u003c");
+
 export const personSchema: StructuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "@id": `${siteUrl}/#person`,
+  "@id": PERSON_ID,
   name: "Chingis Zwecker E.",
   alternateName: ["Chinggis Zwecker E.", "Chinggis Zwecker", "Chingis Zwecker"],
   url: siteUrl,
@@ -84,7 +90,7 @@ export const websiteSchema: StructuredData = {
   alternateName: ["Chinggis Zwecker E. Portfolio", "Chinggis Dev"],
   description:
     "Portfolio of Chingis Zwecker E. (also known as Chinggis), a Senior Product Engineer based in Karlsruhe, Germany.",
-  author: { "@id": `${siteUrl}/#person` },
+  author: { "@id": PERSON_ID },
   inLanguage: ["en", "de"],
 };
 
@@ -96,17 +102,19 @@ export const createWebPageSchema = (
   if (!pageConfig) return null;
 
   const langConfig = pageConfig[lang] || pageConfig.en;
-  const url = `${siteUrl}${pageConfig.path}`;
+  const url = localizedUrl(pageConfig.path, lang);
 
   return {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "@id": `${url}/#webpage`,
+    "@type": page === "about" ? "ProfilePage" : ["blog", "projects"].includes(page) ? "CollectionPage" : "WebPage",
+    "@id": `${url}#webpage`,
     url,
     name: langConfig.title,
     description: langConfig.description,
     isPartOf: { "@id": `${siteUrl}/#website` },
-    about: { "@id": `${siteUrl}/#person` },
+    about: { "@id": PERSON_ID },
+    ...(page === "about" ? { mainEntity: { "@id": PERSON_ID } } : {}),
+    ...(pageConfig.image ? { primaryImageOfPage: { "@type": "ImageObject", url: absoluteUrl(pageConfig.image) } } : {}),
     inLanguage: lang,
   };
 };
@@ -119,25 +127,16 @@ export const createBreadcrumbSchema = (
   if (!pageConfig || page === "home") return null;
 
   const langConfig = pageConfig[lang] || pageConfig.en;
-  const homeConfig = seoConfig.pages.home[lang] || seoConfig.pages.home.en;
+  const items = [
+    { name: lang === "de" ? "Startseite" : "Home", item: localizedUrl("/", lang) },
+    ...(page === "denkpause" ? [{ name: lang === "de" ? "Projekte" : "Projects", item: localizedUrl("/projects", lang) }] : []),
+    { name: langConfig.title.split(" | ")[0], item: localizedUrl(pageConfig.path, lang) },
+  ];
 
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: homeConfig.title.split(" | ")[0],
-        item: siteUrl,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: langConfig.title.split(" | ")[0],
-        item: `${siteUrl}${pageConfig.path}`,
-      },
-    ],
+    itemListElement: items.map((item, index) => ({ "@type": "ListItem", position: index + 1, ...item })),
   };
 };
 
@@ -147,16 +146,8 @@ export const professionalServiceSchema: StructuredData = {
   "@id": `${siteUrl}/#service`,
   name: "Chingis Zwecker E. - Web Development",
   url: siteUrl,
-  provider: { "@id": `${siteUrl}/#person` },
-  areaServed: {
-    "@type": "GeoCircle",
-    geoMidpoint: {
-      "@type": "GeoCoordinates",
-      latitude: 49.0069,
-      longitude: 8.4037,
-    },
-    description: "Karlsruhe, Germany and remote worldwide",
-  },
+  areaServed: "Worldwide (remote)",
+  address: { "@type": "PostalAddress", addressLocality: "Karlsruhe", addressCountry: "DE" },
   serviceType: [
     "Web Development",
     "Full Stack Development",
@@ -199,3 +190,39 @@ export const professionalServiceSchema: StructuredData = {
     ],
   },
 };
+
+export const createBlogPostingSchema = (post: Post): StructuredData => {
+  const url = localizedUrl(`/blog/${post.slug}`, post.locale);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    isPartOf: { "@id": `${siteUrl}/#website` },
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.dateModified ?? post.date,
+    inLanguage: post.locale,
+    author: {
+      "@type": "Person",
+      "@id": PERSON_ID,
+      name: siteName,
+      url: localizedUrl("/about", post.locale),
+    },
+    publisher: { "@type": "Person", "@id": PERSON_ID, name: siteName },
+    ...(post.image ? { image: absoluteUrl(post.image) } : {}),
+    keywords: post.tags,
+  };
+};
+
+export const createBlogBreadcrumbSchema = (post: Post): StructuredData => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { name: post.locale === "de" ? "Startseite" : "Home", item: localizedUrl("/", post.locale) },
+    { name: "Blog", item: localizedUrl("/blog", post.locale) },
+    { name: post.title, item: localizedUrl(`/blog/${post.slug}`, post.locale) },
+  ].map((item, index) => ({ "@type": "ListItem", position: index + 1, ...item })),
+});

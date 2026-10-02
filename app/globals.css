@@ -1386,3 +1386,22 @@ main:has(> .studio-explorer) > .footer .footer-container > div:last-child { flex
   body:has(.studio-explorer, .denkpause-case) .site-header,
   body:has(.studio-explorer, .denkpause-case) .portfolio-audio { position: absolute; }
 }
+
+/* Keep scrolling text from showing through the navigation on content pages. */
+body:not(:has(.studio-explorer)) .site-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -20px;
+  bottom: -16px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  pointer-events: none;
+}
+body:not(:has(.studio-explorer)) .editorial-navigation,
+body:not(:has(.studio-explorer)) .music-launcher {
+  background: var(--paper);
+}

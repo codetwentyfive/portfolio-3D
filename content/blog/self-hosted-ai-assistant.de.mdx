@@ -1,0 +1,53 @@
+---
+title: "Anatomie eines selbst gehosteten KI-Assistenten"
+description: "Erfahrungen mit einem KI-Assistenten aus Docker, Ollama und Telegram: lokale Modelle, Datenwege, geplante Aufgaben und typische Fehler im Betrieb."
+date: "2026-10-02"
+dateModified: "2026-10-02"
+image: "/images/worlds/assistant-v6.png"
+imageAlt: "Illustration der Homelab-Szene meines Portfolios."
+tags: ["AI", "Self-Hosting", "Docker", "Ollama"]
+---
+
+Mein morgendliches News-Briefing ist ein guter Test für einen KI-Assistenten. Ein geplanter Agent muss suchen, lesen, zusammenfassen und etwas liefern, das sich zu öffnen lohnt. Dabei sitzt niemand an der Tastatur, um jeden Schritt zu retten.
+
+Dafür habe ich ein Setup aus einem Agent-Gateway, Docker, lokalen Modellen über Ollama und Telegram aufgebaut. Unterwegs gab es doppelte Bot-Prozesse, veraltete Zugangsdaten und Recherchen, denen der Platz im Kontext ausging.
+
+Diese Fehler haben mir gezeigt, wo die eigentliche Arbeit liegt: festlegen, worauf ein Agent zugreifen darf, wohin seine Daten fließen und wie ein abgebrochener Ablauf wieder funktioniert.
+
+## Vier Teile mit unterschiedlichen Aufgaben
+
+**Das Gateway koordiniert die Arbeit.** Ein Open-Source-Gateway verwaltet Sitzungen, Tools und Zeitpläne. Docker gibt mir dafür eine einheitliche Umgebung, in der ich den Betrieb und die Zugriffe konfigurieren kann.
+
+**Die Modelle erzeugen die Antworten.** Das Setup unterstützt Cloud-Modelle und lokale Modelle über Ollama. In meiner Docker-Konfiguration erreicht das Gateway den Modellserver auf dem Host über `host.docker.internal`. Welches Modell passt, hängt von der Aufgabe und den erlaubten Datenwegen ab.
+
+**Telegram ist die Oberfläche.** Für ein Briefing aus öffentlichen Nachrichten ist ein Messenger praktisch: ein Bot-Token, ein Chatfenster und die Zustellung auf ein Gerät, das ich ohnehin nutze. Dafür muss ich kein weiteres Frontend bauen.
+
+**Der Scheduler startet die Routine.** Ein Cron-System im Gateway führt den Nachrichten-Agenten aus. Damit daraus ein brauchbares Ergebnis wird, braucht die Aufgabe weiterhin genug Kontext, funktionierende Tools und einen Zustellungsweg.
+
+## Den Datenweg bis zum Ende verfolgen
+
+Lokale Inferenz sagt aus, wo das Modell eine Anfrage verarbeitet. Die übrigen Teile des Ablaufs haben eigene Datenwege.
+
+Telegram ist ein Cloud-Dienst. Nachrichten an den Bot laufen über Telegram, auch wenn das antwortende Modell auf meiner Hardware liegt. Die [Datenschutzerklärung von Telegram](https://telegram.org/privacy/eu#3-3-1-cloud-chats) beschreibt die Speicherung von Cloud-Chats. Sollen Daten lokal bleiben, braucht auch die Oberfläche einen lokalen oder entsprechend privaten Zugangsweg.
+
+Auch Ollama bietet Cloud-Funktionen. Der [rein lokale Betriebsmodus](https://docs.ollama.com/faq#how-do-i-disable-ollama-cloud-features) kann sie mit `OLLAMA_NO_CLOUD=1` deaktivieren. Angebundene Tools, externe Protokollierung und Backups müssen zusätzlich geprüft werden. Ein lokales Modell macht eine externe Suchanfrage nicht privat.
+
+Bei Docker kommt es ebenfalls auf die Konfiguration an: eingebundene Verzeichnisse, Berechtigungen und der Zugriff auf den Docker-Daemon bestimmen die Isolation mit. Die [Docker-Dokumentation zur Sicherheit](https://docs.docker.com/engine/security/) erklärt diese Grenzen. Ein weitreichender Zugriff auf Host-Dateien über einen Mount kann einen großen Teil der beabsichtigten Trennung aufheben.
+
+## Was im Alltag schiefging
+
+**Zwei Instanzen nutzten denselben Bot.** Bei mir liefen eine native Gateway-Installation und eine Docker-Instanz gleichzeitig. Beide wollten dieselben Telegram-Updates empfangen. Das führte zu einem 409-Konflikt. Die praktische Konsequenz: Für diesen Bot darf nur eine Instanz aktiv Updates abrufen, und der laufende Prozess muss leicht zu erkennen sein.
+
+**Ein Prozess behielt alte Zugangsdaten.** Nach dem Wechsel zwischen Installationen verwendete das Gateway weiter veraltete Geräte-Zugangsdaten. Ein Container-Neustart löste das Problem. Daraus entstand auch eine Anforderung an den Betrieb: Beim Wechsel von Zugangsdaten muss klar sein, was neu geladen oder gestartet werden muss.
+
+**Die native Installation konnte keine Sandbox-Prozesse starten.** Dieser Weg funktionierte auf meinem Setup nicht, also wurde Docker zum Standard. Die Berechtigungen des Containers blieben trotzdem eine eigene Aufgabe.
+
+**Der Recherche ging der Kontext aus.** Ein größeres Kontextbudget des Agenten löste diesen konkreten Fall. Mehr Kontext abzurufen und zu verarbeiten kann allerdings Speicherbedarf, Latenz und API-Kosten erhöhen. Das Budget sollte zur Aufgabe passen. Danach lohnt sich die Prüfung, ob die Antwort die nötigen Belege noch enthält.
+
+## Mit einer überprüfbaren Aufgabe anfangen
+
+Das News-Briefing eignete sich als erster Ablauf, weil ich die Quellen prüfen und das Ergebnis lesen konnte. Damit hatte ich eine kleine, wiederholbare Aufgabe, um Zeitplanung, Modellzugriff und Zustellung gemeinsam zu testen.
+
+Bei einem Ablauf für Kund*innen würde ich zuerst klären, welche Daten welche Dienste erreichen dürfen, welche Aktionen der Agent ausführen darf und wer das Ergebnis prüft. Daraus ergeben sich Oberfläche, Modell und Tool-Berechtigungen.
+
+Bevor du mehr Autonomie hinzufügst, nimm eine wiederkehrende Aufgabe. Verfolge eine Eingabe durch alle beteiligten Dienste. Teste anschließend einen fehlgeschlagenen Durchlauf und die Wiederherstellung. Das sagt viel darüber aus, wie sich der Assistent im Betrieb verhält.

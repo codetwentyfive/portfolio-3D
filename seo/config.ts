@@ -1,4 +1,6 @@
-const SITE_URL = "https://chingis.dev";
+const SITE_URL = "https://www.chingis.dev";
+// Shared with chingis.shop: the person's identity is stable across canonical-host changes.
+export const PERSON_ID = "https://chingis.dev/#person";
 const SITE_NAME = "Chingis Zwecker E.";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
@@ -10,13 +12,15 @@ export interface PageMeta {
 }
 
 /** Page entry: route path plus locale-keyed metadata directly on the object. */
-export type PageSeo = { path: string } & Record<SeoLocale, PageMeta>;
+export type PageSeo = { path: string; image?: string } & Record<SeoLocale, PageMeta>;
 
 export type SeoPageKey =
   | "denkpause"
   | "home"
   | "about"
   | "projects"
+  | "blog"
+  | "services"
   | "contact"
   | "legal"
   | "impressum"
@@ -37,6 +41,7 @@ export const seoConfig: SeoConfig = {
   pages: {
     denkpause: {
       path: "/projects/denkpause",
+      image: "/images/worlds/denkpause-v3.webp",
       en: {title: "denk.pause — Architecture, AI Integration & Product Delivery", description: "Ongoing development of denk.pause, a web and iOS app for teachers. External development and consulting on architecture, app structure and AI integration."},
       de: {title: "denk.pause — Architektur, KI-Integration & Produktentwicklung", description: "denk.pause: eine Web- und iOS-App für Lehrkräfte in laufender Entwicklung. Externe Entwicklung und Beratung zu Architektur, App-Struktur und KI-Integration."},
     },
@@ -69,6 +74,28 @@ export const seoConfig: SeoConfig = {
         title: "Projekte | Chingis Zwecker E. — Echte Arbeit, echte Ergebnisse",
         description:
           "E-Commerce-Plattformen, Firmenwebsites, interaktive 3D-Erlebnisse, KI-Agentensysteme und mehr. Jedes Projekt löst ein echtes Problem — vom ersten Konzept bis zum Produktiv-Deploy.",
+      },
+    },
+    blog: {
+      path: "/blog",
+      en: {
+        title: "Blog | Chingis Zwecker E.",
+        description: "Articles on web development, AI workflows, e-commerce, and modernizing legacy systems.",
+      },
+      de: {
+        title: "Blog | Chingis Zwecker E.",
+        description: "Artikel über Webentwicklung, AI-Workflows, E-Commerce und die Modernisierung von Legacy-Systemen.",
+      },
+    },
+    services: {
+      path: "/services",
+      en: {
+        title: "Services | Chingis Zwecker E.",
+        description: "Freelance software engineering in Karlsruhe: web apps with Next.js, e-commerce and payments, legacy modernization, AI integration, hosting, and interactive 3D experiences.",
+      },
+      de: {
+        title: "Leistungen | Chingis Zwecker E.",
+        description: "Freelance-Softwareentwicklung in Karlsruhe: Web-Apps mit Next.js, E-Commerce und Payments, Legacy-Modernisierung, AI-Integration, Hosting und interaktive 3D-Erlebnisse.",
       },
     },
     contact: {

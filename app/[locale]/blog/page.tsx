@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/src/i18n/navigation";
 import { getAllPosts } from "@/lib/blog";
+import JsonLd from "@/components/JsonLd";
+import { buildPageMetadata } from "@/seo/metadata";
+import { createWebPageSchema, createBreadcrumbSchema } from "@/seo/structured-data";
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
@@ -11,19 +14,7 @@ interface Props {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { locale } = await props.params;
 
-  const t = await getTranslations({ locale });
-  return {
-    title: t("blog_meta_title"),
-    description: t("blog_meta_description"),
-    alternates: {
-      canonical: `https://chingis.dev/${locale}/blog`,
-      languages: {
-        de: "https://chingis.dev/de/blog",
-        en: "https://chingis.dev/en/blog",
-        "x-default": "https://chingis.dev/de/blog",
-      },
-    },
-  };
+  return buildPageMetadata("blog", locale);
 }
 
 const formatDate = (date: string, locale: Locale) =>
@@ -40,6 +31,7 @@ export default async function BlogPage(props: Props) {
 
   return (
     <section className="max-container">
+      <JsonLd schemas={[createWebPageSchema("blog", locale), createBreadcrumbSchema("blog", locale)]} />
       <header className="journal-hero">
         <div className="flex items-center justify-between gap-4 editorial-kicker">
           <span>{t("editorial.journal")}</span>
@@ -67,7 +59,7 @@ export default async function BlogPage(props: Props) {
               <span className="journal-entry-number" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <Link href={`/blog/${post.slug}`} className="block min-w-0">
+              <Link href={`/blog/${post.slug}`} locale={post.locale} className="block min-w-0">
                 <p className="editorial-kicker">
                   <time dateTime={post.date}>
                     {post.date ? formatDate(post.date, locale) : null}

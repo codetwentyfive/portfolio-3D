@@ -1,33 +1,35 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/src/i18n/routing";
 import { getAllPosts } from "@/lib/blog";
+import { seoConfig, type SeoPageKey } from "@/seo/config";
+import { languageAlternates, localizedUrl } from "@/seo/urls";
 
-const BASE_URL = "https://chingis.dev";
-
-const staticPaths = ["", "/about", "/projects", "/projects/denkpause", "/services", "/blog", "/contact", "/rechtliches"];
+// Legal pages are intentionally noindex; their redirect aliases also stay out.
+const staticPages = (Object.keys(seoConfig.pages) as SeoPageKey[])
+  .filter((page) => !["legal", "impressum", "privacy"].includes(page));
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
-    url: `${BASE_URL}/${routing.defaultLocale}${path}`,
-    lastModified: new Date(),
-    alternates: {
-      languages: Object.fromEntries(
-        routing.locales.map((locale) => [locale, `${BASE_URL}/${locale}${path}`])
-      ),
-    },
-  }));
+  const entries: MetadataRoute.Sitemap = staticPages.flatMap((page) => {
+    const path = seoConfig.pages[page].path;
+    return routing.locales.map((locale) => ({
+      url: localizedUrl(path, locale),
+      alternates: { languages: languageAlternates(path) },
+    }));
+  });
 
-  const posts = await getAllPosts(routing.defaultLocale);
-  for (const post of posts) {
-    entries.push({
-      url: `${BASE_URL}/${routing.defaultLocale}/blog/${post.slug}`,
-      lastModified: post.date ? new Date(post.date) : new Date(),
-      alternates: {
-        languages: Object.fromEntries(
-          routing.locales.map((locale) => [locale, `${BASE_URL}/${locale}/blog/${post.slug}`])
-        ),
-      },
-    });
+  const postsByLocale = await Promise.all(routing.locales.map(getAllPosts));
+  for (const [index, posts] of postsByLocale.entries()) {
+    for (const post of posts) {
+      // A fallback is useful for visitors, but is not a published translation.
+      if (post.locale !== routing.locales[index]) continue;
+      const path = `/blog/${post.slug}`;
+      entries.push({
+        url: localizedUrl(path, post.locale),
+        lastModified: post.dateModified ?? post.date,
+        alternates: { languages: languageAlternates(path, post.availableLocales) },
+        ...(post.image ? { images: [new URL(post.image, seoConfig.siteUrl).href] } : {}),
+      });
+    }
   }
 
   return entries;

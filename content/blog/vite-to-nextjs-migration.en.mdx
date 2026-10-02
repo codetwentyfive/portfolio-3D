@@ -1,30 +1,47 @@
 ---
 title: "Migrating this site from Vite to Next.js 14"
-description: "Why I moved my 3D portfolio from a Vite SPA to Next.js App Router — and what actually broke along the way."
+description: "How I moved my bilingual 3D portfolio from Vite to the Next.js App Router: crawlable content, React Three Fiber compatibility and the migration traps."
 date: "2026-07-06"
+dateModified: "2026-10-02"
+image: "/images/worlds/portfolio-v2.png"
+imageAlt: "The original interactive island from my portfolio."
 tags: ["Next.js", "Migration", "React Three Fiber"]
 ---
 
-This site — the one you are reading right now — started as a Vite single-page app: React Router, i18next with localStorage, and a React Three Fiber island floating in the middle of it. It worked fine. So why migrate?
+The 3D island already worked. What I wanted next was a blog, a services page, and a proper address for each page in English and German.
 
-## The honest reasons
+On 6 July 2026, I moved this portfolio from a Vite single-page app to the Next.js App Router. The useful part of that migration was deciding which work belonged on the server and which still needed the browser.
 
-**SEO was invisible.** As an SPA, every route served the same empty `index.html`. Google saw one page in one language, even though the site speaks English and German. With the App Router, every page is server-rendered, both languages get their own URLs (`/de/...`, `/en/...`) with proper `hreflang` tags, and metadata is generated per page.
+> **Updated 2 October 2026:** This article describes the original Next.js 14 migration. The site moved to Next.js 15, React 19 and React Three Fiber 9 in September. I have updated the explanations below to distinguish that first step from the current stack.
 
-**The site was growing past "portfolio".** A blog and a services page don't belong in a client-rendered bundle. MDX files rendered at build time are simpler, faster, and indexable.
+## Give every page its own address
 
-**One stack everywhere.** My client projects run on Next.js, TypeScript, and Tailwind. Having the portfolio on a different setup meant maintaining two mental models for zero benefit.
+The Vite version used React Router and i18next, with the language choice stored in localStorage. Routes shared an HTML shell and default metadata; their content appeared after JavaScript ran. English and German did not have their own URL trees.
 
-## What actually required care
+That made publishing more awkward than it needed to be. I wanted a link to a German article to reliably open that German article, with its title, description and content already in the HTML response.
 
-**React Three Fiber and React versions.** R3F v8 requires React 18, which pins the migration to Next.js 14 — not 15. Upgrading to R3F v9 and React 19 at the same time as a framework migration would have doubled the risk for no visible gain. One migration at a time.
+The App Router gave me that structure: `/de/...` and `/en/...`, metadata for each page, and `hreflang` links connecting translations. Blog posts live in MDX files and render into HTML during the build.
 
-**GLB imports.** Vite happily imports `.glb` files as URLs. Next.js does not, so all 3D models moved to `public/3d/` and are referenced as plain paths. As a bonus they now get immutable cache headers.
+Google can render JavaScript, so the old site was not automatically invisible to search. The improvement is that reading the page no longer depends on that extra step. Other crawlers may not execute JavaScript at all. [Google's JavaScript SEO guide](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics) explains this distinction.
 
-**`window` at render time.** The old pages read `window.innerWidth` during render to scale the 3D scenes. That crashes on the server. The fix is the usual one: compute sizes in an effect, render the scene as a client component behind a thin server page.
+## Separate the framework move from the 3D upgrade
 
-**i18n strategy.** localStorage-based language switching became route-based locales with next-intl. The middleware remembers your choice in a cookie, and the language switcher just swaps the same path into the other locale tree.
+The scene used React Three Fiber 8 and React 18. Those versions belong together: [R3F's documentation](https://r3f.docs.pmnd.rs/getting-started/introduction) pairs version 8 with React 18 and version 9 with React 19.
 
-## Was it worth it?
+I kept the existing pair for the initial move to Next.js 14. That reduced the number of changes I had to investigate if the scene broke. The React 19 and R3F 9 upgrade came later, alongside Next.js 15.
 
-The site looks identical. That was the point — the migration is invisible to visitors and very visible to crawlers. And this article you are reading is the first thing the old stack could not have served.
+For a migration like this, that is the decision I would repeat: keep a working renderer stable while moving the application around it.
+
+## Three details that needed attention
+
+**Browser-only values.** The old scene read `window.innerWidth` during rendering to choose its scale. A server has no `window`. I moved that measurement into an effect and kept the interactive scene in a client component behind a server-rendered page.
+
+**Model URLs.** The Vite setup imported `.glb` files as URLs. In the Next.js setup, I moved the models to `public/3d/` and referenced their public paths. This avoided adding a custom asset-loader configuration. The site also sets immutable cache headers for those files, which means a changed model needs a new filename to avoid stale copies.
+
+**Language switching.** With next-intl, changing language now changes the locale in the URL while keeping the page path. The middleware remembers the preference in a cookie. The URL itself tells a reader which language they are opening.
+
+## What I gained
+
+The migration kept the interactive portfolio and added a straightforward publishing workflow around it. Articles and service descriptions arrive as readable HTML, each translation has an address, and the 3D experience runs where it belongs: in the browser.
+
+Vite could also support a blog with the right setup. For this site, Next.js brought routing, content rendering and metadata into one structure I could maintain. That was enough reason to move.

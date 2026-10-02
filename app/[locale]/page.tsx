@@ -6,8 +6,6 @@ import HomeScene from "@/components/scenes/HomeScene";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/seo/metadata";
 import {
-  personSchema,
-  websiteSchema,
   professionalServiceSchema,
   createWebPageSchema,
   createBreadcrumbSchema,
@@ -36,8 +34,6 @@ export default async function HomePage(props: Props) {
     <>
       <JsonLd
         schemas={[
-          personSchema,
-          websiteSchema,
           professionalServiceSchema,
           createWebPageSchema("home", locale),
           createBreadcrumbSchema("home", locale),

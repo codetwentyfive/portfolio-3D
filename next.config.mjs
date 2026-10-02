@@ -25,6 +25,11 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["three"],
+  outputFileTracingIncludes: {
+    "/og/**/*": ["./public/images/worlds/**/*", "./content/blog/**/*"],
+    "/llms.txt": ["./content/blog/**/*"],
+    "/llms-full.txt": ["./content/blog/**/*"],
+  },
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
@@ -32,13 +37,6 @@ const nextConfig = {
         source: "/3d/:path*",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
-      {
-        source: "/(llms|llms-full).txt",
-        headers: [
-          { key: "Content-Type", value: "text/plain; charset=utf-8" },
-          { key: "Cache-Control", value: "public, max-age=86400" },
         ],
       },
     ];

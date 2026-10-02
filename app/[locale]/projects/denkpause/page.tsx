@@ -1,3 +1,5 @@
+import JsonLd from "@/components/JsonLd";
+import { createWebPageSchema, createBreadcrumbSchema } from "@/seo/structured-data";
 import DenkpauseViewer from "@/components/scenes/DenkpauseViewer";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/src/i18n/navigation";
@@ -15,6 +17,7 @@ export default async function DenkpauseCase({ params }: Props) {
   const decisions = c.raw("decisions") as {title: string; text: string}[];
   const flow = c.raw("flow") as string[];
   return <article className="max-container denkpause-case">
+    <JsonLd schemas={[createWebPageSchema("denkpause", locale), createBreadcrumbSchema("denkpause", locale)]} />
     <header className="case-hero">
       <p className="editorial-kicker">{d("discipline")}</p>
       <h1 className="head-text">denk.pause</h1>

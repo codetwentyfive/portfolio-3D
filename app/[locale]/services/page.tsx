@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/src/i18n/navigation";
 import { services, serviceProcess } from "@/constants/services";
+import JsonLd from "@/components/JsonLd";
+import { buildPageMetadata } from "@/seo/metadata";
+import { PERSON_ID, seoConfig } from "@/seo/config";
+import { localizedUrl } from "@/seo/urls";
+import { createWebPageSchema, createBreadcrumbSchema } from "@/seo/structured-data";
 import type { Locale } from "@/src/i18n/routing";
 
 interface Props {
@@ -11,19 +16,7 @@ interface Props {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { locale } = await props.params;
 
-  const t = await getTranslations({ locale });
-  return {
-    title: t("services_meta_title"),
-    description: t("services_meta_description"),
-    alternates: {
-      canonical: `https://chingis.dev/${locale}/services`,
-      languages: {
-        de: "https://chingis.dev/de/services",
-        en: "https://chingis.dev/en/services",
-        "x-default": "https://chingis.dev/de/services",
-      },
-    },
-  };
+  return buildPageMetadata("services", locale);
 }
 
 const serviceIcons: Record<string, React.JSX.Element> = {
@@ -146,7 +139,9 @@ export default async function ServicesPage(props: Props) {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: "Chingis Zwecker E.",
-    url: "https://chingis.dev",
+    "@id": `${seoConfig.siteUrl}/#service`,
+    url: localizedUrl("/services", locale),
+    founder: { "@id": PERSON_ID },
     areaServed: "DE",
     address: {
       "@type": "PostalAddress",
@@ -165,10 +160,7 @@ export default async function ServicesPage(props: Props) {
 
   return (
     <section className="max-container">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd schemas={[jsonLd, createWebPageSchema("services", locale), createBreadcrumbSchema("services", locale)]} />
       <p className="editorial-kicker mb-6">{t("editorial.services")}</p>
       <h1 className="head-text">
         {t("services_heading")}{" "}

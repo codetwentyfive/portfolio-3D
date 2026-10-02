@@ -1,0 +1,53 @@
+---
+title: "Anatomy of a self-hosted AI assistant"
+description: "Lessons from running an AI assistant with Docker, Ollama and Telegram: local models, data boundaries, scheduled tasks and the failures that shaped the setup."
+date: "2026-10-02"
+dateModified: "2026-10-02"
+image: "/images/worlds/assistant-v6.png"
+imageAlt: "Illustration of my portfolio’s home-lab scene."
+tags: ["AI", "Self-Hosting", "Docker", "Ollama"]
+---
+
+My morning news briefing is a useful test of an AI assistant. A scheduled agent has to search, read, summarise and deliver something worth opening. There is nobody at the keyboard to rescue each step.
+
+I built a setup around an agent gateway, Docker, local models through Ollama, and Telegram. Along the way, I ran into duplicate bot processes, stale credentials and research that ran out of context.
+
+Those failures taught me where the real work is: deciding what an agent can access, where its data travels, and how to recover when a task stops halfway through.
+
+## Four parts, four different responsibilities
+
+**The gateway coordinates the work.** An open-source gateway manages sessions, tools and schedules. Running it in Docker gives me a consistent place to operate it and configure its access.
+
+**The models generate the responses.** The setup supports cloud models and local models through Ollama. In my Docker configuration, the gateway reaches the host's model server through `host.docker.internal`. The appropriate model depends on the task and the permitted data flow.
+
+**Telegram is the interface.** For a briefing built from public news, a messenger is convenient: a bot token, a chat window, and delivery to a device I already use. It saves me from building another frontend.
+
+**The scheduler starts the routine.** A cron system inside the gateway runs the news agent. The job still needs enough context, working tools and a delivery channel to produce a useful result.
+
+## Follow the data beyond the model
+
+Local inference tells you where the model processes a request. The rest of the workflow has its own data paths.
+
+Telegram is a cloud service. Messages sent to the bot pass through Telegram, even when the model answering them runs on my hardware. [Telegram's privacy policy](https://telegram.org/privacy/eu#3-3-1-cloud-chats) describes its cloud-chat storage. A workflow whose data must stay local needs a local or suitably private interface as well.
+
+Ollama also supports cloud features. Its [local-only configuration](https://docs.ollama.com/faq#how-do-i-disable-ollama-cloud-features) can disable those with `OLLAMA_NO_CLOUD=1`. Connected tools, remote logging and backups still need their own review. A local model cannot make an external search request private.
+
+Docker needs the same precision. Container isolation depends on configuration, including filesystem mounts, privileges and access to the Docker daemon. [Docker's security documentation](https://docs.docker.com/engine/security/) explains those boundaries. Giving an agent broad host access through a mount can undo much of the separation you intended.
+
+## What broke in daily use
+
+**Two instances tried to use one bot.** I had a native gateway install and a Docker instance running at the same time. Both tried to receive the same Telegram updates, resulting in a 409 conflict. The practical lesson was to keep one active polling instance for that bot and make the running process easy to identify.
+
+**A process kept old credentials in memory.** After switching installations, the gateway continued using stale device credentials. Restarting the container cleared the state. That fix also exposed an operational requirement: credential changes need an explicit reload or restart procedure.
+
+**The native setup could not start sandboxed processes.** On my setup, that path failed, so I made Docker the default. I still had to treat the container's permissions as part of the design.
+
+**The briefing ran out of room for its research.** Increasing the agent's context allocation resolved that case. Larger context is a trade-off: using more of it can increase memory use, latency and API cost. It is worth sizing the budget around the actual task, then checking whether the final answer retained the evidence it needed.
+
+## Start with one task you can inspect
+
+A news briefing was a useful first workflow because I could inspect the sources and read the result. It gave me a small, repeatable task for testing scheduling, model access and delivery together.
+
+For a client workflow, I would start by agreeing which data may reach which services, which actions the agent may take, and who reviews the result. That determines the interface, model and tool permissions.
+
+Before adding more autonomy, pick one recurring task. Trace an input through every service it touches. Then test a failed run and the recovery. That will tell you far more about the assistant you are building than a successful chat demo.

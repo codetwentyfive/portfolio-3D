@@ -33,7 +33,7 @@ near the viewport, with explicit rotate, reset and zoom controls. Reduced-motion
 Save-Data and slow connections retain the poster until deliberately enabled.
 Its product text and app link remain ordinary HTML.
 
-## The Quiet Garden, v2
+## The Quiet Garden
 
 `scripts/build-denkpause-world.mjs` deterministically authors the complete scene:
 
@@ -79,7 +79,7 @@ adapts to viewport width; pixel density is capped for the interactive scene.
   builder. Scene colours are art direction, not claimed official brand tokens.
 - The earlier v1 GLB and poster remain as historical assets. That scene used a
   simple limestone island, mineral wall, sloped timber pavilion, bench and airy
-  tree in 11 material batches. The v2 manifest selects the replacement garden.
+  tree in 11 material batches. The v3 manifest selects the replacement garden.
 
 `scripts/render-denkpause-poster.mjs` captures the actual WebGL scene with its
 runtime camera and lighting at 1200 × 760, hides surrounding HTML and encodes a
@@ -116,3 +116,13 @@ applying node transforms. It also resolves the current poster through the manife
 See `docs/denkpause-verification.md` for recorded checks and measurements.
 The browser suite is `node scripts/denkpause-browser-check.mjs`; use `PREVIEW_URL`
 and `CHECK_OUTPUT` to select the server and screenshot/report directory.
+
+## Planter clearance correction — 2 October 2026
+
+The v2 planter extended through the curved wall when viewed from behind. V3
+reduces the stone radius to 0.54 and moves the bed from (1.11, -1.28) to
+(0.85, -1.23). A smooth deformation reanchors the lower trunk and leaves the
+canopy in its original position, clear of the portal. Soil and pebble scattering
+fit the smaller bed. The builder checks every transformed planter/root/pebble
+vertex against the wall's beveled inner radius, with a 0.02-unit margin.
+The matching GLB and browser-rendered poster have new v3 URLs for cache safety.
