@@ -1,4 +1,55 @@
-# denk.pause verification — 24 September 2026
+# denk.pause verification — 2 October 2026
+
+Local production preview on branch `codex/denkpause-crafted-world`, based on
+`b6f7ce5`. Checkout: `~/Documents/ChatGPT/Portfolio/chingis-dev`. Not deployed.
+
+## Current checks
+
+- `npm run build` passed, including TypeScript, lint and 24 generated pages.
+  The existing `next/no-img-element` warning in `components/HomeInfo.tsx` remains.
+- All **93** tests in `node --test scripts/*.test.mjs` passed. Updated asset checks
+  cover byte-exact source artwork, budgets, native quantization, aligned strides,
+  finite dequantized bounds and manifest-selected posters.
+- Targeted ESLint passed for the viewer and changed Three.js components.
+- A second deterministic builder run produced the identical GLB SHA-256:
+  `c9994c66fa04647ad3d134c06238b7a6873368dd1245c50aa5f049dcecc4a739`.
+- The expanded production browser suite passed EN/DE HTML and layout checks at
+  1440×900, 1280×800, 390×844, 320×740 and 844×390. No horizontal overflow.
+  The case-study scene renders in both locales; rotation changes its pixels and
+  zoom/reset controls work. Canonicals remain correct.
+- All seven worlds rendered. URL selection, history, locale switching, rapid
+  selection and options focus still work. Normal browsing produced no page errors.
+- Home and case-study poster fallbacks passed with reduced motion, Save-Data,
+  unavailable WebGL, failed assets and disabled JavaScript. Explicit enhancement
+  works under reduced motion and Save-Data. Case-study retry succeeds after a
+  blocked GLB is made available again. 200% text remains usable and scrollable.
+- Inspected the actual desktop and mobile renders. Corrected screen depth/UVs,
+  framing, plaque suspension and the reflective pool. Other world assets unchanged.
+
+## Current asset and loading observations
+
+- GLB: **4,089,672 bytes**, **22 material batches**, **63,732 triangles**.
+  Two original product PNGs plus two deterministic grain maps are embedded.
+  Native glTF quantization needs no remote decoder or external texture download.
+- WebP poster: **61,398 bytes**, 1200×760, captured from the real browser scene.
+- Cold synthetic phone: Chrome, 390×844, DPR 2, touch/mobile emulation, cache off,
+  150 ms latency, 200,000 bytes/s down, 93,750 bytes/s up, 4× CPU slowdown.
+  First contentful paint **932 ms**; poster decoded **1,897 ms**; interactive
+  scene observed ready at **11,646 ms**. Project copy and CTA were available.
+- GLB transfer including response overhead: **1,238,902 bytes**, request from
+  **4,942 ms** to **11,298 ms**. The richer model costs more to load than v1;
+  the poster is available independently and the scene remains a deferred enhancement.
+- These are one-run local synthetic measurements, not field or physical-phone
+  measurements. Physical iOS Safari remains unverified.
+
+Production preview: `npm run start -- --hostname 127.0.0.1 --port 3101`.
+Run browser checks with `PREVIEW_URL=http://127.0.0.1:3101
+CHECK_OUTPUT=/tmp/denkpause-v2-check node scripts/denkpause-browser-check.mjs`.
+Screenshots and metrics are in `/tmp/denkpause-v2-check/`.
+
+---
+
+# Historical v1 verification — 24 September 2026
 
 Local production build on branch `codex/refine-project-worlds`. Not deployed.
 

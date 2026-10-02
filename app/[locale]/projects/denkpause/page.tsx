@@ -1,4 +1,4 @@
-import Image from "next/image";
+import DenkpauseViewer from "@/components/scenes/DenkpauseViewer";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/src/i18n/navigation";
 import { buildPageMetadata } from "@/seo/metadata";
@@ -25,7 +25,7 @@ export default async function DenkpauseCase({ params }: Props) {
       <a href="https://web.denkpause.app" target="_blank" rel="noopener noreferrer" className="studio-open">{d("openApp")} ↗</a>
       <span className="case-date">{d("phoneNote")}</span>
     </header>
-    <Image className="case-island" src="/images/worlds/denkpause-v1.webp" alt={d("scene")} width={1200} height={760} priority />
+    <DenkpauseViewer />
     <section><h2>{c("problemTitle")}</h2><p>{c("problem")}</p></section>
     <section><h2>{c("architectureTitle")}</h2>
       <ol className="case-flow" aria-label={c("architectureTitle")}>{flow.map((label, i) => <li key={label}><span>{String(i + 1).padStart(2, "0")}</span>{label}{i < flow.length - 1 && <b aria-hidden="true">→</b>}</li>)}</ol>

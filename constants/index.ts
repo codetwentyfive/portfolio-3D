@@ -422,12 +422,12 @@ export const projects: Project[] = [
       "de": "denk.pause"
     },
     "descriptions": {
-      "en": "A web and iOS app for teachers, combining curated learning resources with a knowledge-backed AI assistant. Technical design and implementation: app architecture, data integration, AI integration and release workflows.",
-      "de": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten. Technische Konzeption und Umsetzung: App-Architektur, Datenintegration, KI-Anbindung und Release-Prozesse."
+      "en": "A web and iOS app for teachers, with curated resources and a knowledge-backed AI assistant. I continue to develop the app as an external developer and advise on architecture, application structure and development processes. My work includes data integration, AI integration and release workflows.",
+      "de": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten. Ich entwickle die App als externer Entwickler weiter und berate zu Architektur, App-Struktur und Entwicklungsprozessen. Meine Arbeit umfasst Datenintegration, KI-Anbindung und Release-Prozesse."
     },
     "status": {
-      "en": "Web + iOS · Soft launch",
-      "de": "Web + iOS · Softlaunch"
+      "en": "In development · Web + iOS soft launch",
+      "de": "In Entwicklung · Web + iOS im Softlaunch"
     },
     "link": "https://web.denkpause.app",
     "caseStudy": "/projects/denkpause"

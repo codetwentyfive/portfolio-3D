@@ -37,8 +37,8 @@ export const seoConfig: SeoConfig = {
   pages: {
     denkpause: {
       path: "/projects/denkpause",
-      en: {title: "denk.pause — Architecture, AI Integration & Product Delivery", description: "Architecture, content integration and AI conversations in a web and iOS app for teachers. An engineering case study of denk.pause."},
-      de: {title: "denk.pause — Architektur, KI-Integration & Produktentwicklung", description: "Architektur, Datenintegration und KI-Gespräche in einer Web- und iOS-App für Lehrkräfte. Ein Einblick in die technische Umsetzung von denk.pause."},
+      en: {title: "denk.pause — Architecture, AI Integration & Product Delivery", description: "Ongoing development of denk.pause, a web and iOS app for teachers. External development and consulting on architecture, app structure and AI integration."},
+      de: {title: "denk.pause — Architektur, KI-Integration & Produktentwicklung", description: "denk.pause: eine Web- und iOS-App für Lehrkräfte in laufender Entwicklung. Externe Entwicklung und Beratung zu Architektur, App-Struktur und KI-Integration."},
     },
     home: {
       path: "/",

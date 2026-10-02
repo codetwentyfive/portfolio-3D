@@ -1345,6 +1345,16 @@ main:has(> .studio-explorer) { height: auto; min-height: 100svh; }
 .case-date { color: #59616a; font-size: .85rem; }
 .case-hero > .case-date { margin-left: 16px; }
 .case-island { width: 100%; height: auto; max-height: 650px; object-fit: contain; margin: 24px 0; }
+.denkpause-viewer { margin: 32px 0; }
+.case-viewer-stage { position: relative; width: 100%; min-height: 280px; max-height: 680px; aspect-ratio: 1200 / 760; overflow: hidden; background: #e9eae5; }
+.case-viewer-poster { object-fit: contain; }
+.case-viewer-stage canvas { touch-action: pan-y !important; }
+.case-viewer-enable { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 18px; min-height: 44px; width: max-content; max-width: calc(100% - 32px); padding: 10px 18px; border: 1px solid #9dada4; border-radius: 2px; background: #f3f4ed; color: #314a3c; font-size: 13px; }
+.case-viewer-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; min-height: 56px; border-top: 1px solid #c8cec6; color: #536156; font-size: 12px; }
+.case-viewer-toolbar > div { display: flex; gap: 4px; }
+.case-viewer-toolbar button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+.case-viewer-toolbar button:hover, .case-viewer-toolbar button[aria-pressed='true'] { background: #dce3d9; }
+.case-viewer-toolbar button:focus-visible, .case-viewer-enable:focus-visible { outline: 2px solid #456958; outline-offset: 2px; }
 .denkpause-case > section { padding: 36px 0; border-top: 1px solid #b9beb9; }
 .denkpause-case h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); letter-spacing: -.035em; margin-bottom: 20px; }
 .denkpause-case section p { max-width: 76ch; line-height: 1.8; }

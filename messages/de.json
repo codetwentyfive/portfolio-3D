@@ -59,7 +59,7 @@
         "seeds": "Eine Miniaturbühne für die Bandwebsite, die ich für The Strange Seeds gebaut habe.",
         "potera": "Ein Innenhof als Miniatur für die Website einer Reinigungsfirma.",
         "assistant": "Mein Wohnzimmer, mein Homelab. Lokale KI und Automatisierungen auf eigener Hardware.",
-        "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten."
+        "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten. Laufende externe Entwicklung und technische Beratung."
       }
     },
     "heading": "Ausgewählte Arbeiten von Chingis",
@@ -99,7 +99,7 @@
       "seeds": "Der Webauftritt einer Band, vom nächsten Konzert bis zur neuesten Veröffentlichung.",
       "potera": "Eine übersichtliche Website für ein deutsches Reinigungsunternehmen.",
       "assistant": "Lokale Modelle und nützliche Automatisierungen auf meiner eigenen Hardware.",
-      "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten."
+      "denkpause": "Eine Web- und iOS-App für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten. Laufende externe Entwicklung und technische Beratung."
     },
     "scenes": {
       "payments": "Ein Versanddepot als Miniatur mit Blechdach, bewegten Paketen, Förderrollen, Scanner und Bedienterminal. Zum Erkunden ziehen.",
@@ -107,7 +107,7 @@
       "seeds": "Eine hölzerne Freilichtbühne mit detailliertem Schlagzeug, E-Gitarre, Verstärkern, Mikrofonen, Effektpedalen, Kabeln und Lichterkette. Zum Erkunden ziehen.",
       "potera": "Ein vollständiges Stadthaus mit Gartenhof, Lavendel, Sitzbank und Reinigungswagen mit befestigten Werkzeugen. Klicke das große Fenster oder den Wagen an, um die Scheibe zu reinigen. Zum Erkunden ziehen.",
       "assistant": "Mein Wohnzimmer als offenes Miniaturmodell: antike Holzschränke, gerahmte Drucke, Pflanzen, Studiolautsprecher, zwei Mac minis und ein DGX Spark im TV-Regal, ein PC mit Holzlamellen und ein großer Fernseher mit grünem Zeichenregen. Zum Erkunden ziehen.",
-      "denkpause": "Ein ruhiger Lernhof mit Holzpavillon, einem Smartphone mit denk.pause, einer Lesebank und einem luftigen Baum."
+      "denkpause": "Ein ruhiger Garten mit Steinbögen, einem Olivenbaum, einer Lesebank, einem Spiegelbecken und einem Smartphone mit denk.pause."
     }
   },
   "navigation": {
@@ -275,19 +275,19 @@
   "denkpause": {
     "role": "Senior Product Engineer",
     "positioning": "KI-gestützte Anwendungen – von Architektur und Datenintegration bis zur Produktion.",
-    "ownership": "Technische Konzeption und Umsetzung: App-Architektur, Datenintegration, KI-Anbindung und Release-Prozesse.",
+    "ownership": "Ich entwickle denk.pause als externer Entwickler weiter und berate zu Architektur, App-Struktur und Vorgehen in der Entwicklung. Meine Arbeit umfasst Datenintegration, KI-Anbindung und Release-Prozesse.",
     "purpose": "Ein digitaler Begleiter für Lehrkräfte mit kuratierten Impulsen und einem wissensgestützten KI-Assistenten.",
-    "stage": "Web + iOS · Softlaunch",
+    "stage": "In Entwicklung · Web + iOS im Softlaunch",
     "caseStudy": "Projekt ansehen",
     "openApp": "App öffnen",
     "phoneNote": "Für Smartphones gestaltet.",
     "interactive": "Interaktive Szene ansehen",
     "discipline": "App-Entwicklung · Architektur & KI-Integration",
-    "scene": "Ein ruhiger Lernhof mit Holzpavillon, einem Smartphone mit denk.pause, einer Lesebank und einem luftigen Baum."
+    "scene": "Ein ruhiger Garten mit Steinbögen, einem Olivenbaum, einer Lesebank, einem Spiegelbecken und einem Smartphone mit denk.pause."
   },
   "denkpauseCase": {
-    "period": "Februar–September 2026 · beWirken",
-    "reviewed": "Produktstand dokumentiert am 24. September 2026",
+    "period": "Seit Februar 2026 · beWirken",
+    "reviewed": "Softlaunch-Meilenstein dokumentiert am 24. September 2026",
     "problemTitle": "Eine Pause im anspruchsvollen Schulalltag",
     "problem": "Lehrkräfte brauchen einen einfachen Zugang zu hilfreichen Impulsen und Raum, um Situationen zu durchdenken. Ich habe diesen Produktbedarf in eine React-Native-/Expo-Anwendung übersetzt, die geprüfte redaktionelle Inhalte, den Kontext von Lehrkräften und KI-Gespräche über Web und native Geräte verbindet. Klare Grenzen zwischen Screens, Zustand, Speicherung und externen Diensten schaffen eine Grundlage, die mit den Anforderungen des Produkts wachsen kann.",
     "architectureTitle": "Klare Verträge zwischen Inhalten, App und KI",
@@ -315,8 +315,8 @@
         "text": "Native Auslieferung braucht mehr als einen erfolgreichen Einreichungsbefehl. Ich habe getrenntes Staging, Umgebungsvalidierung und Release-Gates für geprüften Code aufgebaut – einschließlich expliziter Prüfungen von Build-Endstatus, Artefakt und Commit-Identität. Ein Regressionstest erfasst einen abgebrochenen Build trotz erfolgreichem CLI-Exit. Beim Review im September 2026 bestanden 67 lokale Prüfungen der Delivery-Regeln. Diese Kontrollen machen die Auslieferungsbereitschaft im Workflow überprüfbar, mit gezielten Prüfungen für Web-Deployments und native Builds."
       }
     ],
-    "resultsTitle": "Von der Architektur zur Web- und iOS-Beta",
-    "results": "Im September 2026 hatte denk.pause den Softlaunch mit einer öffentlichen Web-App und einer iOS-Beta erreicht. Meine Arbeit verbindet App-Fundament, redaktionelle Datenintegration, gestreamte KI-Gespräche und Auslieferungsabläufe zu einem nutzbaren Produkt. Zusätzlich habe ich Staging- und Release-Kontrollen für die nächste Entwicklungsphase implementiert.",
+    "resultsTitle": "Ein nutzbares Produkt, das sich weiterentwickelt",
+    "results": "Im September 2026 hatte denk.pause den Softlaunch mit einer öffentlichen Web-App und einer iOS-Beta erreicht. Meine Arbeit verbindet App-Fundament, redaktionelle Datenintegration, gestreamte KI-Gespräche und Auslieferungsabläufe zu einem nutzbaren Produkt. Ich entwickle die App weiter und berate zu ihrer technischen Ausrichtung, Code-Struktur und den Entwicklungsprozessen.",
     "qualityTitle": "Die KI-Erfahrung technisch gestalten",
     "quality": "Meine Arbeit verbindet die sichtbare Interaktion mit den technischen Schnittstellen dahinter: gestreamte Antworten, Übergabe des Wissenskontexts, begrenzte Gesprächshistorie und Analyse des Token-Budgets. Ich betrachte KI als Teil des Produktsystems, in dem hilfreiche Antworten, flüssige Interaktionen und nachvollziehbare Fehlerbehandlung zusammenwirken müssen.",
     "contact": "Über eine Product-Engineering-Rolle sprechen",

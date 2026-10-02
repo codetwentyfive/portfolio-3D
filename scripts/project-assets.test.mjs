@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { DoubleSide, Raycaster, Vector3 } from "three";
+import { Box3, DoubleSide, Matrix4, Quaternion, Raycaster, Vector3 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const root = new URL("../", import.meta.url);
@@ -356,24 +356,93 @@ test("shop: hooves and river fit the exported terrain triangles", async () => {
   }
 });
 
-test('denkpause: compact original courtyard includes genuine, embedded screen and mark', () => {
+test('denkpause: Quiet Garden remains self-contained within deliberate web budgets', () => {
   const file = readFileSync(new URL(`public/3d/worlds/denkpause-v${versions.denkpause}.glb`, root));
+  assert.equal(file.readUInt32LE(0), 0x46546c67);
+  assert.equal(file.readUInt32LE(4), 2);
   assert.equal(file.readUInt32LE(8), file.length);
-  assert.ok(file.length < 2_000_000);
-  const json = JSON.parse(file.subarray(20,20+file.readUInt32LE(12)).toString());
-  assert.ok(json.meshes.length <= 16);
-  assert.equal(json.images.length, 2);
-  for (const name of ['screen','logo']) {
-    const material = json.materials.find(m=>m.name===name);
-    const image = json.images[json.textures[material.pbrMetallicRoughness.baseColorTexture.index].source];
-    const view = json.bufferViews[image.bufferView];
-    const start = 28 + file.readUInt32LE(12) + view.byteOffset;
-    const png = file.subarray(start, start+view.byteLength);
-    const source = readFileSync(new URL(`public/images/denkpause/${name==='screen'?'welcome':'mark'}.png`, root));
-    assert.deepEqual(png, source, `${name} embeds its recorded original pixels`);
+  assert.ok(file.length <= 4_500_000, "detailed garden must stay within 4.5 MB");
+  const jsonLength = file.readUInt32LE(12);
+  const json = JSON.parse(file.subarray(20, 20 + jsonLength).toString());
+  assert.ok(json.meshes.length <= 24, "garden geometry stays material-batched");
+  const primitives = json.meshes.flatMap((mesh) => mesh.primitives);
+  assert.ok(primitives.length <= 24, "material batches also bound draw calls");
+  const triangles = primitives.reduce((sum, p) => sum + json.accessors[p.indices].count / 3, 0);
+  assert.ok(triangles > 5000 && triangles < 100000, `triangle budget: ${triangles}`);
+  const componentBytes = { 5120: 1, 5121: 1, 5122: 2, 5123: 2, 5125: 4, 5126: 4 };
+  const components = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 };
+  for (const primitive of primitives) {
+    for (const index of Object.values(primitive.attributes)) {
+      const accessor = json.accessors[index];
+      const view = json.bufferViews[accessor.bufferView];
+      const stride = view.byteStride || componentBytes[accessor.componentType] * components[accessor.type];
+      assert.equal(stride % 4, 0, "vertex strides retain glTF four-byte alignment after quantization");
+    }
   }
-  assert.ok(statSync(new URL('public/images/worlds/denkpause-v1.webp', root)).size < 180_000);
-  const registry = readFileSync(new URL('components/scenes/planets/planet-data.ts', root),'utf8');
+  assert.ok(json.buffers.every((buffer) => !buffer.uri), "no external geometry dependency");
+  assert.ok(json.images.every((image) => !image.uri), "all artwork and grain maps are embedded");
+  assert.ok(json.extensionsUsed.includes('KHR_mesh_quantization'), "quantized attributes are declared");
+  assert.ok(json.extensionsRequired.includes('KHR_mesh_quantization'), "loading requires quantization support");
+  for (const extension of [...json.extensionsUsed, ...json.extensionsRequired]) {
+    assert.ok(!['KHR_draco_mesh_compression', 'EXT_meshopt_compression', 'KHR_texture_basisu'].includes(extension), "no separate geometry or texture decoder download");
+  }
+
+  // POSITION bounds use the integer grid. Apply node transforms before comparing
+  // scene extent, or valid 1/8192 quantization looks like a 20,000-unit island.
+  const bounds = new Box3();
+  let renderedMeshes = 0;
+  const visit = (index, parentMatrix) => {
+    const node = json.nodes[index];
+    const local = node.matrix ? new Matrix4().fromArray(node.matrix) : new Matrix4().compose(
+      new Vector3(...(node.translation || [0, 0, 0])),
+      new Quaternion(...(node.rotation || [0, 0, 0, 1])),
+      new Vector3(...(node.scale || [1, 1, 1])),
+    );
+    const world = parentMatrix.clone().multiply(local);
+    if (node.mesh !== undefined) {
+      renderedMeshes++;
+      for (const primitive of json.meshes[node.mesh].primitives) {
+        const positions = json.accessors[primitive.attributes.POSITION];
+        assert.equal(positions.componentType, 5122, "positions retain the signed 16-bit grid");
+        assert.ok(!positions.normalized, "node scale restores the grid to scene units");
+        assert.notEqual(primitive.attributes.NORMAL, undefined);
+        assert.ok([...positions.min, ...positions.max].every(Number.isFinite));
+        for (let corner = 0; corner < 8; corner++) {
+          const point = new Vector3(...[0, 1, 2].map((axis) => (corner & (1 << axis) ? positions.max : positions.min)[axis])).applyMatrix4(world);
+          assert.ok(point.toArray().every((value) => Number.isFinite(value) && Math.abs(value) < 10), "dequantized scene extent stays finite and bounded");
+          bounds.expandByPoint(point);
+        }
+      }
+    }
+    for (const child of node.children || []) visit(child, world);
+  };
+  for (const node of json.scenes[json.scene || 0].nodes) visit(node, new Matrix4());
+  assert.equal(renderedMeshes, json.meshes.length, "all authored batches belong to the scene");
+  const size = bounds.getSize(new Vector3());
+  assert.ok(size.x > 3 && size.y > 2 && size.z > 3, "quantization scale preserves a visible garden");
+
+  assert.equal(json.images.length, 4, "two source images and two authored grain maps");
+  const embeddedImage = (image) => {
+    assert.equal(image.mimeType, 'image/png');
+    const view = json.bufferViews[image.bufferView];
+    const start = 28 + jsonLength + (view.byteOffset || 0);
+    return file.subarray(start, start + view.byteLength);
+  };
+  for (const name of ['screen', 'logo']) {
+    const material = json.materials.find((m) => m.name === name);
+    const image = json.images[json.textures[material.pbrMetallicRoughness.baseColorTexture.index].source];
+    const source = readFileSync(new URL(`public/images/denkpause/${name === 'screen' ? 'welcome' : 'mark'}.png`, root));
+    assert.deepEqual(embeddedImage(image), source, `${name} embeds its recorded original pixels`);
+  }
+  for (const type of ['stone', 'wood']) {
+    const image = json.images.find((entry) => entry.name === `Authored ${type} grain`);
+    assert.ok(image, `${type} has its authored surface map`);
+    const png = embeddedImage(image);
+    assert.equal(png.readUInt32BE(16), 256);
+    assert.equal(png.readUInt32BE(20), 256);
+  }
+  assert.ok(statSync(new URL(`public/images/worlds/denkpause-v${versions.denkpause}.webp`, root)).size < 180_000);
+  const registry = readFileSync(new URL('components/scenes/planets/planet-data.ts', root), 'utf8');
   assert.equal([...registry.matchAll(/kind: "([a-z]+)", projectName/g)][0][1], 'denkpause');
   assert.equal([...registry.matchAll(/kind: "([a-z]+)", projectName/g)].length, 7);
 });

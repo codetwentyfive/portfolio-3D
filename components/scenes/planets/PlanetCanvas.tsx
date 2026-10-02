@@ -11,6 +11,7 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
+import worldVersions from "@/assets/world-versions.json";
 import ShopSteppe, { type SheepHandle } from "./ShopSteppe";
 import type { StageHandle, StageInstrument } from "./PlayableStage";
 import { useSceneAction, type SceneActionProps } from "./useSceneAction";
@@ -18,6 +19,10 @@ import ProjectDiorama from "./ProjectDiorama";
 import { planets, type GerStyle } from "./planet-data";
 import WorldTurntable from "./WorldTurntable";
 import WorldPreparation from "./WorldPreparation";
+
+export function clearDenkpauseAsset() {
+  useGLTF.clear(`/3d/worlds/denkpause-v${worldVersions.denkpause}.glb`);
+}
 
 function OriginalIsland({ actionKey, animateInteractions }: SceneActionProps) {
   const rotation = useRef<THREE.Group>(null);
@@ -86,6 +91,56 @@ function Ready({ index, onReady }: { index: number; onReady: (index: number) => 
   const invalidate = useThree((state) => state.invalidate);
   useFrame(() => { if (++frames.current === 2) onReady(index); else if (frames.current < 2) invalidate(); });
   return null;
+}
+
+function DenkpauseLighting() {
+  return (
+    <>
+      <ambientLight intensity={0.1} />
+      <hemisphereLight args={["#dce8ec", "#766957", 0.42]} />
+      <directionalLight
+        position={[-4.5, 6.5, 5]}
+        intensity={2.7}
+        color="#fff0dc"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-4.4}
+        shadow-camera-right={4.4}
+        shadow-camera-top={4.4}
+        shadow-camera-bottom={-4.4}
+        shadow-camera-near={0.1}
+        shadow-camera-far={22}
+        shadow-bias={-0.00012}
+        shadow-normalBias={0.012}
+        shadow-radius={2.2}
+      />
+      <directionalLight position={[4, 4, -4]} intensity={1.05} color="#d6e5eb" />
+      <directionalLight position={[4, 1.5, 6]} intensity={0.28} color="#e9e7dd" />
+      <Environment resolution={128} frames={1}>
+        <Lightformer
+          position={[-3.5, 6, 2]}
+          rotation={[Math.PI / 2, 0, -0.35]}
+          scale={[6, 7, 1]}
+          intensity={1.6}
+          color="#fff2e1"
+        />
+        <Lightformer
+          position={[4, 2, -3]}
+          rotation={[0, -Math.PI / 3, 0]}
+          scale={[3, 6, 1]}
+          intensity={1.25}
+          color="#dcecf0"
+        />
+        <Lightformer
+          position={[-5, 1, -2]}
+          rotation={[0, Math.PI / 2, 0]}
+          scale={[2, 5, 1]}
+          intensity={0.7}
+          color="#d5c1a4"
+        />
+      </Environment>
+    </>
+  );
 }
 
 function World({
@@ -184,7 +239,7 @@ export default function PlanetCanvas({
     );
   return (
     <Canvas
-      shadows="soft"
+      shadows={planets[index].kind === "denkpause" ? "percentage" : "soft"}
       dpr={[1, 1.5]}
       frameloop={motion && planets[index].kind !== "denkpause" ? "always" : "demand"}
       camera={{ position: [5.8, 4.3, 8.7], fov: 38, near: 0.1, far: 70 }}
@@ -207,6 +262,7 @@ export default function PlanetCanvas({
       {prepareIndex !== null && (
         <WorldPreparation index={prepareIndex} onPrepared={onPrepared} />
       )}
+      {planets[index].kind === "denkpause" ? <DenkpauseLighting /> : <>
       <ambientLight intensity={0.08} />
       <hemisphereLight args={["#b9d8e8", "#4c513b", 0.55]} />
       <directionalLight
@@ -247,6 +303,7 @@ export default function PlanetCanvas({
           color="#fff1d9"
         />
       </Environment>
+      </>}
       <WorldTurntable
         zoomed={zoomed}
         index={index}

@@ -3,11 +3,12 @@
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { ContactShadows, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { PlanetKind } from "./planet-data";
 import worldVersions from "@/assets/world-versions.json";
 import MatrixDisplay from "./MatrixDisplay";
+import DenkpauseWater from "./DenkpauseWater";
 import PoteraCleaning from "./PoteraCleaning";
 import PlayableStage, { type StageHandle, type StageInstrument } from "./PlayableStage";
 import { useSceneAction, type SceneActionProps } from "./useSceneAction";
@@ -31,17 +32,18 @@ export default function ProjectDiorama({
   const { scene } = useGLTF(`/3d/worlds/${kind}-v${worldVersions[kind]}.glb`);
   const elapsed = useRef(0);
   const gl = useThree((state) => state.gl);
-  const { model, mechanisms, center, scale, artworkMaterials, artworkTextures } = useMemo(() => {
+  const { model, mechanisms, center, scale, floor, ownedMaterials, artworkTextures } = useMemo(() => {
     const model = scene.clone(true);
     const mechanisms: THREE.Object3D[] = [];
-    const artworkMaterials: THREE.MeshStandardMaterial[] = [];
+    const ownedMaterials: THREE.MeshStandardMaterial[] = [];
     const artworkTextures: THREE.Texture[] = [];
     model.traverse((object) => {
       if (object instanceof THREE.Mesh) {
         const artwork = !Array.isArray(object.material) &&
           (object.material.name.endsWith("official logo") || (kind === "denkpause" && ["logo", "screen"].includes(object.material.name)));
         const fineSeams = !Array.isArray(object.material) && object.material.name === "Potera fine roof seams";
-        object.castShadow = !artwork && !fineSeams && !(
+        const water = kind === "denkpause" && !Array.isArray(object.material) && object.material.name === "water";
+        object.castShadow = !artwork && !fineSeams && !water && !(
           !Array.isArray(object.material) &&
           object.material.name === "Room cabinet glass"
         );
@@ -57,7 +59,11 @@ export default function ProjectDiorama({
             artworkTextures.push(material.map);
           }
           object.material = material;
-          artworkMaterials.push(material);
+          ownedMaterials.push(material);
+        } else if (water) {
+          // Keep the export self-contained; the live scene replaces its baked
+          // surface with a small demand-rendered planar reflection.
+          object.visible = false;
         }
         // Thin printed artwork must not receive biased shadows from its backing.
         object.receiveShadow = !artwork && !fineSeams;
@@ -69,12 +75,12 @@ export default function ProjectDiorama({
     const center = bounds.getCenter(new THREE.Vector3());
     const size = bounds.getSize(new THREE.Vector3());
     const scale = 6 / Math.max(size.x, size.y, size.z);
-    return { model, mechanisms, center, scale, artworkMaterials, artworkTextures };
+    return { model, mechanisms, center, scale, floor: bounds.min.y, ownedMaterials, artworkTextures };
   }, [scene, gl, kind]);
   useEffect(() => () => {
-    artworkMaterials.forEach((material) => material.dispose());
+    ownedMaterials.forEach((material) => material.dispose());
     artworkTextures.forEach((texture) => texture.dispose());
-  }, [artworkMaterials, artworkTextures]);
+  }, [ownedMaterials, artworkTextures]);
 
   useFrame((_, delta) => {
     if (effect.current) {
@@ -107,6 +113,17 @@ export default function ProjectDiorama({
         onClick: (event: ThreeEvent<MouseEvent>) => event.stopPropagation(),
         onPointerOver: (event: ThreeEvent<PointerEvent>) => event.stopPropagation(),
       } : kind === "denkpause" ? {} : action.handlers)} />}
+      {kind === "denkpause" && <ContactShadows
+        position={[center.x, floor - 0.035, center.z]}
+        scale={7.2}
+        opacity={0.3}
+        blur={2.8}
+        far={0.8}
+        resolution={256}
+        frames={1}
+        color="#574d40"
+      />}
+      {kind === "denkpause" && <DenkpauseWater />}
       {kind === "seeds" && <PlayableStage model={model} ref={stageRef} motion={animateInteractions} extraInstrument={extraInstrument} soundEnabled={soundEnabled} onPlayed={onStagePlayed} />}
       {kind === "payments" && <group ref={effect} visible={false} position={[.2, 1.02, .95]}>
         <mesh><boxGeometry args={[.016, .55, .64]} /><meshBasicMaterial color="#b0ffcf" transparent opacity={.18} depthWrite={false} /></mesh>

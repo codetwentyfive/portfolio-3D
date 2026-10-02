@@ -23,7 +23,13 @@ try {
    if(width===390) assert.ok(layout.scene<height-100);
    findings.push({locale,width,height,...layout});
   }
-  await page.goto(`${base}/${locale}/projects/denkpause`);assert.equal(await page.locator('h1').innerText(),'denk.pause');assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),`https://chingis.dev/${locale}/projects/denkpause`);await page.screenshot({path:`${out}/${locale}-case.png`,fullPage:true});
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto(`${base}/${locale}/projects/denkpause`);assert.equal(await page.locator('h1').innerText(),'denk.pause');assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),`https://chingis.dev/${locale}/projects/denkpause`);
+  const viewer=page.locator('.denkpause-viewer');await viewer.scrollIntoViewIfNeeded();await page.locator('.denkpause-viewer[data-state="ready"]').waitFor({timeout:30000});
+  const controls=viewer.locator('.case-viewer-toolbar button');assert.equal(await controls.count(),4);
+  const before=await viewer.locator('canvas').screenshot();await controls.nth(1).click();await page.waitForTimeout(100);const rotated=await viewer.locator('canvas').screenshot();assert.notDeepEqual(before,rotated,'case viewer rotation changes the rendered model');
+  await controls.nth(2).click();assert.equal(await controls.nth(2).getAttribute('aria-pressed'),'true');await controls.nth(3).click();assert.equal(await controls.nth(2).getAttribute('aria-pressed'),'false');
+  await page.screenshot({path:`${out}/${locale}-case.png`,fullPage:true});
  }
  await page.setViewportSize({width:1440,height:900});await page.goto(`${base}/en?world=shop`);assert.equal(await page.locator('.studio-caption h2').innerText(),'chingis.shop');
  await page.locator('.studio-project').nth(2).click();assert.ok(page.url().endsWith('world=payments'));await page.goBack();assert.equal(await page.locator('.studio-caption h2').innerText(),'chingis.shop');await page.goForward();assert.equal(await page.locator('.studio-caption h2').innerText(),'Commerce systems');
@@ -49,6 +55,20 @@ try {
   assert.ok(await page.locator('.world-poster').evaluate(img=>img.complete && img.naturalWidth>0));
   await page.screenshot({path:`${out}/${policy}.png`,fullPage:true});
   if(policy!=='noJS') {await page.locator('.studio-mobile-pager-buttons button').last().click();assert.equal(await page.locator('.studio-explorer').getAttribute('data-world'),'shop');}
+  await page.goto(`${base}/en/projects/denkpause`);await page.locator('.denkpause-viewer').scrollIntoViewIfNeeded();
+  const viewer=page.locator('.denkpause-viewer');assert.ok(await viewer.locator('img').evaluate(img=>img.complete && img.naturalWidth>0));
+  if(['reduced','saveData','noJS'].includes(policy)) {
+   assert.equal(await page.locator('canvas').count(),0);assert.equal((await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>r.name.includes('.glb')))).length,0);
+  } else {
+   await page.locator('.denkpause-viewer[data-state="failed"]').waitFor({timeout:16000});
+  }
+  if(['reduced','saveData','failedAsset'].includes(policy)) {
+   if(policy==='failedAsset') await context.unroute('**/3d/**/*.glb');
+   await viewer.locator('.case-viewer-enable').click();await page.locator('.denkpause-viewer[data-state="ready"]').waitFor({timeout:30000});
+   assert.equal(await viewer.locator('.case-viewer-toolbar button').count(),4);
+  }
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:`${out}/case-${policy}.png`,fullPage:true});
   await context.close();
  }
  // Enlarged text should scroll naturally and keep the primary action usable.
