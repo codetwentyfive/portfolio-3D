@@ -41,7 +41,7 @@ export const seoConfig: SeoConfig = {
   pages: {
     denkpause: {
       path: "/projects/denkpause",
-      image: "/images/worlds/denkpause-v3.webp",
+      image: "/images/worlds/denkpause-v4.webp",
       en: {title: "denk.pause — Architecture, AI Integration & Product Delivery", description: "Ongoing development of denk.pause, a web and iOS app for teachers. External development and consulting on architecture, app structure and AI integration."},
       de: {title: "denk.pause — Architektur, KI-Integration & Produktentwicklung", description: "denk.pause: eine Web- und iOS-App für Lehrkräfte in laufender Entwicklung. Externe Entwicklung und Beratung zu Architektur, App-Struktur und KI-Integration."},
     },

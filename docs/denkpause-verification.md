@@ -1,4 +1,20 @@
-# V3 release verification — 2 October 2026
+# V4 scene correction — 2 October 2026
+
+- User review prompted a whole-scene pass: contained planting bowls, dry solid
+  phone podium, pool/lantern separation, clean coping joints, supported bench
+  slats, and foundations reaching the underlying deck.
+- Procedural clearance/support assertions pass, along with all 21 targeted
+  asset and SEO tests. The preceding full release suite had 98 passing tests.
+- An independent geometry audit found no canopy/portal vertex or triangle-edge
+  intersection. Eight fresh browser angles show no visible clipping; evidence
+  `/tmp/denkpause-v4-review`.
+- Model 4,065,264 bytes / 22 batches / 64,074 triangles; actual WebGL poster
+  60,156 bytes / 1200×760. New v4 URLs avoid stale immutable asset caches.
+- Production build passes with the existing unrelated HomeInfo image warning.
+
+---
+
+# Earlier V3 release verification — 2 October 2026
 
 Release checkout: `~/Documents/ChatGPT/Portfolio/chingis-dev`.
 

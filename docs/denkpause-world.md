@@ -79,7 +79,7 @@ adapts to viewport width; pixel density is capped for the interactive scene.
   builder. Scene colours are art direction, not claimed official brand tokens.
 - The earlier v1 GLB and poster remain as historical assets. That scene used a
   simple limestone island, mineral wall, sloped timber pavilion, bench and airy
-  tree in 11 material batches. The v3 manifest selects the replacement garden.
+  tree in 11 material batches. The v4 manifest selects the replacement garden.
 
 `scripts/render-denkpause-poster.mjs` captures the actual WebGL scene with its
 runtime camera and lighting at 1200 × 760, hides surrounding HTML and encodes a
@@ -126,3 +126,22 @@ canopy in its original position, clear of the portal. Soil and pebble scattering
 fit the smaller bed. The builder checks every transformed planter/root/pebble
 vertex against the wall's beveled inner radius, with a 0.02-unit margin.
 The matching GLB and browser-rendered poster have new v3 URLs for cache safety.
+
+## Whole-scene clearance and support correction — v4
+
+A second user review identified wall planting and a screen podium crossing the
+pool edge. V4 replaces eight loose plant clusters with three shallow planting
+bowls, each with bounded soil/foliage. It moves the complete phone assembly onto
+a solid dry-deck podium, moves the right lantern away from the pool, separates
+coping corner joints, and adds continuous bench rails and transverse bearers.
+Foundations, table and reading-ledge supports reach the underlying deck even
+where paving slabs end. The independent canopy audit found no portal penetration.
+
+The generator checks transformed plant geometry against nearby solid-part bounds
+and the curved-wall envelope, foliage against soil radii, planter roots against
+the wall, and support bottoms against deck height. Intended stacked construction
+joints and roots entering soil remain normal assembled geometry. Eight browser
+angles were independently inspected; no visible clipping remained.
+
+V4 assets: GLB 4,065,264 bytes, 22 material batches, 64,074 triangles; matching
+WebP 60,156 bytes, 1200×760. Versioned filenames update cached clients cleanly.

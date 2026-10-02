@@ -22,6 +22,8 @@ const range = (a, b) => a + random() * (b - a);
 const scene = new T.Scene();
 const batches = new Map();
 const assemblyOffset = new T.Vector3();
+const rigidOffset = new T.Vector3();
+const authoredParts = [];
 const treeBaseGeometry = [];
 const palette = {
   stone: ['#d8cdb9', .88], stoneLight: ['#eee5d1', .81], stoneDark: ['#a39a84', .95],
@@ -53,6 +55,7 @@ function mesh(name, geometry, material, p = [0, 0, 0], rotation = [0, 0, 0], sca
   }
   const matrix = new T.Matrix4().compose(new T.Vector3(...p), new T.Quaternion().setFromEuler(new T.Euler(...rotation)), new T.Vector3(...scale));
   geometry.applyMatrix4(matrix);
+  geometry.translate(rigidOffset.x, rigidOffset.y, rigidOffset.z);
   // Reanchor the lower trunk without moving the mature canopy into the arch.
   if (assemblyOffset.lengthSq()) {
     const points = geometry.attributes.position;
@@ -63,6 +66,8 @@ function mesh(name, geometry, material, p = [0, 0, 0], rotation = [0, 0, 0], sca
     geometry.computeVertexNormals();
   }
   if (["Tree planter bronze reveal", "Tree planter stone", "Earth", "Olive root flare", "Planter river pebble"].includes(name)) treeBaseGeometry.push(geometry);
+  geometry.computeBoundingBox();
+  authoredParts.push({ name, geometry, bounds: geometry.boundingBox.clone() });
   if (!geometry.index) geometry.setIndex(Array.from({ length: geometry.attributes.position.count }, (_, i) => i));
   if (!geometry.attributes.uv) geometry.setAttribute('uv', new T.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count * 2), 2));
   if (!['screen', 'logo'].includes(material)) {
@@ -159,7 +164,7 @@ function portal(z) {
   const g = new T.ExtrudeGeometry(s, { depth: .22, bevelEnabled: true, bevelSize: .022, bevelThickness: .022, bevelSegments: 3, curveSegments: 40 });
   mesh('Carved travertine portal', g, 'stoneLight', [cx, floor, z]);
   for (const x of [cx - .94, cx + .94]) {
-    slab('Portal foot', [x, .24, z + .11], .34, .4, .12, 'stone', .03);
+    slab('Portal foot', [x, .2295, z + .11], .34, .4, .141, 'stone', .03);
     for (let y = .58; y < 1.55; y += .33) box('Horizontal stone joint', [x, y, z + .244], [.21, .008, .005], 'stoneDark');
   }
   // Radial voussoir joints on the front arch.
@@ -177,7 +182,7 @@ for (let i = 0; i < 27; i++) {
 // Rear timber screen, joints and a reading ledge visible through the arch.
 for (let i = 0; i < 14; i++) rounded('Vertical rear cedar screen', [-1.59 + i * .11, .93, -1.63], [.048, 1.45, .065], 'timber', .012);
 slab('Interior reading ledge', [-.86, .66, -1.41], 1.62, .33, .07, 'timber');
-for (const x of [-1.42, -.29]) rod('Reading ledge bronze support', [x, .25, -1.39], [x, .63, -1.39], .022, 'bronze');
+for (const x of [-1.42, -.29]) rod('Reading ledge bronze support', [x, .15, -1.39], [x, .63, -1.39], .022, 'bronze');
 // Curved side enclosure meets the tree garden without blocking the app.
 arc('Low garden wall', [0, .18, 0], 2.11, 2.31, .12, 1.75, .31, 'stone', .02);
 arc('Garden wall coping', [0, .5, 0], 2.08, 2.34, .12, 1.75, .055, 'stoneLight');
@@ -186,17 +191,19 @@ arc('Garden wall coping', [0, .5, 0], 2.08, 2.34, .12, 1.75, .055, 'stoneLight')
 const pool = [1.05, .207, .58];
 slab('Reflecting pool basin', pool, 1.46, 2.25, .09, 'bronze', .26);
 slab('Still garden water', [pool[0], .259, pool[2]], 1.34, 2.13, .01, 'water', .24);
-for (const x of [.305, 1.795]) slab('Pool edge coping', [x, .28, .58], .115, 2.23, .16, 'stoneLight', .045);
+for (const x of [.305, 1.795]) slab('Pool edge coping', [x, .28, .58], .115, 2.09, .16, 'stoneLight', .045);
 for (const z of [-.57, 1.73]) slab('Pool end coping', [1.05, .28, z], 1.59, .13, .16, 'stoneLight', .045);
 // Thin ripple arcs sit on the water, sparse enough to remain calm at thumbnail scale.
 for (let i = 0; i < 4; i++) arc('Water ripple', [1.16, .273, .91], .16 + i * .095, .165 + i * .095, .25, 2.4, .001, 'ripple', 0);
 for (const [x, z, a] of [[.9, 1.23, .5], [1.39, .9, -.4]]) {
   arc('Water lily leaf', [x, .28, z], 0, .085, .15, Math.PI * 2 - .15, .007, 'leaf', 0);
 }
-// A single bridge/touchdown separates app hardware from the garden.
-slab('Phone landing bridge', [.44, .385, .18], .94, .78, .12, 'stoneLight', .06);
+// A dry, solid stone podium carries the device all the way down to the deck.
+// Keep the complete hardware assembly left of the pool, with a visible air gap.
+rigidOffset.set(-.66, 0, 0);
+slab('Phone podium foundation', [.44, .298, .18], .74, .68, .28, 'stoneLight', .06);
 slab('Phone pedestal foot', [.44, .51, .19], .62, .43, .14, 'stone', .035);
-rounded('Phone pedestal', [.44, .72, .16], [.33, .4, .27], 'stoneLight', .035);
+rounded('Phone pedestal', [.44, .625, .29], [.33, .09, .23], 'stoneLight', .025);
 // Rounded graphite shell, machined metal perimeter, tiny speakers and side controls.
 const phone = [.44, 1.44, .29];
 rounded('Titanium device perimeter', phone, [.795, 1.53, .108], 'bronze', .103);
@@ -209,6 +216,7 @@ rounded('Earpiece', [.44, 2.116, .376], [.1, .012, .004], 'ink', .005);
 cylinder('Lens', [.515, 2.116, .376], .012, .012, .004, 'ink', 12);
 for (const [x, y, h] of [[.844, 1.76, .13], [.037, 1.8, .1], [.037, 1.64, .1]]) rounded('Side button', [x, y, .302], [.012, h, .035], 'brass', .004);
 for (let i = 0; i < 6; i++) box('Bottom speaker port', [.3 + i * .057, .669, .325], [.018, .008, .026], 'ink');
+rigidOffset.set(0, 0, 0);
 // Official identity on an inset enamel plaque — original image pixels retained.
 rounded('Enamel identity plaque', [-.87, 1.15, -.505], [.65, .36, .036], 'linen', .035);
 mesh('Official denk.pause mark', new T.PlaneGeometry(.58, .27), 'logo', [-.87, 1.15, -.477]);
@@ -219,8 +227,10 @@ for (const x of [-1.13, -.61]) mesh('Plaque brass pin', new T.SphereGeometry(.00
 for (const a of [2.6, 3.7]) {
   const x = -.87 + Math.cos(a) * .74, z = .68 - Math.sin(a) * .74;
   box('Bench bronze leg', [x, .39, z], [.065, .43, .085], 'bronze');
-  slab('Bench foot', [x, .21, z], .18, .19, .04, 'bronze', .02);
+  slab('Bench foot', [x, .1945, z], .18, .19, .071, 'bronze', .02);
+  slab('Bench underseat bearer', [x, .555, z], .08, .37, .055, 'bronze', .012, a - Math.PI / 2);
 }
+for (const radius of [.62, .92]) arc('Bench curved stringer', [-.87, .548, .68], radius - .012, radius + .012, 2.28, 3.75, .025, 'bronze', .004);
 for (let i = 0; i < 22; i++) {
   const a = 2.3 + i * .068;
   const x = -.87 + Math.cos(a) * .77, z = .68 - Math.sin(a) * .77;
@@ -228,13 +238,13 @@ for (let i = 0; i < 22; i++) {
 }
 slab('Linen seat pad', [-1.59, .659, .56], .29, .3, .037, 'linen', .05, .05);
 // Reading table, open book with separate leaf edges, and a ceramic cup.
-cylinder('Side table pedestal', [-.79, .43, .72], .045, .065, .43, 'bronze', 16);
+cylinder('Side table pedestal', [-.79, .3975, .72], .045, .065, .495, 'bronze', 16);
 cylinder('Side table honed top', [-.79, .65, .72], .285, .27, .05, 'stoneLight', 48);
 slab('Book linen cover', [-.84, .697, .72], .26, .21, .025, 'lilac', .012, -.18);
 for (let i = 0; i < 4; i++) slab('Visible book pages', [-.84, .714 + i * .004, .72], .243, .194, .002, 'linen', .008, -.18);
-cylinder('Ceramic cup', [-.63, .728, .64], .043, .037, .095, 'linen', 24);
-cylinder('Coffee surface', [-.63, .779, .64], .034, .034, .003, 'bark', 24);
-mesh('Cup handle', new T.TorusGeometry(.026, .009, 6, 16), 'linen', [-.58, .743, .64], [Math.PI / 2, 0, 0]);
+cylinder('Ceramic cup', [-.63, .7225, .64], .043, .037, .095, 'linen', 24);
+cylinder('Coffee surface', [-.63, .771, .64], .034, .034, .003, 'bark', 24);
+mesh('Cup handle', new T.TorusGeometry(.026, .009, 6, 16), 'linen', [-.58, .7375, .64], [Math.PI / 2, 0, 0]);
 
 // Keep the planter assembly inside the curved wall, including its reveal.
 // Original authored centre: [1.11, -1.28]; installed centre: [.85, -1.23].
@@ -300,32 +310,67 @@ for (const geometry of treeBaseGeometry) {
       throw new Error("Tree planter intersects the garden wall clearance envelope");
   }
 }
-// Small plants are geometry rather than opaque foliage blobs.
-function grass(x, y, z, height, mat = 'moss') {
+// Planting is contained in real shallow bowls, with every stem inside the soil.
+const plantingBeds = [[-1.87, -.21], [-1.45, 1.55], [-.85, -1.98]];
+const plantParts = [];
+for (const [x, z] of plantingBeds) {
+  const partStart = authoredParts.length;
+  cylinder('Planting bowl bronze reveal', [x, .20125, z], .183, .17, .1025, 'bronze', 32);
+  cylinder('Planting bowl stone rim', [x, .245, z], .19, .178, .08, 'stoneLight', 40);
+  cylinder('Planting bowl soil', [x, .282, z], .158, .158, .01, 'earth', 40);
   for (let i = 0; i < 9; i++) {
-    const a = range(0, 6.28), h = range(height * .6, height), lean = range(.06, .15);
+    const a = range(0, 6.28), h = range(.16, .25), lean = range(.06, .12);
     const g = new T.BufferGeometry();
-    g.setAttribute('position', new T.Float32BufferAttribute([x, y, z, x + Math.cos(a) * lean / 2 - .012, y + h * .55, z + Math.sin(a) * lean / 2, x + Math.cos(a) * lean / 2 + .012, y + h * .55, z + Math.sin(a) * lean / 2, x + Math.cos(a) * lean, y + h, z + Math.sin(a) * lean], 3));
-    g.setIndex([0, 1, 2, 1, 3, 2]); g.computeVertexNormals(); mesh('Fine garden grass', g, mat);
+    g.setAttribute('position', new T.Float32BufferAttribute([x, .287, z, x + Math.cos(a) * lean / 2 - .012, .287 + h * .55, z + Math.sin(a) * lean / 2, x + Math.cos(a) * lean / 2 + .012, .287 + h * .55, z + Math.sin(a) * lean / 2, x + Math.cos(a) * lean, .287 + h, z + Math.sin(a) * lean], 3));
+    g.setIndex([0, 1, 2, 1, 3, 2]); g.computeVertexNormals(); mesh('Bowl garden grass', g, 'leaf');
   }
-}
-for (const [x, z] of [[-2.0, -.55], [-1.93, -.98], [-1.56, -1.95], [.34, -1.99], [1.8, -1.15], [1.93, -.45], [-1.87, 1.04], [-1.72, 1.39]]) {
-  stone('Garden moss cushion', [x, .24, z], [.16, .065, .13], 'moss');
-  grass(x, .24, z, .28, 'leaf');
   for (let i = 0; i < 5; i++) {
-    const px = x + range(-.17, .17), pz = z + range(-.14, .14);
-    const h = range(.2, .4);
-    rod('Lavender stem', [px, .25, pz], [px + .025, .25 + h, pz], .004, 'moss', .003, 5);
-    for (let j = 0; j < 3; j++) mesh('Lavender flower', new T.IcosahedronGeometry(.016, 0), 'lilac', [px + .025, .25 + h + j * .025, pz], [0, j, 0], [1, 1.4, 1]);
+    const a = range(0, 6.28), r = range(.025, .075);
+    const px = x + Math.cos(a) * r, pz = z + Math.sin(a) * r, h = range(.2, .34);
+    rod('Bowl lavender stem', [px, .287, pz], [px + .025, .287 + h, pz], .004, 'moss', .003, 5);
+    for (let j = 0; j < 3; j++) mesh('Bowl lavender flower', new T.IcosahedronGeometry(.016, 0), 'lilac', [px + .025, .287 + h + j * .025, pz], [0, j, 0], [1, 1.4, 1]);
   }
+  const parts = authoredParts.slice(partStart);
+  for (const part of parts.filter(part => part.name.startsWith('Bowl'))) {
+    const positions = part.geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+      if (Math.hypot(positions.getX(i) - x, positions.getZ(i) - z) > .145)
+        throw new Error('A garden plant extends beyond its soil bed');
+    }
+  }
+  plantParts.push(...parts);
 }
 // Warm bollards, each with a physical inset light source and bronze cap.
-for (const [x, z] of [[-1.1, 1.89], [1.85, .34], [-2.03, .23]]) {
-  slab('Lantern footing', [x, .215, z], .18, .18, .04, 'stoneDark', .025);
+for (const [x, z] of [[-1.1, 1.89], [2.15, .34], [-2.03, .23]]) {
+  slab('Lantern footing', [x, .197, z], .18, .18, .076, 'stoneDark', .025);
   rounded('Bronze garden lantern', [x, .39, z], [.11, .32, .11], 'bronze', .022);
   rounded('Warm lantern inset', [x, .415, z + .058], [.063, .17, .008], 'glow', .013);
   slab('Lantern cap', [x, .56, z], .145, .145, .035, 'bronze', .018);
 }
+
+// Spatial checks use actual transformed geometry. Intended stacked joints and
+// roots entering soil are allowed; exposed plants/hardware must clear masonry.
+const obstacles = authoredParts.filter(part => /Portal foot|Carved travertine portal|Cedar|cedar|Bench|seat slat|Side table|Pool .* coping|Phone|Titanium|Graphite|Bronze garden lantern|Lantern footing|Lantern cap/.test(part.name));
+for (const plant of plantParts) {
+  for (const obstacle of obstacles) {
+    if (plant.bounds.clone().expandByScalar(.02).intersectsBox(obstacle.bounds))
+      throw new Error(`${plant.name} intersects ${obstacle.name}`);
+  }
+  const vertices = plant.geometry.attributes.position;
+  for (let i = 0; i < vertices.count; i++) {
+    const x = vertices.getX(i), z = vertices.getZ(i), radius = Math.hypot(x, z);
+    const angle = (Math.atan2(-z, x) + Math.PI * 2) % (Math.PI * 2);
+    if (angle >= .10 && angle <= 1.77 && radius >= 2.048 && radius <= 2.372)
+      throw new Error(`${plant.name} intersects the curved wall clearance envelope`);
+  }
+}
+const foundation = authoredParts.find(part => part.name === 'Phone podium foundation');
+if (foundation.bounds.min.y > .161 || foundation.bounds.max.x > .2185)
+  throw new Error('Phone podium must meet the dry deck and stay clear of the pool');
+for (const part of authoredParts.filter(part => /^(Portal foot|Bench foot|Lantern footing|Planting bowl bronze reveal|Side table pedestal|Reading ledge bronze support)$/.test(part.name))) {
+  if (part.bounds.min.y > .161) throw new Error(`${part.name} is floating above the deck`);
+}
+console.log(`Geometry clearance: ${plantingBeds.length} contained planting beds; dry, grounded phone podium; clear tree base.`);
 
 // Merge by material: sculptural detail without thousands of runtime draw calls.
 let triangles = 0;
