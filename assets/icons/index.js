@@ -45,6 +45,7 @@ import docker from './docker.svg';
 import prisma from './prisma.svg';
 import postgresql from './postgresql.svg';
 import bewirken from './bewirken logo.svg';
+import krz from './krz-swd.png';
 import claude from './claude.svg';
 import cursor from './cursor.svg';
 import openai from './openai.svg';
@@ -101,6 +102,7 @@ export {
   prisma,
   postgresql,
   bewirken,
+  krz,
   claude,
   cursor,
   openai,
