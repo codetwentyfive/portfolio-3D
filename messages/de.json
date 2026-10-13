@@ -217,7 +217,19 @@
   "impressum": "Impressum",
   "privacy": "Datenschutz",
   "greeting_about": "Hi! Ich bin",
-  "short_intro": "Als Full-Stack Entwickler erschaffe ich digitale Erlebnisse und frage mich dabei, ob mein Code träumt, wenn er in Produktion läuft. Wie Schrödingers Bug: Er ist gleichzeitig gefixt und kaputt, bis man in die Logs schaut ✨",
+  "short_intro": "Ich bin Product Engineer aus Karlsruhe. Ich entwickle Web- und iOS-Apps und verbinde Anwendungsarchitektur, Datenpipelines, KI-Funktionen und Release-Prozesse.",
+  "about_work_intro": "Dazu gehören die laufende Entwicklung und technische Beratung für denk.pause, eine App für Lehrkräfte, sowie Commerce-Integrationen und eigene Softwareprojekte.",
+  "about_work": {
+    "heading": "Meine Arbeit in der Praxis",
+    "denkpause": {
+      "title": "Die Entwicklung von denk.pause",
+      "description": "Architektur, redaktionelle Datenpipelines, KI-Integration und Release-Entscheidungen hinter einer Web- und iOS-App für Lehrkräfte."
+    },
+    "assistant": {
+      "title": "Ein selbst gehosteter KI-Assistent",
+      "description": "Was ich beim Betrieb eines Assistenten mit Docker, Ollama und Telegram über Datenwege, Automatisierung und Fehlerbehebung gelernt habe."
+    }
+  },
   "my_skills": "Meine digitale Werkzeugkiste",
   "timeline": "Die Story bisher",
   "timeline_description1": "Angetrieben von Kaffee und existenziellen Fragen über Semikolons, entwickle ich Weblösungen, die Nutzer weniger an der Realität zweifeln lassen.",

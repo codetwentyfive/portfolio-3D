@@ -53,14 +53,14 @@ export const seoConfig: SeoConfig = {
     about: {
       path: "/about",
       en: {
-        title: "About | Chingis Zwecker E. — What I Bring to the Table",
+        title: "About | Chingis Zwecker E. — Product Engineering and AI Integration",
         description:
-          "Developer who ships across domains — modern frontends, robust backends, legacy rescue, infrastructure, AI integration, and project management. The kind of person you call when it needs to work, not just look good on a whiteboard.",
+          "Product engineer in Karlsruhe building web and iOS apps, data pipelines and AI integrations. Explore my work on denk.pause and independent software projects.",
       },
       de: {
-        title: "Über mich | Chingis Zwecker E. — Was ich mitbringe",
+        title: "Über mich | Chingis Zwecker E. — Product Engineering und KI-Integration",
         description:
-          "Entwickler, der über Domänen hinweg liefert — moderne Frontends, robuste Backends, Legacy-Rettung, Infrastruktur, KI-Integration und Projektmanagement. Der, den man ruft, wenn es funktionieren soll — nicht nur auf dem Whiteboard gut aussehen.",
+          "Product Engineer aus Karlsruhe für Web- und iOS-Apps, Datenpipelines und KI-Integration. Einblicke in meine Arbeit an denk.pause und eigene Softwareprojekte.",
       },
     },
     projects: {

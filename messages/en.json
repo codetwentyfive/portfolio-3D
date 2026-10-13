@@ -217,7 +217,19 @@
   "impressum": "Impressum",
   "privacy": "Privacy",
   "greeting_about": "Hi! I'm",
-  "short_intro": "As a Full-Stack Developer, I craft digital experiences while wondering if my code dreams when it runs in production. Like Schrödinger's bug: it's both fixed and broken until you check the logs ✨",
+  "short_intro": "I'm a product engineer based in Karlsruhe. I build web and iOS applications and connect application architecture, data pipelines, AI features and release workflows.",
+  "about_work_intro": "My work includes ongoing development and technical consulting for denk.pause, an app for teachers, alongside commerce integrations and independent software projects.",
+  "about_work": {
+    "heading": "My work in practice",
+    "denkpause": {
+      "title": "Engineering denk.pause",
+      "description": "Architecture, editorial data pipelines, AI integration and release decisions behind a web and iOS app for teachers."
+    },
+    "assistant": {
+      "title": "A self-hosted AI assistant",
+      "description": "What running an assistant with Docker, Ollama and Telegram taught me about data boundaries, automation and recovery."
+    }
+  },
   "my_skills": "My Digital Toolbox",
   "timeline": "The Story So Far",
   "timeline_description1": "Fueled by coffee and existential questions about semicolons, I develop web solutions that make users question reality less.",
