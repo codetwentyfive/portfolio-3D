@@ -30,6 +30,8 @@ Motion permission requires a secure context on supporting browsers. For an actua
 
 Reduced motion keeps a static frame and disables phone motion. Animation is capped at 20 FPS and canvas pixel density at 1.5. Pause, hidden pages and reduced motion suspend the animation loop; sensor listeners also suspend while paused or hidden.
 
+Visibility follow-up: the first pass was too faint in the embedded preview. Edge ink is now about 2.3 times stronger and glyphs are 1px larger; a stronger central mask keeps reading-area ink near its original level. A visible preview continues animating while focus moves to the chat. Only page visibility, pause and reduced motion suspend rendering.
+
 ## Verification and verdict
 
 Checked 2026-10-13: optimized Next.js build, TypeScript/lint and all five existing SEO tests passed (one pre-existing `HomeInfo` image warning). Chromium screenshots at 1440px and 390px show readable foreground and no mobile overflow. Simulated phone checks passed for opt-in, denial, missing readings, portrait, both landscape directions, upside-down, flat settling, pause/resume, stop, reduced motion, URL reload and original comparison. Production-mode checks confirm the effect is query-gated, developer controls are hidden, Pause remains available, and the home/EN/DE About routes load without page errors. No persistent test suite was added for this throwaway study.

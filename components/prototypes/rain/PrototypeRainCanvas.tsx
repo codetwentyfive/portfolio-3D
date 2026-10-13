@@ -62,7 +62,6 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
     let height = 0;
     let frame = 0;
     let previousTime = 0;
-    let focused = document.hasFocus();
 
     function gravity() {
       const value = gravityRef?.current ?? { x: 0, y: 1 };
@@ -80,7 +79,7 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
       const drops = Array.from({ length: count }, (_, i): Drop => {
         const key = variant === "margin" ? i * 173 + 11 : variant === "field" ? i * 251 + 53 : i * 307 + 97;
         const depth = seed(key + 1);
-        const size = (variant === "syntax" ? 9 : 10) + depth * 3;
+        const size = (variant === "syntax" ? 10 : 11) + depth * 3;
         const length = variant === "margin"
           ? 5 + Math.floor(seed(key + 2) * 9)
           : variant === "field" ? 1 + Math.floor(seed(key + 4) * 4) : 1;
@@ -140,7 +139,7 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
       const right = smooth(width < 700 ? 0.84 : 0.75, 0.985, relativeX);
       const perimeter = Math.max(left, right);
       const verticalFade = smooth(0, 100, y) * (1 - smooth(height - 120, height, y));
-      return (0.23 + 0.77 * perimeter) * verticalFade;
+      return (0.12 + 0.88 * perimeter) * verticalFade;
     }
 
     function glyph(text: string, x: number, y: number, size: number, opacity: number, color: number) {
@@ -168,19 +167,19 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
             const character = GLYPHS[Math.floor(seed(key + row * 31 + 17) * GLYPHS.length)];
             const tailFade = 0.28 + 0.72 * Math.pow(1 - row / length, 1.2);
             const distance = row * size * 1.65;
-            glyph(character, x - dx * distance, y - dy * distance, size, (0.16 + depth * 0.08) * tailFade, i);
+            glyph(character, x - dx * distance, y - dy * distance, size, (0.38 + depth * 0.16) * tailFade, i);
           }
         } else if (variant === "field") {
           // Separated glyph clusters turn as a constellation with lateral breathing room.
           for (let part = 0; part < length; part++) {
             const character = GLYPHS[Math.floor(seed(key + part * 43 + 5) * GLYPHS.length)];
             const lateral = part === 0 ? 0 : (seed(key + part * 67) - 0.5) * 21;
-            glyph(character, x - dx * part * 18 + dy * lateral, y - dy * part * 18 - dx * lateral, size, (0.14 + depth * 0.08) * (1 - part * 0.17), i);
+            glyph(character, x - dx * part * 18 + dy * lateral, y - dy * part * 18 - dx * lateral, size, (0.34 + depth * 0.14) * (1 - part * 0.17), i);
           }
         } else {
           // Syntax remains horizontal while its whole fragment falls toward the ground.
           const fragment = FRAGMENTS[Math.floor(seed(key + 4) * FRAGMENTS.length)];
-          glyph(fragment, x, y, size, 0.15 + depth * 0.08, i);
+          glyph(fragment, x, y, size, 0.36 + depth * 0.14, i);
         }
       }
 
@@ -201,7 +200,7 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
       window.cancelAnimationFrame(frame);
       previousTime = 0;
       paint();
-      if (!paused && !motion.matches && !document.hidden && focused) {
+      if (!paused && !motion.matches && !document.hidden) {
         frame = window.requestAnimationFrame(animate);
       }
     }
@@ -234,32 +233,18 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
       paint();
     }
 
-    function onFocus() {
-      focused = true;
-      syncPlayback();
-    }
-
-    function onBlur() {
-      focused = false;
-      syncPlayback();
-    }
-
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     resize();
     syncPlayback();
     motion.addEventListener("change", syncPlayback);
     document.addEventListener("visibilitychange", syncPlayback);
-    window.addEventListener("focus", onFocus);
-    window.addEventListener("blur", onBlur);
 
     return () => {
       window.cancelAnimationFrame(frame);
       observer.disconnect();
       motion.removeEventListener("change", syncPlayback);
       document.removeEventListener("visibilitychange", syncPlayback);
-      window.removeEventListener("focus", onFocus);
-      window.removeEventListener("blur", onBlur);
     };
   }, [variant, paused, gravityRef]);
 
