@@ -11,7 +11,7 @@ import "./prototype-rain.css";
 const variants = [
   { key: "margin", name: "Margin", note: "Fine trails · quiet centre" },
   { key: "field", name: "Field", note: "Scattered glyphs · open space" },
-  { key: "syntax", name: "Syntax", note: "Small fragments · slow descent" },
+  { key: "syntax", name: "Syntax", note: "Vertical words · paired symbols" },
 ] as const;
 
 export default function PrototypeRain() {

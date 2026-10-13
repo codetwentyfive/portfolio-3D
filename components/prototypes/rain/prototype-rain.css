@@ -29,9 +29,69 @@ body:has(.prototype-rain-layer) main {
   z-index: 1;
 }
 
-/* The home gallery keeps its scene surfaces, while the page's paper becomes open. */
+/* Open space carries the rain; opaque paper protects every reading surface. */
 body:has(.prototype-rain-layer) .studio-explorer {
   background-color: transparent;
+}
+
+body:has(.prototype-rain-layer) :is(
+  .studio-professional,
+  .studio-index,
+  .studio-caption,
+  .studio-mobile-intro,
+  .studio-mobile-hud,
+  .denkpause-mobile-stage,
+  .studio-view-tools,
+  .studio-transition-status,
+  .max-container > :not(script, hr, .btn)
+) {
+  background-color: var(--paper);
+  box-shadow: 0 0 0 10px var(--paper);
+}
+
+body:has(.prototype-rain-layer) :is(
+  .site-header,
+  .editorial-navigation,
+  .menu-toggle,
+  .music-launcher,
+  .music-panel,
+  .studio-material-menu,
+  .studio-mobile-finishes,
+  .studio-scene-arrow,
+  .scene-options-trigger,
+  .scene-options-panel
+) {
+  background-color: var(--paper);
+}
+
+body:has(.prototype-rain-layer) .studio-scene-arrow:disabled {
+  opacity: 1;
+}
+
+body:has(.prototype-rain-layer) .studio-scene-arrow:disabled svg {
+  opacity: .4;
+}
+
+/* The WebGL canvas already clears transparently. Hide the fallback poster only
+   after its model is ready, so open space around the model can show the rain. */
+body:has(.prototype-rain-layer) .studio-canvas .world-enhancement[data-ready="true"] {
+  background: transparent;
+}
+
+body:has(.prototype-rain-layer) .studio-canvas:has(.world-enhancement[data-ready="true"]) .world-poster {
+  visibility: hidden;
+}
+
+@media (max-width: 699px) {
+  body:has(.prototype-rain-layer) :is(
+    .studio-professional,
+    .studio-caption,
+    .studio-mobile-hud,
+    .denkpause-mobile-stage,
+    .max-container > :not(script, hr, .btn)
+  ) {
+    box-shadow: 0 0 0 6px var(--paper);
+  }
 }
 
 body:has(.prototype-rain-tools) .footer {

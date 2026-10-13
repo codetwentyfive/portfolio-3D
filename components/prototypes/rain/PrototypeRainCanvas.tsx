@@ -30,11 +30,11 @@ type Scene = {
 };
 
 const GLYPHS = "abcdefghjkmnprstuvxyz0123456789.:/{}[]+−";
-const FRAGMENTS = ["await", "return", "{ }", "[ ]", "=>", "0 · 1", "...", "()", "const", "if", "</>"];
-const COLORS = ["#65796f", "#71818a", "#83877d"];
+const FRAGMENTS = ["await", "return", "{}", "[]", "=>", "0 · 1", "...", "()", "const", "if", "</>"];
+const COLORS = ["#405b4c", "#465d69", "#626b5b"];
 const FONT = '"SFMono-Regular", Consolas, "Liberation Mono", monospace';
 
-// Throwaway study: sparse margin trails, an open glyph field, and horizontal syntax.
+// Throwaway study: margin trails, an open glyph field, and vertical words with paired symbols.
 function seed(value: number) {
   let n = Math.imul(value ^ (value >>> 16), 0x45d9f3b);
   n = Math.imul(n ^ (n >>> 16), 0x45d9f3b);
@@ -72,18 +72,20 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
     function populate() {
       const g = gravity();
       const count = variant === "margin"
-        ? width < 700 ? 8 : 16
+        ? width < 700 ? 10 : 18
         : variant === "field"
-          ? Math.max(17, Math.min(56, Math.floor((width * height) / 25000)))
-          : width < 700 ? 13 : 26;
+          ? Math.max(24, Math.min(64, Math.floor((width * height) / 18000)))
+          : width < 700 ? 22 : 36;
       const drops = Array.from({ length: count }, (_, i): Drop => {
         const key = variant === "margin" ? i * 173 + 11 : variant === "field" ? i * 251 + 53 : i * 307 + 97;
         const depth = seed(key + 1);
-        const size = (variant === "syntax" ? 10 : 11) + depth * 3;
+        const size = (variant === "syntax" ? 13 : 12) + depth * 3;
+        const fragment = FRAGMENTS[Math.floor(seed(key + 4) * FRAGMENTS.length)];
         const length = variant === "margin"
           ? 5 + Math.floor(seed(key + 2) * 9)
-          : variant === "field" ? 1 + Math.floor(seed(key + 4) * 4) : 1;
-        const speed = 10 + depth * (variant === "margin" ? 8 : variant === "field" ? 7 : 6);
+          : variant === "field" ? 1 + Math.floor(seed(key + 4) * 4)
+            : /^[a-z]+$/.test(fragment) ? fragment.length : 1;
+        const speed = 16 + depth * (variant === "margin" ? 12 : 10);
         const right = i >= count / 2;
         const lane = i % (count / 2);
         const x = variant === "margin"
@@ -93,11 +95,14 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
           : 14 + seed(key + 2) * Math.max(0, width - (variant === "syntax" ? 72 : 28));
         return {
           key, depth, size, length, speed, x,
-          y: seed(key + 3) * height,
+          // Low-discrepancy bands populate the full height from the first frame.
+          y: ((i * 0.61803398875 + seed(key + 3) * 0.03) % 1) * height,
           vx: g.x * speed,
           vy: g.y * speed,
           heading: Math.hypot(g.x, g.y) > 0.01 ? Math.atan2(g.y, g.x) : Math.PI / 2,
-          padding: variant === "margin" ? length * size * 1.65 + 24 : variant === "field" ? length * 18 + 24 : 80,
+          padding: variant === "margin" ? length * size * 1.65 + 24
+            : variant === "field" ? length * 18 + 24
+              : Math.max(80, (length - 1) * size * 1.4 + size + 24),
         };
       });
       sceneRef.current = { variant, width, height, drops };
@@ -132,21 +137,16 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
       }
     }
 
-    function inkAt(x: number, y: number) {
-      const relativeX = x / width;
-      // Leave a quiet reading area; the thin perimeter carries almost all the ink.
-      const left = 1 - smooth(0.035, width < 700 ? 0.16 : 0.15, relativeX);
-      const right = smooth(width < 700 ? 0.84 : 0.75, 0.985, relativeX);
-      const perimeter = Math.max(left, right);
-      const verticalFade = smooth(0, 100, y) * (1 - smooth(height - 120, height, y));
-      return (0.12 + 0.88 * perimeter) * verticalFade;
+    function inkAt(y: number) {
+      // Actual paper surfaces protect the text; negative space keeps visible ink.
+      return smooth(0, 48, y) * (1 - smooth(height - 64, height, y));
     }
 
     function glyph(text: string, x: number, y: number, size: number, opacity: number, color: number) {
       if (!context || y < -size || y > height + size) return;
-      context.font = `${size}px ${FONT}`;
+      context.font = `500 ${size}px ${FONT}`;
       context.fillStyle = COLORS[color % COLORS.length];
-      context.globalAlpha = opacity * inkAt(x, y);
+      context.globalAlpha = opacity * inkAt(y);
       context.fillText(text, x, y);
     }
 
@@ -167,19 +167,29 @@ export default function PrototypeRainCanvas({ variant, paused, gravityRef }: Pro
             const character = GLYPHS[Math.floor(seed(key + row * 31 + 17) * GLYPHS.length)];
             const tailFade = 0.28 + 0.72 * Math.pow(1 - row / length, 1.2);
             const distance = row * size * 1.65;
-            glyph(character, x - dx * distance, y - dy * distance, size, (0.38 + depth * 0.16) * tailFade, i);
+            glyph(character, x - dx * distance, y - dy * distance, size, (0.60 + depth * 0.18) * tailFade, i);
           }
         } else if (variant === "field") {
           // Separated glyph clusters turn as a constellation with lateral breathing room.
           for (let part = 0; part < length; part++) {
             const character = GLYPHS[Math.floor(seed(key + part * 43 + 5) * GLYPHS.length)];
             const lateral = part === 0 ? 0 : (seed(key + part * 67) - 0.5) * 21;
-            glyph(character, x - dx * part * 18 + dy * lateral, y - dy * part * 18 - dx * lateral, size, (0.34 + depth * 0.14) * (1 - part * 0.17), i);
+            glyph(character, x - dx * part * 18 + dy * lateral, y - dy * part * 18 - dx * lateral, size, (0.54 + depth * 0.16) * (1 - part * 0.17), i);
           }
         } else {
-          // Syntax remains horizontal while its whole fragment falls toward the ground.
           const fragment = FRAGMENTS[Math.floor(seed(key + 4) * FRAGMENTS.length)];
-          glyph(fragment, x, y, size, 0.36 + depth * 0.14, i);
+          if (/^[a-z]+$/.test(fragment)) {
+            // Read words top to bottom during ordinary downward fall. The last
+            // letter leads; the word's trail bends with gravity, its glyphs upright.
+            for (let part = 0; part < fragment.length; part++) {
+              const distance = (fragment.length - 1 - part) * size * 1.4;
+              const tailFade = 0.72 + 0.28 * part / Math.max(1, fragment.length - 1);
+              glyph(fragment[part], x - dx * distance, y - dy * distance, size, (0.60 + depth * 0.18) * tailFade, i);
+            }
+          } else {
+            // Paired punctuation and small symbol groups stay together horizontally.
+            glyph(fragment, x, y, size, 0.60 + depth * 0.18, i);
+          }
         }
       }
 
