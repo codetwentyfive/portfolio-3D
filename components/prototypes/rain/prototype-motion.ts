@@ -22,17 +22,18 @@ export function cameraTilt(neutral: PhonePose, current: PhonePose): CameraTilt {
   const horizontal = Math.atan2(dot(axes[0]), dot(axes[2]));
   const vertical = Math.atan2(-dot(axes[1]), dot(axes[2]));
   const angle = current.screen * radians;
-  // A small dead zone removes hand tremor; 25° of phone tilt reaches the limit.
+  // A small dead zone removes hand tremor; 18° of phone tilt reaches the limit.
+  // Wider camera travel makes a comfortable wrist movement visibly steer the view.
   const response = (value: number) => Math.abs(value) <= 0.4 * radians ? 0
-    : Math.sign(value) * Math.min(1, (Math.abs(value) - 0.4 * radians) / (24.6 * radians));
+    : Math.sign(value) * Math.min(1, (Math.abs(value) - 0.4 * radians) / (17.6 * radians));
   return {
-    x: response(Math.cos(angle) * horizontal + Math.sin(angle) * vertical) * 8 * radians,
-    y: response(-Math.sin(angle) * horizontal + Math.cos(angle) * vertical) * 4 * radians,
+    x: response(Math.cos(angle) * horizontal + Math.sin(angle) * vertical) * 18 * radians,
+    y: response(-Math.sin(angle) * horizontal + Math.cos(angle) * vertical) * 10 * radians,
   };
 }
 
 export function easeCameraTilt(current: CameraTilt, target: CameraTilt, delta: number) {
-  const amount = 1 - Math.exp(-Math.max(0, Math.min(delta, 0.05)) / 0.28);
+  const amount = 1 - Math.exp(-Math.max(0, Math.min(delta, 0.05)) / 0.2);
   current.x += (target.x - current.x) * amount;
   current.y += (target.y - current.y) * amount;
   const moving = Math.abs(target.x - current.x) + Math.abs(target.y - current.y) > 0.00005;
