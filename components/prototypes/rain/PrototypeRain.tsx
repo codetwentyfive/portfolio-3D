@@ -104,7 +104,7 @@ export default function PrototypeRain() {
           <aside className="prototype-rain-switcher" aria-label="Rain prototype controls">
             <div className="prototype-rain-caption">
               <span>Rain study</span>
-              <span>{original ? "Original page" : reducedMotion ? "Still · reduced motion" : paused ? "Still" : "In motion"}</span>
+              <span>{original ? "Rain hidden" : reducedMotion ? "Still · reduced motion" : paused ? "Still" : "In motion"}</span>
             </div>
             <div className="prototype-rain-controls">
               <button type="button" onClick={() => cycle(-1)} aria-label="Previous rain composition">←</button>
@@ -119,7 +119,7 @@ export default function PrototypeRain() {
                 className="prototype-rain-text-button"
                 aria-pressed={original}
                 onClick={() => setOriginal(!original)}
-              >{original ? "Show rain" : "Original"}</button>
+              >{original ? "Show rain" : "Hide rain"}</button>
             </div>
           </aside>
         )}
