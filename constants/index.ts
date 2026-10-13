@@ -40,6 +40,7 @@ import {
   prisma,
   postgresql,
   bewirken,
+  krz,
   claude,
   cursor,
   openai,
@@ -219,6 +220,48 @@ export const skills: Skill[] = [
 ];
 
 export const experiences: Experience[] = [
+  {
+    title: {
+      en: "Python Developer - Backend & Data Engineering",
+      de: "Python-Entwickler - Backend & Data Engineering",
+    },
+    company_name: {
+      en: "Stiftung Kirchliches Rechenzentrum Südwestdeutschland",
+      de: "Stiftung Kirchliches Rechenzentrum Südwestdeutschland",
+    },
+    icon: krz,
+    iconBg: "#e9eae5",
+    date: {
+      en: "August 2026 - present",
+      de: "August 2026 - heute",
+    },
+    points: [
+      {
+        en: "Design, development and maintenance of backend services and APIs with Python and FastAPI",
+        de: "Konzeption, Entwicklung und Wartung von Backend-Services und APIs mit Python und FastAPI",
+      },
+      {
+        en: "Development and ongoing maintenance of business-critical ETL processes and data pipelines",
+        de: "Entwicklung und Weiterentwicklung geschäftskritischer ETL-Prozesse und Datenpipelines",
+      },
+      {
+        en: "Profiling Python workflows and optimizing SQL queries and database integration with Oracle and PostgreSQL",
+        de: "Profiling von Python-Workflows sowie Optimierung von SQL-Abfragen und Datenbankanbindungen mit Oracle und PostgreSQL",
+      },
+      {
+        en: "Testing and containerizing applications with Docker, working with DevOps on deployment and operation in GitLab and Nomad",
+        de: "Tests und Containerisierung von Anwendungen mit Docker sowie Zusammenarbeit mit DevOps bei Bereitstellung und Betrieb in GitLab und Nomad",
+      },
+      {
+        en: "Second- and third-level technical support and service request coordination through Jira and ServiceNow",
+        de: "Technischer Support im 2nd und 3rd Level sowie Koordination von Serviceanfragen über Jira und ServiceNow",
+      },
+      {
+        en: "Technical design of data solutions and structured documentation in the internal wiki and Jira",
+        de: "Technische Konzeption von Datenlösungen und strukturierte Dokumentation im internen Wiki und in Jira",
+      },
+    ],
+  },
   {
     title: {
       en: "Full Stack Developer",

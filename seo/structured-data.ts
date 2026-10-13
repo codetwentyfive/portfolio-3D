@@ -19,10 +19,10 @@ export const personSchema: StructuredData = {
   alternateName: ["Chinggis Zwecker E.", "Chinggis Zwecker", "Chingis Zwecker"],
   url: siteUrl,
   image: ogImage,
-  jobTitle: "Senior Product Engineer",
+  jobTitle: "Python Developer - Backend & Data Engineering",
   worksFor: {
     "@type": "Organization",
-    name: "beWirken",
+    name: "Stiftung Kirchliches Rechenzentrum Südwestdeutschland",
   },
   address: {
     "@type": "PostalAddress",
