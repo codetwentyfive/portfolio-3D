@@ -12,6 +12,7 @@ import SiteFooter from "@/components/SiteFooter";
 import GlassFilters from "@/components/GlassFilters";
 import JsonLd from "@/components/JsonLd";
 import PrototypeRain from "@/components/prototypes/rain/PrototypeRain";
+import PrototypeMotionProvider from "@/components/prototypes/rain/PrototypeMotionProvider";
 import { seoConfig } from "@/seo/config";
 import { personSchema, websiteSchema } from "@/seo/structured-data";
 import "../globals.css";
@@ -76,15 +77,17 @@ export default async function LocaleLayout(
         <GlassFilters />
         <NextIntlClientProvider messages={messages}>
           <AudioProvider>
-            <Suspense fallback={null}>
-              <PrototypeRain />
-            </Suspense>
-            <main className="min-h-screen">
-              <Navbar />
-              {children}
-              <AudioPlayer />
-              <SiteFooter />
-            </main>
+            <PrototypeMotionProvider>
+              <Suspense fallback={null}>
+                <PrototypeRain />
+              </Suspense>
+              <main className="min-h-screen">
+                <Navbar />
+                {children}
+                <AudioPlayer />
+                <SiteFooter />
+              </main>
+            </PrototypeMotionProvider>
           </AudioProvider>
         </NextIntlClientProvider>
       </body>

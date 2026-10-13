@@ -1,10 +1,11 @@
 "use client";
 
 /* eslint-disable react/no-unknown-property */
-import { Suspense, useEffect, useRef, type ReactNode } from "react";
+import { Suspense, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
+import { easeCameraTilt, type PrototypeMotion } from "@/components/prototypes/rain/prototype-motion";
 import { planets } from "./planet-data";
 import {
   advance,
@@ -28,6 +29,7 @@ export default function WorldTurntable({
   orbitStep,
   onHoldChange,
   zoomed,
+  cameraMotion,
 }: {
   children: ReactNode;
   motion: boolean;
@@ -36,12 +38,26 @@ export default function WorldTurntable({
   orbitStep: number;
   onHoldChange: (held: boolean) => void;
   zoomed: boolean;
+  cameraMotion: PrototypeMotion | null;
 }) {
   const group = useRef<THREE.Group>(null);
   const state = useRef(createTurntable());
   const time = useRef(0);
   const previousStep = useRef(orbitStep);
   const { gl, invalidate, camera, size, setDpr } = useThree();
+  const rig = useMemo(() => ({
+    tilt: { x: 0, y: 0 },
+    centre: new THREE.Vector3(),
+    base: new THREE.Spherical(),
+    orbit: new THREE.Spherical(),
+    offset: new THREE.Vector3(),
+  }), []);
+
+  useEffect(() => {
+    invalidate();
+    // Demand-rendered worlds only wake for sensor samples or settling inertia.
+    if (motion) return cameraMotion?.subscribe(invalidate);
+  }, [cameraMotion, invalidate, motion]);
 
   useEffect(() => {
     const landscape = planets[index].kind === "shop";
@@ -56,12 +72,14 @@ export default function WorldTurntable({
       .set(denkpause ? 5.2 : 5.8, landscape ? 6.2 : denkpause ? 4.65 : courtyard ? 5.5 : 4.15, 8.7)
       .normalize()
       .multiplyScalar(distance * (zoomed ? 0.9 : 1));
-    camera.lookAt(0, denkpause ? -0.45 : 0.15, 0);
+    rig.centre.set(0, denkpause ? -0.45 : 0.15, 0);
+    rig.base.setFromVector3(rig.offset.copy(camera.position).sub(rig.centre));
+    camera.lookAt(rig.centre);
     setDpr(
       Math.min(window.devicePixelRatio || 1, size.width < 768 ? 1.25 : 1.5),
     );
     invalidate();
-  }, [camera, index, size.width, size.height, zoomed, setDpr, invalidate]);
+  }, [camera, index, size.width, size.height, zoomed, setDpr, invalidate, rig]);
 
   useEffect(() => {
     const canvas = gl.domElement;
@@ -178,6 +196,17 @@ export default function WorldTurntable({
 
   useFrame((_, delta) => {
     if (!group.current) return;
+    // Freeze the camera during a gesture so the model stays under the finger.
+    // Releasing blends toward the latest phone pose; stop/pause eases to centre.
+    if (!document.hidden && state.current.pointer === null) {
+      const target = motion && cameraMotion ? cameraMotion.target : { x: 0, y: 0 };
+      if (easeCameraTilt(rig.tilt, target, delta)) invalidate();
+    }
+    rig.orbit.copy(rig.base);
+    rig.orbit.theta += rig.tilt.x;
+    rig.orbit.phi -= rig.tilt.y;
+    camera.position.copy(rig.offset.setFromSpherical(rig.orbit)).add(rig.centre);
+    camera.lookAt(rig.centre);
     advance(state.current, delta, motion && planets[index].kind !== "denkpause");
     if (motion && planets[index].kind !== "denkpause" && state.current.pointer === null)
       time.current += Math.min(delta, 0.05);

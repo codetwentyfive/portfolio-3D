@@ -109,7 +109,8 @@ body:has(.prototype-rain-tools) .footer {
 }
 
 .prototype-rain-motion {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: 12px;
   padding: 5px 12px;
@@ -130,7 +131,14 @@ body:has(.prototype-rain-tools) .footer {
 
 .prototype-rain-motion button:disabled { opacity: .5; }
 .prototype-rain-motion button:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
-.prototype-rain-motion p { margin: 0; font-size: 10px; line-height: 1.5; }
+.prototype-rain-motion p {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin: -8px 0 5px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.prototype-rain-motion button:first-child { justify-self: start; }
 
 .prototype-rain-switcher {
   margin-top: 7px;

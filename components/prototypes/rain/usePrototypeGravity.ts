@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePrototypeMotion } from "./PrototypeMotionProvider";
 
 export type PrototypeGravityStatus =
   | "off" | "requesting" | "waiting" | "active"
@@ -31,6 +32,7 @@ function projectGravity(beta: number, gamma: number) {
 }
 
 export default function usePrototypeGravity(suspended: boolean) {
+  const cameraMotion = usePrototypeMotion();
   const gravityRef = useRef({ x: 0, y: 1 });
   const [status, setStatus] = useState<PrototypeGravityStatus>("off");
   const [supported, setSupported] = useState<boolean | null>(null);
@@ -55,9 +57,10 @@ export default function usePrototypeGravity(suspended: boolean) {
     pendingRef.current = false;
     enabledRef.current = false;
     gravityRef.current = { x: 0, y: 1 };
+    cameraMotion?.reset();
     setEnabled(false);
     setStatus("off");
-  }, []);
+  }, [cameraMotion]);
 
   // Call directly from a click handler: Safari needs that transient activation.
   // Relative orientation needs no compass, location, or motion permission call.
@@ -100,6 +103,7 @@ export default function usePrototypeGravity(suspended: boolean) {
   }, []);
 
   useEffect(() => {
+    cameraMotion?.reset();
     if (!enabled || suspended) return;
 
     let attached = false;
@@ -108,6 +112,7 @@ export default function usePrototypeGravity(suspended: boolean) {
     let latest: { beta: number; gamma: number } | undefined;
 
     const onRotation = () => {
+      cameraMotion?.reset();
       if (latest && enabledRef.current) {
         gravityRef.current = projectGravity(latest.beta, latest.gamma);
       }
@@ -116,7 +121,13 @@ export default function usePrototypeGravity(suspended: boolean) {
       if (!enabledRef.current || event.beta === null || event.gamma === null
         || !Number.isFinite(event.beta) || !Number.isFinite(event.gamma)) return;
       latest = { beta: event.beta, gamma: event.gamma };
-      onRotation();
+      gravityRef.current = projectGravity(latest.beta, latest.gamma);
+      cameraMotion?.update({
+        ...latest,
+        alpha: event.alpha !== null && Number.isFinite(event.alpha) ? event.alpha : 0,
+        screen: window.screen.orientation?.angle
+          ?? (window as Window & { orientation?: number }).orientation ?? 0,
+      });
       if (!received) {
         received = true;
         window.clearTimeout(timer);
@@ -124,6 +135,7 @@ export default function usePrototypeGravity(suspended: boolean) {
       }
     };
     const detach = () => {
+      cameraMotion?.reset();
       window.clearTimeout(timer);
       window.removeEventListener("deviceorientation", onOrientation);
       window.removeEventListener("orientationchange", onRotation);
@@ -157,7 +169,7 @@ export default function usePrototypeGravity(suspended: boolean) {
       detach();
       document.removeEventListener("visibilitychange", syncVisibility);
     };
-  }, [enabled, suspended]);
+  }, [enabled, suspended, cameraMotion]);
 
-  return { gravityRef, status, supported, enabled, enable, disable };
+  return { gravityRef, status, supported, enabled, enable, disable, recenter: cameraMotion?.recenter };
 }

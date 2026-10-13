@@ -33,7 +33,7 @@ export default function PrototypeRain() {
           off: "Optional. Your browser may ask for permission.",
           requesting: "Waiting for your browser's permission…",
           waiting: "Tilt your phone gently to start.",
-          active: "Gravity on. Tilt slowly; lay flat to let it settle.",
+          active: "Tilt gently to move the view and rain. Recenter resets your grip.",
           denied: "Permission declined. Ordinary rain is still on.",
           unavailable: "No sensor signal. Ordinary rain is still on.",
           insecure: "Phone motion needs HTTPS. Ordinary rain is still on.",
@@ -93,6 +93,12 @@ export default function PrototypeRain() {
             disabled={gravity.status === "requesting" || (!gravity.enabled && (reducedMotion || paused || original))}
           >{gravity.status === "requesting" ? "Asking permission…" : gravity.enabled ? "Stop phone motion" : "Use phone motion"}</button>
           <p id="rain-motion-status" role="status">{motionMessage}</p>
+          <button
+            type="button"
+            onClick={gravity.recenter}
+            disabled={gravity.status !== "active" || reducedMotion || paused || original}
+            title="Use your current phone position as the centre of the view"
+          >Recenter</button>
           <button
             type="button"
             disabled={reducedMotion || original}

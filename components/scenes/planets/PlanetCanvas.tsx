@@ -19,6 +19,7 @@ import ProjectDiorama from "./ProjectDiorama";
 import { planets, type GerStyle } from "./planet-data";
 import WorldTurntable from "./WorldTurntable";
 import WorldPreparation from "./WorldPreparation";
+import { usePrototypeMotion } from "@/components/prototypes/rain/PrototypeMotionProvider";
 
 export function clearDenkpauseAsset() {
   useGLTF.clear(`/3d/worlds/denkpause-v${worldVersions.denkpause}.glb`);
@@ -196,6 +197,7 @@ export default function PlanetCanvas({
   onPrepared: (index: number) => void;
   onFailure: () => void;
 } & PlayProps) {
+  const cameraMotion = usePrototypeMotion();
   const [available, setAvailable] = useState<boolean | null>(null);
   useEffect(() => {
     const probe = document.createElement("canvas");
@@ -305,6 +307,7 @@ export default function PlanetCanvas({
       </Environment>
       </>}
       <WorldTurntable
+        cameraMotion={cameraMotion}
         zoomed={zoomed}
         index={index}
         resetKey={resetKey}
