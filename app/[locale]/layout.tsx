@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -11,6 +11,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import SiteFooter from "@/components/SiteFooter";
 import GlassFilters from "@/components/GlassFilters";
 import JsonLd from "@/components/JsonLd";
+import PrototypeRain from "@/components/prototypes/rain/PrototypeRain";
 import { seoConfig } from "@/seo/config";
 import { personSchema, websiteSchema } from "@/seo/structured-data";
 import "../globals.css";
@@ -75,6 +76,9 @@ export default async function LocaleLayout(
         <GlassFilters />
         <NextIntlClientProvider messages={messages}>
           <AudioProvider>
+            <Suspense fallback={null}>
+              <PrototypeRain />
+            </Suspense>
             <main className="min-h-screen">
               <Navbar />
               {children}

@@ -1,0 +1,176 @@
+/* Throwaway rain study. Paper → rain (0) → portfolio (1) → controls (100). */
+body:has(.prototype-rain-layer) {
+  isolation: isolate;
+}
+
+.prototype-rain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+}
+
+.prototype-rain-layer[data-original="true"] {
+  visibility: hidden;
+}
+
+.prototype-rain-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+body:has(.prototype-rain-layer) main {
+  position: relative;
+  z-index: 1;
+}
+
+/* The home gallery keeps its scene surfaces, while the page's paper becomes open. */
+body:has(.prototype-rain-layer) .studio-explorer {
+  background-color: transparent;
+}
+
+body:has(.prototype-rain-tools) .footer {
+  padding-bottom: 160px;
+}
+
+.prototype-rain-tools {
+  position: fixed;
+  z-index: 100;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(500px, calc(100vw - 24px));
+  font-family: var(--font-archivo), sans-serif;
+}
+
+.prototype-rain-motion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 12px;
+  color: #46534a;
+  background: #e9eae5;
+  border: 1px solid #c6cdc2;
+  border-radius: 10px;
+}
+
+.prototype-rain-motion button {
+  flex-shrink: 0;
+  min-height: 44px;
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.prototype-rain-motion button:disabled { opacity: .5; }
+.prototype-rain-motion button:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+.prototype-rain-motion p { margin: 0; font-size: 10px; line-height: 1.5; }
+
+.prototype-rain-switcher {
+  margin-top: 7px;
+  padding: 11px 12px 5px;
+  color: #e9eae5;
+  background: #29302c;
+  border: 1px solid #515c53;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgb(32 36 33 / 12%);
+}
+
+.prototype-rain-caption {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #a8b6ab;
+}
+
+.prototype-rain-controls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.prototype-rain-controls button {
+  flex-shrink: 0;
+  min-width: 38px;
+  min-height: 44px;
+  border-radius: 5px;
+  color: inherit;
+  transition: background-color 120ms;
+}
+
+.prototype-rain-controls button:hover {
+  background: rgb(255 255 255 / 7%);
+}
+
+.prototype-rain-controls button:focus-visible {
+  outline: 1px solid #d9e2cc;
+  outline-offset: 1px;
+}
+
+.prototype-rain-controls button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.prototype-rain-controls .prototype-rain-text-button {
+  padding: 0 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.prototype-rain-current {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 0;
+}
+
+.prototype-rain-current strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.prototype-rain-current strong span {
+  margin-right: 5px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  color: #a8b6ab;
+}
+
+.prototype-rain-current small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #a8b6ab;
+}
+
+.prototype-rain-divider {
+  height: 24px;
+  width: 1px;
+  margin: 0 4px;
+  background: #515c53;
+}
+
+@media (max-width: 440px) {
+  .prototype-rain-switcher { padding-inline: 7px; }
+  .prototype-rain-controls { gap: 0; }
+  .prototype-rain-controls button { min-width: 30px; }
+  .prototype-rain-controls .prototype-rain-text-button { padding-inline: 6px; font-size: 10px; }
+  .prototype-rain-divider { margin-inline: 3px; }
+  .prototype-rain-current small { font-size: 8px; }
+}
+
+@media print {
+  .prototype-rain-layer, .prototype-rain-tools { display: none; }
+}
