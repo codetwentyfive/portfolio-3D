@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const base = new URL(process.env.BASE_URL || "http://127.0.0.1:3101");
 const canonicalOrigin = "https://www.chingis.dev";
 const personId = "https://chingis.dev/#person";
-const requiredArticles = ["self-hosted-ai-assistant", "vite-to-nextjs-migration"];
+const requiredArticles = ["self-hosted-ai-assistant", "vite-to-nextjs-migration", "faster-than-the-forecast"];
 const corePaths = ["", "/about", "/projects", "/projects/denkpause", "/services", "/blog", "/contact"];
 const failures = [];
 const snapshots = new Map();
@@ -56,7 +56,7 @@ try {
   }, await sitemapResponse.text());
   const urls = new Set(entries.map(({ url }) => url));
   assert.equal(urls.size, entries.length, "duplicate sitemap URLs");
-  assert.ok(entries.length >= 2 * (corePaths.length + requiredArticles.length), "expected both languages, all core pages and both articles");
+  assert.ok(entries.length >= 2 * (corePaths.length + requiredArticles.length), "expected both languages, all core pages and all required articles");
   for (const locale of ["de", "en"]) {
     for (const path of corePaths) assert.ok(urls.has(`${canonicalOrigin}/${locale}${path}`), `missing ${locale}${path}`);
     for (const slug of requiredArticles) assert.ok(urls.has(`${canonicalOrigin}/${locale}/blog/${slug}`), `missing ${locale}/${slug}`);

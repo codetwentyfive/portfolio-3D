@@ -13,6 +13,9 @@ export interface PostFrontmatter {
   dateModified?: string;
   image: string;
   imageAlt: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageCaption?: string;
   tags: string[];
 }
 
@@ -48,6 +51,16 @@ const parsePost = (slug: string, locale: Locale, raw: string, availableLocales: 
     typeof data.imageAlt !== "string" || !data.imageAlt.trim()) {
     throw new Error(`${file}: published articles require a representative image and imageAlt`);
   }
+  const hasImageDimensions = data.imageWidth !== undefined || data.imageHeight !== undefined;
+  if (hasImageDimensions && (
+    !Number.isInteger(data.imageWidth) || data.imageWidth <= 0 ||
+    !Number.isInteger(data.imageHeight) || data.imageHeight <= 0
+  )) {
+    throw new Error(`${file}: imageWidth and imageHeight must both be positive integers`);
+  }
+  if (data.imageCaption !== undefined && typeof data.imageCaption !== "string") {
+    throw new Error(`${file}: imageCaption must be a string when supplied`);
+  }
   return {
     slug,
     locale,
@@ -58,6 +71,9 @@ const parsePost = (slug: string, locale: Locale, raw: string, availableLocales: 
     dateModified,
     image: data.image.trim(),
     imageAlt: data.imageAlt.trim(),
+    imageWidth: data.imageWidth,
+    imageHeight: data.imageHeight,
+    imageCaption: data.imageCaption?.trim(),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     content,
   };

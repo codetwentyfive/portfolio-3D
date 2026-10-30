@@ -298,6 +298,14 @@ html {
   }
   .article-body {
     @apply mx-auto flex max-w-[68ch] flex-col gap-6 text-[17px] leading-[1.85] text-slate-700 sm:text-lg;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .article-body > * {
+    min-width: 0;
+  }
+  .article-body :where(h2, h3, [id]) {
+    scroll-margin-top: 1.5rem;
   }
   .article-body > p:first-of-type::first-letter {
     @apply float-left mr-2 mt-1 font-display text-7xl font-bold leading-[.8] text-ink;
@@ -332,6 +340,95 @@ html {
   }
   .article-body blockquote {
     @apply border-l-2 border-accent pl-6 font-display text-2xl font-medium;
+  }
+  .article-context {
+    @apply border-l-2 border-slate-400 bg-white/20 px-5 py-4 text-sm leading-relaxed text-slate-600;
+  }
+  .article-contents {
+    @apply border-y border-slate-300 py-4;
+  }
+  .article-contents summary {
+    @apply cursor-pointer py-2 font-mono text-xs font-medium uppercase tracking-[0.1em] text-ink;
+    list-style-position: inside;
+  }
+  .article-contents[open] summary {
+    @apply mb-4;
+  }
+  .article-body .article-contents ol {
+    @apply grid gap-x-8 gap-y-2 space-y-0 pl-1 text-sm leading-relaxed sm:grid-cols-2;
+  }
+  .article-contents a {
+    @apply inline-block py-1;
+  }
+  .article-stats {
+    @apply my-3 grid border-y border-slate-400 sm:grid-cols-3;
+  }
+  .article-body .article-stats > a {
+    @apply flex flex-col gap-3 border-b border-slate-300 px-4 py-6 text-ink no-underline last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0;
+  }
+  .article-stats strong {
+    @apply font-display text-4xl font-semibold leading-none tracking-tight text-accent;
+  }
+  .article-stats span {
+    @apply text-sm leading-relaxed text-slate-600;
+  }
+  .article-stats a:hover span {
+    @apply text-ink underline underline-offset-4;
+  }
+  .article-table {
+    @apply my-3 w-full max-w-full overflow-x-auto border-y border-slate-400;
+    overscroll-behavior-x: contain;
+  }
+  .article-table table {
+    @apply w-full min-w-[42rem] border-collapse text-left text-sm leading-relaxed;
+  }
+  .article-table caption {
+    @apply pb-4 pt-5 text-left font-mono text-xs font-medium uppercase tracking-[0.08em] text-ink;
+    caption-side: top;
+  }
+  .article-table th {
+    @apply border-b border-slate-400 px-4 py-4 font-semibold text-ink;
+  }
+  .article-table td {
+    @apply border-b border-slate-300 px-4 py-4 align-top;
+  }
+  .article-table th:first-child,
+  .article-table td:first-child {
+    @apply pl-0;
+    width: 30%;
+  }
+  .article-table th:last-child,
+  .article-table td:last-child {
+    @apply pr-0;
+    width: 36%;
+  }
+  .article-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .article-table tbody tr:nth-child(even) {
+    @apply bg-white/20;
+  }
+  .article-illustration {
+    @apply my-5;
+  }
+  .article-illustration img {
+    @apply block h-auto w-full rounded-sm;
+  }
+  .article-illustration figcaption {
+    @apply mt-3 text-sm leading-relaxed text-slate-500;
+  }
+  .article-body sup {
+    @apply font-mono text-xs;
+  }
+  .article-body sup a {
+    @apply px-0.5 no-underline;
+  }
+  .article-body .article-sources {
+    @apply space-y-4 text-sm leading-relaxed;
+    overflow-wrap: anywhere;
+  }
+  .article-sources li::marker {
+    @apply font-mono text-xs text-slate-500;
   }
 
   .planet-stage canvas {

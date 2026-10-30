@@ -39,6 +39,7 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPost(slug, locale);
   if (!post) notFound();
   if (post.locale !== locale) permanentRedirect(`/${post.locale}/blog/${post.slug}`);
+  const imageCaption = post.imageCaption ?? post.imageAlt;
 
   return (
     <section className="max-container">
@@ -68,8 +69,8 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
           {post.image && (
             <figure className="mx-auto mt-10 max-w-[820px]">
-              <Image src={post.image} alt={post.imageAlt ?? ""} width={1200} height={760} sizes="(max-width: 860px) 90vw, 820px" priority className="h-auto w-full rounded-sm" />
-              {post.imageAlt && <figcaption className="mt-3 text-sm leading-relaxed text-slate-500">{post.imageAlt}</figcaption>}
+              <Image src={post.image} alt={post.imageAlt} width={post.imageWidth ?? 1200} height={post.imageHeight ?? 760} sizes="(max-width: 860px) 90vw, 820px" priority className="h-auto w-full rounded-sm" />
+              {imageCaption && <figcaption className="mt-3 text-sm leading-relaxed text-slate-500">{imageCaption}</figcaption>}
             </figure>
           )}
         </header>

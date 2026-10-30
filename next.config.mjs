@@ -26,7 +26,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["three"],
   outputFileTracingIncludes: {
-    "/og/**/*": ["./public/images/worlds/**/*", "./content/blog/**/*"],
+    "/og/**/*": ["./public/images/worlds/**/*", "./public/images/blog/**/*", "./content/blog/**/*"],
     "/llms.txt": ["./content/blog/**/*"],
     "/llms-full.txt": ["./content/blog/**/*"],
   },
