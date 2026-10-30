@@ -37,7 +37,7 @@ try {
       };
     });
     assert.equal(reading.figures,3);
-    assert.equal(reading.sources,16);
+    assert.equal(reading.sources,5);
     assert.equal(reading.rows,11);
     assert.equal(reading.columns,3);
     assert.equal(reading.rowHeaders,11);
@@ -46,6 +46,10 @@ try {
     assert.equal(reading.date,'2026-10-30');
     assert.match(reading.note,/September 2026/);
     assert.equal(reading.leakedSyntax,false);
+    assert.equal(await page.locator('#career-map').getAttribute('open'),null,'career table starts optional');
+    await page.locator('#career-map summary').focus();
+    await page.keyboard.press('Enter');
+    assert.notEqual(await page.locator('#career-map').getAttribute('open'),null,'career table opens by keyboard');
     for (const img of await page.locator('article img').all()) {
       await img.scrollIntoViewIfNeeded();
       await img.evaluate(img=>img.decode());
@@ -57,10 +61,10 @@ try {
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${locale} overflows at ${width}px`);
       const hero = await page.locator('article header img').evaluate(img=>({ratio:img.clientWidth/img.clientHeight,natural:img.naturalWidth/img.naturalHeight}));
       assert.ok(Math.abs(hero.ratio-hero.natural)<0.02,'hero aspect ratio');
-      await page.locator('.article-contents summary').click();
-      await page.locator('.article-contents a[href="#the-builder"]').click();
+      await page.locator('#article-contents summary').click();
+      await page.locator('#article-contents a[href="#the-builder"]').click();
       assert.equal(new URL(page.url()).hash,'#the-builder');
-      await page.locator('.article-contents summary').click();
+      await page.locator('#article-contents summary').click();
       if (width<640) {
         assert.ok(await page.locator('.article-table').evaluate(n=>n.scrollWidth>n.clientWidth),'small-screen table scrolls internally');
         await page.locator('.article-table').evaluate(n=>n.scrollLeft=n.scrollWidth);
@@ -71,7 +75,6 @@ try {
         await page.evaluate(()=>window.scrollTo(0,0));
         await page.screenshot({path:`${shotDir}/${locale}-${width}-top.png`});
         await page.locator('.article-table').screenshot({path:`${shotDir}/${locale}-${width}-table.png`});
-        await page.locator('.article-stats').screenshot({path:`${shotDir}/${locale}-${width}-stats.png`});
       }
     }
     await page.locator('#cite-1-1 a').click();
@@ -79,7 +82,7 @@ try {
     await page.locator('#source-1 a[href="#cite-1-1"]').click();
     assert.equal(new URL(page.url()).hash,'#cite-1-1');
     assert.deepEqual(errors,[],'browser runtime errors');
-    console.log(`PASS ${locale}: blog entry, 3 illustrations, 16 sources/backlinks, 11 career rows, contents, accurate dates, 1440/390/320px layouts`);
+    console.log(`PASS ${locale}: blog entry, 3 illustrations, 5 sources/backlinks, 11 optional career rows, contents, accurate dates, 1440/390/320px layouts`);
     await context.close();
   }
 } finally { await browser.close(); }

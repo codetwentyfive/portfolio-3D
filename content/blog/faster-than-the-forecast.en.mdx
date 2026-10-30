@@ -1,7 +1,8 @@
 ---
 title: "Faster Than the Forecast"
-description: "How AI is changing IT work: a personal essay on building, maintaining, verifying, shaping and operating software—and how people learn those skills."
+description: "AI writes more of my code. I still have to make it work. Five responsibilities changing IT jobs, and what that means for people starting out."
 date: "2026-10-30"
+dateModified: "2026-10-30"
 image: "/images/blog/faster-than-the-forecast/01-shared-workshop.webp"
 imageAlt: "Five coworkers build, inspect, repair, plan, and operate a shared computer system in a newspaper-comic workshop."
 imageCaption: "In a small organization, five kinds of work share one bench. Illustration generated with AI."
@@ -10,67 +11,128 @@ imageHeight: 941
 tags: ["AI", "Software Engineering", "Future of Work"]
 ---
 
-<aside className="article-context">Written in September 2026 from my work at beWirken. First published on October 30, 2026. The figures below describe the periods stated in the sources.</aside>
+<aside className="article-context">A reflection from September 2026, first published on October 30, 2026.</aside>
 
-In February 2025 I started as the developer at beWirken, a small non-profit in Germany that works on school development and democracy education. The same month, Anthropic released the first research preview of Claude Code. I did not notice the coincidence at the time. I do now.
+I used to type most of my code. Now I read it.
 
-My job description covers development for client projects, maintenance of the organization's IT infrastructure, advice on IT security, and the AI strategy. In practice that means a WordPress shop, a Moodle server, a Django application, a couple of Next.js tools, a HubSpot integration, and the servers under all of it. On paper it is one title. In practice it is five jobs. I build. I keep things alive. I check what can be trusted. I help decide what should exist. I run what is live.
+An AI coding tool writes the first version. I explain what we need, review what it built, and decide whether it goes live. That shift happened within nineteen months of starting at beWirken, a German nonprofit working on education.
 
-Nineteen months ago I typed most of my code. Today I read most of it. An agent drafts; I specify, review, test, and decide whether it ships. The change has been faster than I expected. But the most useful question is what happens to the rest of the job when writing the code becomes easier.
+The rest of the job stayed. The website, learning platform and servers still need to work. Someone still has to decide who can see which data. Generating the code doesn't settle any of that.
 
-<details className="article-contents">
+This is where I think IT work is heading: more responsibility for the whole system, even as typing becomes a smaller part of the day.
+
+<details className="article-contents" id="article-contents">
 <summary>In this article</summary>
 <ol>
-<li><a href="#how-fast-is-fast">How fast is fast</a></li>
-<li><a href="#the-job-market">The job market moved first at the bottom of the ladder</a></li>
-<li><a href="#five-responsibilities">What the work is turning into</a></li>
-<li><a href="#the-builder">01 / The builder</a></li>
-<li><a href="#the-maintainer">02 / The maintainer</a></li>
-<li><a href="#the-scanner">03 / The scanner</a></li>
-<li><a href="#the-idea-shaper">04 / The idea-shaper</a></li>
-<li><a href="#the-operator">05 / The operator</a></li>
-<li><a href="#what-i-am-doing">What I am doing about it</a></li>
+<li><a href="#how-fast-is-fast">The tools are already here</a></li>
+<li><a href="#the-job-market">Who gets to learn the job?</a></li>
+<li><a href="#five-responsibilities">Five kinds of work</a></li>
+<li><a href="#the-builder">The builder</a></li>
+<li><a href="#the-maintainer">The maintainer</a></li>
+<li><a href="#the-scanner">The scanner</a></li>
+<li><a href="#the-idea-shaper">The idea-shaper</a></li>
+<li><a href="#the-operator">The operator</a></li>
+<li><a href="#what-i-am-doing">What I'd focus on</a></li>
+<li><a href="#career-map">Where today's IT jobs fit</a></li>
 <li><a href="#sources">Sources</a></li>
 </ol>
 </details>
 
-<h2 id="how-fast-is-fast">How fast is fast</h2>
+<h2 id="how-fast-is-fast">The tools are already here</h2>
 
-One way to measure the pace comes from METR, a research group that compares AI performance with the time a skilled human needs for a task. In March 2025 it reported that the length of tasks frontier models could complete at a 50 percent success rate had doubled roughly every seven months since 2019, reaching about one hour.<sup id="cite-1-1"><a href="#source-1" aria-label="Source 1">[1]</a></sup> Its January 2026 update estimated a shorter doubling time of 89 days when looking only at models released since 2024.<sup id="cite-2-1"><a href="#source-2" aria-label="Source 2">[2]</a></sup> Its May report put the February–March 2026 public frontier at around twelve hours on this measure, with a very wide estimated interval of five to sixty-one hours.<sup id="cite-3-1"><a href="#source-3" aria-label="Source 3">[3]</a></sup>
+JetBrains surveyed more than 15,000 professional developers between May and July 2026. Ninety percent reported using coding agents at least weekly.<sup id="cite-1-1"><a href="#source-1" aria-label="Source 1">[1]</a></sup> That's widespread use among the people surveyed. It doesn't tell us whether the resulting software is better.
 
-Those figures suggest rapid progress, but they need careful reading. The 89-day estimate uses a shorter period and an updated task suite; METR's longer historical fit still gives roughly seven months. A 50 percent time horizon estimates the human task duration at which a model succeeds half the time; it does not measure twelve hours of reliable autonomous work. The estimates are uncertain, especially near the limits of the test.<sup id="cite-2-2"><a href="#source-2" aria-label="Source 2">[2]</a></sup><sup id="cite-4-1"><a href="#source-4" aria-label="Source 4">[4]</a></sup> For planning real work, the checks around an agent matter as much as its best result.
+That distinction gets lost whenever a working demo becomes a prediction that nobody will need developers. A demo usually shows what happens when everything goes right. A real service gets old data, missing permissions and someone clicking the button twice.
 
-Inside companies building these tools, the change is already visible in everyday engineering. Anthropic reports that Claude authored more than 80 percent of the lines merged into its production codebase as of May 2026.<sup id="cite-5-1"><a href="#source-5" aria-label="Source 5">[5]</a></sup> That is a company report about code volume, not an independent measure of productivity. It does, however, describe a workflow in which producing the text of a program is increasingly delegated.
+Those are the problems I still have to think through, however the code gets written.
 
-<div className="article-stats">
-<a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/"><strong>89 days</strong><span>January 2026 estimate of task-horizon doubling time for models released since 2024; sensitive to the evaluation period and task suite</span></a>
-<a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/"><strong>90%</strong><span>Weekly coding-agent use reported in JetBrains’ survey of professional developers, May–July 2026</span></a>
-<a href="https://digitaleconomy.stanford.edu/news/canariesaug26/"><strong>19%</strong><span>Relative employment shortfall as of June 2026 for young workers in highly AI-exposed occupations; not a causal estimate</span></a>
-</div>
+<h2 id="the-job-market">Who gets to learn the job?</h2>
 
-JetBrains' survey of more than 15,000 professional developers, conducted between May and July 2026, reports 90 percent using coding agents at least weekly and 68 percent daily.<sup id="cite-6-1"><a href="#source-6" aria-label="Source 6">[6]</a></sup> Adoption tells us that a tool is becoming normal. It does not tell us how much useful work it adds, or who benefits.
+The part that worries me is the first rung of the career ladder.
 
-> The job changed before the title did.
+Stanford's August 2026 analysis found a 19 percent relative employment gap for 22-to-25-year-olds in jobs with many tasks AI can perform, compared with the path of peers in jobs less exposed to AI. The data ran through June 2026; the gap appeared mainly in hiring. This is an observed pattern, not proof that AI caused it.<sup id="cite-2-1"><a href="#source-2" aria-label="Source 2">[2]</a></sup>
 
-I would be cautious about turning any of this into a date for the disappearance of a profession. Capability, adoption, productivity, and employment are different things. They affect one another, but they do not move together. The evidence becomes more useful when we keep those distinctions in view.
+Small fixes and routine coding are also how people learn. Hand all of those tasks to agents, then demand experienced engineers, and you've created a fairly obvious problem: where should the experience come from?
 
-<h2 id="the-job-market">The job market moved first at the bottom of the ladder</h2>
+Teams need to give newcomers real work, feedback and increasing responsibility. “Review what the AI did” is a tough first assignment if you've never learned what good looks like.
 
-The labor-market evidence is uneven. A Danish study using administrative records through June 2024 found no significant effects of chatbot adoption on earnings or recorded hours.<sup id="cite-7-1"><a href="#source-7" aria-label="Source 7">[7]</a></sup> Stanford's US payroll analysis finds no widespread, economy-wide displacement associated with AI either.<sup id="cite-8-1"><a href="#source-8" aria-label="Source 8">[8]</a></sup> It does find a troubling pattern at the start of people's careers.
+<h2 id="five-responsibilities">Five kinds of work</h2>
 
-In Stanford's August 2026 update, employment among 22-to-25-year-olds in highly AI-exposed occupations was, as of June 2026, about 19 percent below where it would have been had it kept pace with similarly aged workers in less-exposed occupations. On the same measure, the gap was 15 percent in the July 2025 data. The adjustment appears to come mainly through reduced hiring, and experienced workers show no comparable gap. The authors explicitly describe these as patterns, not causal estimates: the data cannot establish how much of the divergence AI caused.<sup id="cite-8-2"><a href="#source-8" aria-label="Source 8">[8]</a></sup>
+I split my job into five responsibilities. These are my labels for work people already do. One person may cover several; I cover all five in a small organization.
 
-That finding can coexist with the US Bureau of Labor Statistics projecting 10 percent growth in software developer employment between 2025 and 2035.<sup id="cite-9-1"><a href="#source-9" aria-label="Source 9">[9]</a></sup> One concerns recent differences between groups of young workers; the other concerns total employment over a decade. Neither settles what an individual graduate should expect. Together they raise a practical question: if employers still need experienced people, how will the next generation get that experience?
+<h2 id="the-builder">01 / The builder</h2>
 
-Germany, where I work, adds another complication. Bitkom estimates 79,000 unfilled IT positions in September 2026, down from 149,000 in 2023. Among surveyed companies that have cut positions or expect to do so, 35 percent say AI replaces vacant IT roles they cannot or no longer want to fill.<sup id="cite-10-1"><a href="#source-10" aria-label="Source 10">[10]</a></sup> That is evidence of changing staffing decisions, but it does not prove that AI caused the entire decline in vacancies. A shortage of particular skills can coexist with difficult hiring conditions for applicants.
+The builder turns a request into something people can use.
 
-My concern is the training problem behind those numbers. Routine implementation, small fixes, and first attempts at testing have also been ways to learn a system. If agents take on more of that work, teams will need to be deliberate about how newcomers learn to judge the results. Asking for experienced judgment while removing opportunities to develop it is a poor succession plan.
+My work starts with specifics: which data may leave the server, which tools we already use, and what the person in the school office should see. An agent can implement that. It cannot rescue a requirement I never thought through.
 
-<h2 id="five-responsibilities">What the work is turning into</h2>
+Knowing what “finished” means matters more in my week than remembering syntax. Can the right person use the tool? Can the wrong person access it? Does it fit the way the organization actually works?
 
-In my own work, I find it useful to separate five responsibilities: the **builder**, the **maintainer**, the **scanner**, the **idea-shaper**, and the **operator**. These are familiar parts of IT work, not five new professions. My argument is that delegating implementation changes their balance—and makes the boundaries between job titles less useful.
+That's also useful for people commissioning software. A clear description of the problem gives a developer far more to work with than a list of fashionable features.
 
-Here is how I map today's jobs onto them. Multiple destinations are intentional. A title cannot tell you where someone's strongest contribution will be.
+<h2 id="the-maintainer">02 / The maintainer</h2>
+
+Someone has to understand the software six months after the exciting demo.
+
+For me, that means a WordPress shop, a learning platform and several applications sharing infrastructure. Changing one part can break another. An agent can suggest an update; knowing what depends on it is the hard part.
+
+The useful work is making those dependencies visible: what must keep working, how to test it, and how to recover if the change fails. That knowledge needs to survive the person who happens to remember it.
+
+If you own the budget, ask how the software will be kept running after launch. The first version is only the start of the bill.
+
+<h2 id="the-scanner">03 / The scanner</h2>
+
+The scanner checks whether a result deserves trust. Testers, security people and researchers already do this.
+
+Sonar's January 2026 survey found that 96 percent of respondents didn't fully trust AI-generated code to be correct, while only 48 percent said they always checked it before adding it to their code. These are self-reported habits.<sup id="cite-3-1"><a href="#source-3" aria-label="Source 3">[3]</a></sup> Still, that's quite a gap between suspicion and action.
+
+I want the attention to follow the consequences. A color change needs a quick check. Changes to logins, payments or personal data need someone testing what happens when things go wrong.
+
+A confident answer is easy to get. Establishing that it is right takes work.
+
+<h2 id="the-idea-shaper">04 / The idea-shaper</h2>
+
+When prototypes get easier to build, people outside development can show what they mean. That's useful: the person doing the work often knows exactly where the process falls apart.
+
+The harder questions remain. Who needs this? What must it never do? Who will own it? Would fixing the process make the new app unnecessary?
+
+Being able to generate a tool makes that last question awkward. I'd still ask it before giving an organization another system to look after.
+
+<h2 id="the-operator">05 / The operator</h2>
+
+If a teacher cannot log in on a training morning, someone has to get the service working again. They also need to decide what to stop and whom to inform.
+
+I run the servers. Agents can help inspect logs, suggest fixes and apply updates. But permission to investigate a problem is different from permission to change a live service. Those boundaries need to be set before an incident.
+
+Who can stop the automation? Where is the backup? Can we restore it? These questions are less exciting than the demo. They're much more interesting during an outage.
+
+<figure className="article-illustration">
+<img src="/images/blog/faster-than-the-forecast/02-today-and-tomorrow.webp" alt="Two newspaper-comic panels: an operator restores a running system while a colleague repairs the component behind repeated failures." width={1672} height={836} loading="lazy" decoding="async" />
+<figcaption>The operator restores today. The maintainer fixes the reason tomorrow would have failed. Illustration generated with AI.</figcaption>
+</figure>
+
+<h2 id="what-i-am-doing">What I'd focus on</h2>
+
+I'd build skill around a part of the work I can judge: why a system fails, what a department needs, or whether a change is safe to release. Then I'd learn enough of the neighboring work to take a useful idea further.
+
+I'd also measure whether the tools help. In METR's randomized study, 16 experienced open-source developers took 19 percent longer in projects they already knew with early-2025 AI tools, despite thinking they were faster.<sup id="cite-4-1"><a href="#source-4" aria-label="Source 4">[4]</a></sup> Its February 2026 follow-up couldn't give a reliable estimate for newer tools because participation was skewed and time tracking unreliable.<sup id="cite-5-1"><a href="#source-5" aria-label="Source 5">[5]</a></sup> The result depends on the setting. My own feeling of speed is a poor stopwatch.
+
+For now, my priorities are simple:
+
+- **Define finished.** Write the outcome and checks before asking an agent to build.
+- **Stay able to fix it.** Understand the result, the backups and how to stop it.
+- **Talk to the people using it.** Find the problem before choosing the tool.
+- **Let people learn.** Give newcomers practice, feedback and real responsibility.
+
+<figure className="article-illustration">
+<img src="/images/blog/faster-than-the-forecast/03-work-continues.webp" alt="Three newspaper-comic panels follow coworkers from discussing a problem to building a tool and returning to it for ongoing care." width={1672} height={697} loading="lazy" decoding="async" />
+<figcaption>Discovering, building, and caring for what follows. The work continues after the demo. Illustration generated with AI.</figcaption>
+</figure>
+
+For someone outside IT, I'd ask one question before adopting the next impressive tool: **who understands it well enough to take responsibility when it fails?** A convincing answer should include a person and a plan.
+
+<details className="article-contents" id="career-map">
+<summary>Where today's IT jobs fit — expand the career table</summary>
 
 <div className="article-table" role="region" tabIndex={0} aria-label="How today’s IT jobs map to five responsibilities">
 <table>
@@ -92,106 +154,14 @@ Here is how I map today's jobs onto them. Multiple destinations are intentional.
 </table>
 </div>
 
-<h2 id="the-builder">01 / The builder</h2>
-
-**Where developers, integration engineers, and automation specialists are heading.**
-
-The builder takes a rough requirement through to a working, integrated service. With agents handling more implementation, one person may be able to cover a larger slice of that process. In February 2026, OpenAI described an experiment that produced roughly a million lines across application code, infrastructure, tooling, and documentation, with 1,500 merged pull requests in five months, initially driven by three engineers, with the team later growing to seven. The code was agent-written; the engineers concentrated on the environment, instructions, and feedback that made the work possible.<sup id="cite-11-1"><a href="#source-11" aria-label="Source 11">[11]</a></sup> It is one team's account under unusual conditions, but the shift in effort is recognizable.
-
-That matches my week. I write the specification, the acceptance checks, and the constraints: which data may leave the server, which library we already use, what the person in the school office actually sees. The agent writes the implementation. I read it. The skill that gained value is knowing what "done" means for a real organization. The skill that lost value is remembering syntax.
-
-The useful question for a builder is how much of the outcome they can understand and verify. A working screen is a start. It still needs to fit the organization's data, permissions, existing systems, and actual habits. Faster implementation gives those decisions more room—or makes it easier to rush past them.
-
-<h2 id="the-maintainer">02 / The maintainer</h2>
-
-**Where legacy developers, database administrators, ERP specialists, and experienced sysadmins are heading.**
-
-Software can outlive the people and agents that wrote it. Someone has to keep it understandable. That is the maintainer, and AI creates both extra work and new ways to handle it.
-
-The difficult part is that plausible code can accumulate faster than anyone understands it. Veracode's spring 2026 update reports security pass rates around 55 percent across its generation tests, with some reasoning models reaching 70–72 percent.<sup id="cite-12-1"><a href="#source-12" aria-label="Source 12">[12]</a></sup> Those are results on a particular security test, not the proportion of all AI code that is safe. They are still a reason to resist treating a passing demo as evidence that a system is ready to maintain.
-
-The same tools can help with migrations and dependency updates. Google's experience report on internal code migrations describes substantial use of AI-generated edits alongside human review.<sup id="cite-13-1"><a href="#source-13" aria-label="Source 13">[13]</a></sup> For an organization with a WordPress shop, a Moodle server, and a Django app, help with that work is valuable. The benefit depends on knowing what must continue to work after the change.
-
-The maintainer's advantage is knowing what depends on what. The maintainer's new job is turning that knowledge into something agents can act on safely: dependency maps, regression checks, and written rules about what must never change.
-
-<h2 id="the-scanner">03 / The scanner</h2>
-
-**Where testers, security analysts, and anyone who investigates technology are heading.**
-
-A scanner investigates a system, a claim, or a proposal and produces evidence a decision can rest on. The name covers work already done by testers, security analysts, and researchers. As generated output grows, I expect this responsibility to become more prominent.
-
-Sonar's January 2026 survey reports a revealing gap: 96 percent of surveyed developers did not fully trust AI-generated code to be functionally correct, but only 48 percent said they always checked it before committing.<sup id="cite-14-1"><a href="#source-14" aria-label="Source 14">[14]</a></sup> This is a vendor survey of reported behavior, not an audit of repositories. The tension it describes is familiar: accepting an answer takes less effort than establishing that it is right.
-
-Verification has its own costs. Generating more changes does not automatically create more capacity to review them, even when agents help with testing. The test engineer who evaluates a service whose answers vary from run to run, the security analyst who checks an agent's permissions and actions, and the researcher who tests a demo's claims all help decide what deserves trust.
-
-The standard I want to hold my own work to is deliberate verification. Changes involving authentication, payments, or personal data deserve close review and tests of the failure cases. Other changes still need checks proportionate to what could go wrong. Reading a diff is part of building the software; so is finding out whether it behaves as expected.
-
-<h2 id="the-idea-shaper">04 / The idea-shaper</h2>
-
-**Where product managers, business analysts, UX researchers, and domain experts are heading.**
-
-When a working prototype becomes easier to make, more people can participate in shaping it. A domain expert can show a workflow and discover its gaps by trying it. That expands the conversation beyond the people who know the framework.
-
-For the idea-shaper, that is an opportunity to test assumptions sooner. The hard questions remain: what should exist, what must not happen, who owns it after launch, and whether the real problem is a missing process rather than a missing tool. A prototype can help answer those questions. It cannot appoint the owner. That distance between a promising demonstration and something people can depend on is where I expect more of the work to sit.
-
-<h2 id="the-operator">05 / The operator</h2>
-
-**Where IT support, cloud operations, DevOps, SRE, and MLOps professionals are heading.**
-
-The operator keeps live services useful and answers for them when they fail. In 2026 the services include agents, and the agents are starting to run the services.
-
-The temptation is to hand over both routine operations and the judgment around them. But investigating an alert, recommending a fix, applying it, and deciding whether the service has recovered are different levels of authority. Each needs a clear boundary. An agent that can explain a log entry should not acquire production access simply because the next step is convenient.
-
-I run the servers. Agents can help with patches, log analysis, and runbooks. If a teacher cannot log in on a training morning, somebody still needs to decide what to restore, what to stop, and whom to inform. Somebody must be able to interrupt the automation. That authority needs to be assigned before the incident.
-
-<figure className="article-illustration">
-<img src="/images/blog/faster-than-the-forecast/02-today-and-tomorrow.webp" alt="Two newspaper-comic panels: an operator restores a running system while a colleague repairs the component behind repeated failures." width={1672} height={836} loading="lazy" decoding="async" />
-<figcaption>The operator restores today. The maintainer fixes the reason tomorrow would have failed. Illustration generated with AI.</figcaption>
-</figure>
-
-<h2 id="what-i-am-doing">What I am doing about it</h2>
-
-I do not know how far this goes. Even the effect on productivity depends on the setting. METR's randomized study found 16 experienced open-source developers working in familiar repositories took 19 percent longer with early-2025 AI tools, despite believing the tools helped.<sup id="cite-15-1"><a href="#source-15" aria-label="Source 15">[15]</a></sup> Its February 2026 follow-up could not give a reliable estimate of the newer tools' effect because of selection effects and unreliable time tracking.<sup id="cite-16-1"><a href="#source-16" aria-label="Source 16">[16]</a></sup> That is a reason to measure results in the work at hand, not to assume either a universal speedup or a permanent slowdown.
-
-For my own work, I want to keep six habits at the center:
-
-- **Define what done means.** Write down the outcome and acceptance criteria before asking an agent to implement it.
-- **Review according to consequence.** Give sensitive changes close attention and test the ways a failure would hurt the people using the system.
-- **Improve the working environment.** Clear repository instructions, useful checks, and documented constraints help across many tasks.
-- **Stay able to operate the result.** Know where the backups are, how to restore them, and how to stop an automation.
-- **Spend time with the people who need the work.** A conversation before building can prevent a tool nobody needed.
-- **Make room for people to learn.** If judgment matters more, teams need to give newcomers practice, feedback, and increasing responsibility.
-
-<figure className="article-illustration">
-<img src="/images/blog/faster-than-the-forecast/03-work-continues.webp" alt="Three newspaper-comic panels follow coworkers from discussing a problem to building a tool and returning to it for ongoing care." width={1672} height={697} loading="lazy" decoding="async" />
-<figcaption>Discovering, building, and caring for what follows. The work continues after the demo. Illustration generated with AI.</figcaption>
-</figure>
-
-For readers in one of the jobs in the table, I would start with the part of the work you understand unusually well: why an old system behaves as it does, where a test strategy has blind spots, what a department really needs, or how to bring a failing service back. Then ask which adjacent skills would let you take responsibility for more of the outcome. These tools change what we can delegate. We still have to decide what we are prepared to stand behind.
-
-Nineteen months ago I typed most of my code. Today I read it, question it, and decide whether it ships. The job title has stayed the same. The work inside it has changed.
-
----
-
-*Editorial note: This essay draws on sources published through September 2026. Surveys, benchmarks, and company reports measure different things; none alone establishes AI's effect on employment or productivity. The five responsibilities and career mappings are my interpretation. Illustrations were generated with AI.*
+</details>
 
 <h2 id="sources">Sources</h2>
 
 <ol className="article-sources">
-<li id="source-1">METR, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">Measuring AI Ability to Complete Long Software Tasks</a>, 19 March 2025. <a href="#cite-1-1" aria-label="Back to citation 1">↩</a></li>
-<li id="source-2">METR, <a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/">Time Horizon 1.1</a>, 29 January 2026. <a href="#cite-2-1" aria-label="Back to citation 2">↩</a></li>
-<li id="source-3">METR, <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">Frontier Risk Report</a>, 19 May 2026. February–March 2026 public frontier 50 percent horizon about 12 hours (estimated interval: 5–61 hours); measurements above 16 hours unreliable with the current task suite. <a href="#cite-3-1" aria-label="Back to citation 3">↩</a></li>
-<li id="source-4">METR, <a href="https://metr.org/notes/2026-01-22-time-horizon-limitations/">Limitations of the time horizon metric</a>, 22 January 2026. <a href="#cite-4-1" aria-label="Back to citation 4">↩</a></li>
-<li id="source-5">Anthropic Institute, <a href="https://www.anthropic.com/institute/recursive-self-improvement">When AI builds itself</a>, 4 June 2026. <a href="#cite-5-1" aria-label="Back to citation 5">↩</a></li>
-<li id="source-6">JetBrains, <a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/">AI coding agent adoption 2026</a>, August 2026. <a href="#cite-6-1" aria-label="Back to citation 6">↩</a></li>
-<li id="source-7">Humlum and Vestergaard, <a href="https://bfi.uchicago.edu/wp-content/uploads/2025/04/BFI_WP_2025-56.pdf">Large Language Models, Small Labor Market Effects</a>, Becker Friedman Institute Working Paper 2025-56, 14 April 2025. This version uses administrative records through June 2024. <a href="#cite-7-1" aria-label="Back to citation 7">↩</a></li>
-<li id="source-8">Brynjolfsson, Chandar, and Chen, <a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Canaries in the Coal Mine, August 2026 update</a>, Stanford Digital Economy Lab, 12 August 2026. <a href="#cite-8-1" aria-label="Back to citation 8">↩</a></li>
-<li id="source-9">US Bureau of Labor Statistics, <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">Occupational Outlook Handbook: Software Developers, Quality Assurance Analysts, and Testers</a>, 2025–2035 projections, last updated 27 August 2026. <a href="#cite-9-1" aria-label="Back to citation 9">↩</a></li>
-<li id="source-10">Bitkom, <a href="https://www.bitkom.org/Presse/Presseinformation/IT-Fachkraeftemangel-in-den-letzten-drei-Jahren-halbiert">IT-Fachkräftemangel in den letzten drei Jahren halbiert</a>, 3 September 2026. <a href="#cite-10-1" aria-label="Back to citation 10">↩</a></li>
-<li id="source-11">OpenAI, <a href="https://openai.com/index/harness-engineering/">Harness engineering</a>, 11 February 2026. <a href="#cite-11-1" aria-label="Back to citation 11">↩</a></li>
-<li id="source-12">Veracode, <a href="https://www.veracode.com/blog/spring-2026-genai-code-security/">Spring 2026 GenAI Code Security Update</a>, Spring 2026. <a href="#cite-12-1" aria-label="Back to citation 12">↩</a></li>
-<li id="source-13">Nikolov et al., <a href="https://arxiv.org/html/2501.06972v1">How is Google using AI for internal code migrations?</a>, January 2025. <a href="#cite-13-1" aria-label="Back to citation 13">↩</a></li>
-<li id="source-14">Sonar, <a href="https://www.sonarsource.com/company/press-releases/sonar-data-reveals-critical-verification-gap-in-ai-coding/">State of Code 2026: the verification gap</a>, 8 January 2026. <a href="#cite-14-1" aria-label="Back to citation 14">↩</a></li>
-<li id="source-15">METR, <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</a>, 10 July 2025. <a href="#cite-15-1" aria-label="Back to citation 15">↩</a></li>
-<li id="source-16">METR, <a href="https://metr.org/blog/2026-02-24-uplift-update/">We are Changing our Developer Productivity Experiment Design</a>, 24 February 2026. <a href="#cite-16-1" aria-label="Back to citation 16">↩</a></li>
+<li id="source-1">JetBrains, <a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/">AI coding agent adoption 2026</a>, August 2026. <a href="#cite-1-1" aria-label="Back to citation 1">↩</a></li>
+<li id="source-2">Brynjolfsson, Chandar, and Chen, <a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Canaries in the Coal Mine, August 2026 update</a>, Stanford Digital Economy Lab, 12 August 2026. <a href="#cite-2-1" aria-label="Back to citation 2">↩</a></li>
+<li id="source-3">Sonar, <a href="https://www.sonarsource.com/company/press-releases/sonar-data-reveals-critical-verification-gap-in-ai-coding/">State of Code 2026: the verification gap</a>, 8 January 2026. <a href="#cite-3-1" aria-label="Back to citation 3">↩</a></li>
+<li id="source-4">METR, <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</a>, 10 July 2025. <a href="#cite-4-1" aria-label="Back to citation 4">↩</a></li>
+<li id="source-5">METR, <a href="https://metr.org/blog/2026-02-24-uplift-update/">We are Changing our Developer Productivity Experiment Design</a>, 24 February 2026. <a href="#cite-5-1" aria-label="Back to citation 5">↩</a></li>
 </ol>

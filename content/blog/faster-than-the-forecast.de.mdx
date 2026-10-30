@@ -1,7 +1,8 @@
 ---
 title: "Schneller als die Prognosen"
-description: "Wie KI die Arbeit in der IT verändert: ein persönlicher Essay über Bauen, Pflegen, Prüfen, Gestalten und Betreiben – und darüber, wie Menschen das lernen."
+description: "KI schreibt mehr von meinem Code. Funktionieren muss er trotzdem. Fünf Aufgaben, die IT-Berufe verändern – und die Frage, wie Menschen sie lernen."
 date: "2026-10-30"
+dateModified: "2026-10-30"
 image: "/images/blog/faster-than-the-forecast/01-shared-workshop.webp"
 imageAlt: "Fünf Kolleg*innen bauen, prüfen, reparieren, planen und betreiben ein gemeinsames Computersystem in einer Werkstatt im Stil eines Zeitungscomics."
 imageCaption: "In einer kleinen Organisation teilen sich fünf Arten von Arbeit eine Werkbank. Illustration mit KI erstellt."
@@ -10,67 +11,128 @@ imageHeight: 941
 tags: ["KI", "Software Engineering", "Arbeitswelt"]
 ---
 
-<aside className="article-context">Geschrieben im September 2026 aus meiner Arbeit bei beWirken. Erstmals veröffentlicht am 30. Oktober 2026. Die Zahlen beziehen sich auf die jeweils genannten Zeiträume.</aside>
+<aside className="article-context">Ein Rückblick aus dem September 2026, erstmals veröffentlicht am 30. Oktober 2026.</aside>
 
-Im Februar 2025 habe ich als Entwickler bei beWirken angefangen, einer kleinen gemeinnützigen Organisation in Deutschland, die an Schulentwicklung und Demokratiebildung arbeitet. Im selben Monat veröffentlichte Anthropic die erste Forschungsvorschau von Claude Code. Damals fiel mir dieses Zusammentreffen nicht auf. Heute schon.
+Früher habe ich den Großteil meines Codes selbst getippt. Heute lese ich ihn.
 
-Meine Stellenbeschreibung umfasst die Entwicklung für Kundenprojekte, die Pflege der IT-Infrastruktur, Beratung zur IT-Sicherheit und die KI-Strategie. Im Alltag heißt das: ein WordPress-Shop, ein Moodle-Server, eine Django-Anwendung, ein paar Next.js-Tools, eine HubSpot-Anbindung und die Server darunter. Auf dem Papier ist das eine Stelle. In der Praxis sind es fünf Aufgaben. Ich baue. Ich halte Dinge am Laufen. Ich prüfe, worauf wir uns verlassen können. Ich entscheide mit, was entstehen soll. Ich betreibe, was bereits genutzt wird.
+Ein KI-Werkzeug schreibt die erste Fassung. Ich erkläre, was wir brauchen, prüfe das Ergebnis und entscheide, ob es veröffentlicht wird. So hat sich meine Arbeit in den neunzehn Monaten seit meinem Start bei beWirken verändert, einer gemeinnützigen Organisation im Bildungsbereich.
 
-Vor neunzehn Monaten habe ich den Großteil meines Codes selbst getippt. Heute lese ich ihn überwiegend. Ein Agent entwirft die Lösung; ich beschreibe die Anforderungen, prüfe, teste und entscheide über die Veröffentlichung. Der Wandel kam schneller, als ich erwartet hatte. Die nützlichste Frage ist für mich aber, was mit dem Rest der Arbeit passiert, wenn das Schreiben von Code leichter wird.
+Der Rest der Arbeit ist geblieben. Website, Lernplattform und Server müssen laufen. Jemand muss entscheiden, wer welche Daten sehen darf. Generierter Code klärt das alles nicht.
 
-<details className="article-contents">
+Dahin bewegt sich IT-Arbeit aus meiner Sicht: mehr Verantwortung für das ganze System, während das Tippen einen kleineren Teil des Tages einnimmt.
+
+<details className="article-contents" id="article-contents">
 <summary>In diesem Artikel</summary>
 <ol>
-<li><a href="#how-fast-is-fast">Wie schnell ist schnell?</a></li>
-<li><a href="#the-job-market">Am unteren Ende der Karriereleiter bewegt sich zuerst etwas</a></li>
-<li><a href="#five-responsibilities">Wie sich die Arbeit verändert</a></li>
-<li><a href="#the-builder">01 / Bauen</a></li>
-<li><a href="#the-maintainer">02 / Pflegen</a></li>
-<li><a href="#the-scanner">03 / Prüfen</a></li>
-<li><a href="#the-idea-shaper">04 / Gestalten</a></li>
-<li><a href="#the-operator">05 / Betreiben</a></li>
-<li><a href="#what-i-am-doing">Was ich daraus mache</a></li>
+<li><a href="#how-fast-is-fast">Die Werkzeuge sind längst da</a></li>
+<li><a href="#the-job-market">Wer darf den Beruf noch lernen?</a></li>
+<li><a href="#five-responsibilities">Fünf Arten von Arbeit</a></li>
+<li><a href="#the-builder">Bauen</a></li>
+<li><a href="#the-maintainer">Pflegen</a></li>
+<li><a href="#the-scanner">Prüfen</a></li>
+<li><a href="#the-idea-shaper">Gestalten</a></li>
+<li><a href="#the-operator">Betreiben</a></li>
+<li><a href="#what-i-am-doing">Worauf ich mich konzentrieren würde</a></li>
+<li><a href="#career-map">Wo heutige IT-Berufe hineinpassen</a></li>
 <li><a href="#sources">Quellen</a></li>
 </ol>
 </details>
 
-<h2 id="how-fast-is-fast">Wie schnell ist schnell?</h2>
+<h2 id="how-fast-is-fast">Die Werkzeuge sind längst da</h2>
 
-Eine Möglichkeit, das Tempo zu messen, bietet METR. Die Forschungsorganisation vergleicht die Leistung von KI mit der Zeit, die ein fachkundiger Mensch für eine Aufgabe braucht. Im März 2025 berichtete METR, dass sich die Länge der Aufgaben, die Spitzenmodelle mit einer Erfolgsquote von 50 Prozent bewältigen konnten, seit 2019 ungefähr alle sieben Monate verdoppelt hatte und bei etwa einer Stunde lag.<sup id="cite-1-1"><a href="#source-1" aria-label="Quelle 1">[1]</a></sup> Die Aktualisierung vom Januar 2026 schätzte die Verdopplungszeit auf 89 Tage, wenn nur seit 2024 veröffentlichte Modelle berücksichtigt wurden.<sup id="cite-2-1"><a href="#source-2" aria-label="Quelle 2">[2]</a></sup> Der Bericht vom Mai bezifferte diesen Zeithorizont für die leistungsfähigsten öffentlich verfügbaren Modelle auf rund zwölf Stunden. Das war eine Momentaufnahme vom Februar und März 2026, mit einem breiten Unsicherheitsintervall von fünf bis 61 Stunden.<sup id="cite-3-1"><a href="#source-3" aria-label="Quelle 3">[3]</a></sup>
+JetBrains befragte zwischen Mai und Juli 2026 mehr als 15.000 professionelle Entwickler\*innen. 90 Prozent gaben an, mindestens wöchentlich KI-Agenten zum Programmieren zu nutzen.<sup id="cite-1-1"><a href="#source-1" aria-label="Quelle 1">[1]</a></sup> Unter den Befragten sind sie also weit verbreitet. Ob die Software dadurch besser wird, verrät die Zahl nicht.
 
-Diese Zahlen sprechen für schnelle Fortschritte, müssen aber sorgfältig gelesen werden. Die Schätzung von 89 Tagen bezieht sich auf einen kürzeren Zeitraum und eine überarbeitete Aufgabensammlung. Über den längeren historischen Zeitraum ergibt sich weiterhin eine Verdopplung etwa alle sieben Monate. Der 50-Prozent-Zeithorizont ist zudem ein aus den Testergebnissen geschätzter Wert: Er bezeichnet die menschliche Bearbeitungszeit einer Aufgabe, bei der das Modell mit einer Erfolgswahrscheinlichkeit von 50 Prozent abschließt. Er sagt nicht, dass ein Agent zwölf Stunden lang zuverlässig selbstständig arbeiten kann. Besonders an den Grenzen des Tests sind die Schätzungen unsicher.<sup id="cite-2-2"><a href="#source-2" aria-label="Quelle 2">[2]</a></sup><sup id="cite-4-1"><a href="#source-4" aria-label="Quelle 4">[4]</a></sup> Wer echte Arbeit plant, muss deshalb ebenso auf die Prüfungen rund um einen Agenten achten wie auf dessen bestes Ergebnis.
+Dieser Unterschied geht gern verloren, wenn eine funktionierende Demo zur Prognose wird, bald brauche niemand mehr Entwickler\*innen. Eine Demo zeigt meistens den Fall, in dem alles klappt. Im Alltag kommen alte Daten dazu, fehlende Zugriffsrechte und jemand, der zweimal auf den Knopf drückt.
 
-In den Unternehmen, die diese Werkzeuge entwickeln, zeigt sich die Veränderung bereits im Arbeitsalltag. Nach Angaben von Anthropic stammten im Mai 2026 mehr als 80 Prozent der in die produktive Codebasis übernommenen Zeilen von Claude.<sup id="cite-5-1"><a href="#source-5" aria-label="Quelle 5">[5]</a></sup> Das ist eine Unternehmensangabe zur Codemenge, keine unabhängige Messung der Produktivität. Sie beschreibt aber einen Arbeitsablauf, in dem das Ausformulieren eines Programms zunehmend delegiert wird.
+Über diese Probleme muss ich weiter nachdenken. Egal, wer den Code schreibt.
 
-<div className="article-stats">
-<a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/"><strong>89 Tage</strong><span>Schätzung vom Januar 2026 zur Verdopplung des Aufgaben-Zeithorizonts bei seit 2024 veröffentlichten Modellen; abhängig von Zeitraum und Aufgabensammlung</span></a>
-<a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/"><strong>90%</strong><span>Mindestens wöchentliche Nutzung von Coding-Agenten laut JetBrains-Befragung professioneller Entwickler*innen, Mai–Juli 2026</span></a>
-<a href="https://digitaleconomy.stanford.edu/news/canariesaug26/"><strong>19%</strong><span>Relativer Beschäftigungsrückstand junger Menschen in stark KI-exponierten Berufen, Stand Juni 2026; keine Schätzung eines kausalen Effekts</span></a>
-</div>
+<h2 id="the-job-market">Wer darf den Beruf noch lernen?</h2>
 
-JetBrains befragte zwischen Mai und Juli 2026 mehr als 15.000 professionelle Entwickler\*innen. 90 Prozent gaben an, Coding-Agenten mindestens wöchentlich zu nutzen, 68 Prozent täglich.<sup id="cite-6-1"><a href="#source-6" aria-label="Quelle 6">[6]</a></sup> Die Verbreitung zeigt, dass ein Werkzeug alltäglich wird. Sie sagt noch nicht, wie viel zusätzliche nützliche Arbeit damit entsteht oder wer davon profitiert.
+Mich beunruhigt die erste Stufe der Karriereleiter.
 
-> Die Arbeit hat sich verändert, bevor sich der Titel geändert hat.
+Stanfords Analyse vom August 2026 fand bei 22- bis 25-Jährigen in Berufen mit vielen Aufgaben, die KI bearbeiten kann, einen relativen Beschäftigungsrückstand von 19 Prozent. Als Vergleich diente die Entwicklung Gleichaltriger in Berufen mit weniger solcher Aufgaben. Die Daten reichen bis Juni 2026; der Unterschied zeigte sich vor allem bei Neueinstellungen. Das ist ein beobachtetes Muster, kein Beweis dafür, dass KI es verursacht hat.<sup id="cite-2-1"><a href="#source-2" aria-label="Quelle 2">[2]</a></sup>
 
-Ich wäre vorsichtig damit, aus solchen Zahlen ein Datum für das Verschwinden eines Berufs abzuleiten. Fähigkeiten, Nutzung, Produktivität und Beschäftigung sind verschiedene Dinge. Sie beeinflussen einander, bewegen sich aber nicht im Gleichschritt. Die Befunde helfen uns mehr, wenn wir diese Unterschiede im Blick behalten.
+Kleine Fehlerbehebungen und Routineaufgaben sind auch Gelegenheiten zum Lernen. Wer sie komplett an Agenten abgibt und dann erfahrene Entwickler\*innen verlangt, hat ein ziemlich offensichtliches Problem: Wo soll die Erfahrung herkommen?
 
-<h2 id="the-job-market">Am unteren Ende der Karriereleiter bewegt sich zuerst etwas</h2>
+Teams müssen Berufseinsteiger\*innen echte Aufgaben, Rückmeldung und wachsende Verantwortung geben. „Prüf mal, was die KI gemacht hat“ ist ein schwieriger erster Auftrag, wenn man noch nie gelernt hat, woran man gute Arbeit erkennt.
 
-Die Befunde zum Arbeitsmarkt ergeben kein einheitliches Bild. Eine dänische Studie mit Verwaltungsdaten bis Juni 2024 fand keine signifikanten Auswirkungen der Chatbot-Nutzung auf Einkommen oder erfasste Arbeitsstunden.<sup id="cite-7-1"><a href="#source-7" aria-label="Quelle 7">[7]</a></sup> Auch Stanfords Analyse amerikanischer Lohnabrechnungsdaten findet keine breite, gesamtwirtschaftliche Verdrängung von Beschäftigung im Zusammenhang mit KI.<sup id="cite-8-1"><a href="#source-8" aria-label="Quelle 8">[8]</a></sup> Am Berufsanfang zeigt sich allerdings ein beunruhigendes Muster.
+<h2 id="five-responsibilities">Fünf Arten von Arbeit</h2>
 
-Laut Stanfords Aktualisierung vom August 2026 lag die Beschäftigung von 22- bis 25-Jährigen in stark KI-exponierten Berufen im Juni 2026 rund 19 Prozent unter dem Wert, der bei einer parallelen Entwicklung zu Gleichaltrigen in weniger exponierten Berufen zu erwarten gewesen wäre. In den Daten vom Juli 2025 betrug dieser Abstand noch 15 Prozent. Die Anpassung scheint vor allem über weniger Neueinstellungen zu laufen. Bei erfahrenen Beschäftigten zeigt sich kein vergleichbarer Abstand. Die Autor\*innen sprechen ausdrücklich von beobachteten Mustern, nicht von kausalen Schätzungen: Aus den Daten lässt sich nicht bestimmen, welchen Anteil dieser Entwicklung KI verursacht hat.<sup id="cite-8-2"><a href="#source-8" aria-label="Quelle 8">[8]</a></sup>
+Ich teile meinen Job in fünf Verantwortungsbereiche auf. Das sind meine Bezeichnungen für Arbeit, die Menschen längst machen. Eine Person kann mehrere abdecken. In einer kleinen Organisation wie unserer übernehme ich alle fünf.
 
-Dieser Befund kann neben der Prognose des US Bureau of Labor Statistics stehen, nach der die Beschäftigung von Softwareentwickler\*innen zwischen 2025 und 2035 um zehn Prozent wachsen soll.<sup id="cite-9-1"><a href="#source-9" aria-label="Quelle 9">[9]</a></sup> Die eine Untersuchung betrachtet jüngste Unterschiede zwischen Gruppen junger Beschäftigter, die andere die Gesamtbeschäftigung über ein Jahrzehnt. Keine von beiden beantwortet, womit einzelne Absolvent\*innen rechnen sollten. Zusammen werfen sie aber eine praktische Frage auf: Wenn Unternehmen weiterhin erfahrene Menschen brauchen, wie soll die nächste Generation diese Erfahrung sammeln?
+<h2 id="the-builder">01 / Bauen</h2>
 
-Deutschland, wo ich arbeite, bringt eine weitere Schwierigkeit ins Bild. Bitkom schätzt die Zahl unbesetzter IT-Stellen im September 2026 auf 79.000, gegenüber 149.000 im Jahr 2023. Unter den befragten Unternehmen, die bereits Stellen abgebaut haben oder dies erwarten, sagen 35 Prozent, dass KI offene IT-Stellen ersetzt, die sie nicht besetzen können oder nicht mehr besetzen wollen.<sup id="cite-10-1"><a href="#source-10" aria-label="Quelle 10">[10]</a></sup> Das spricht für veränderte Personalentscheidungen. Es beweist aber nicht, dass KI den gesamten Rückgang offener Stellen verursacht hat. Bestimmte Fachkenntnisse können knapp sein, während Bewerber\*innen gleichzeitig Schwierigkeiten haben, eine Stelle zu finden.
+Beim Bauen wird aus einem Wunsch etwas, das Menschen nutzen können.
 
-Mich beschäftigt das Lernproblem hinter diesen Zahlen. Routineaufgaben, kleine Fehlerbehebungen und die ersten eigenen Tests waren immer auch Gelegenheiten, ein System kennenzulernen. Wenn Agenten mehr davon übernehmen, müssen Teams bewusst dafür sorgen, dass Berufseinsteiger\*innen lernen, die Ergebnisse zu beurteilen. Erfahrenes Urteilsvermögen zu verlangen und zugleich die Gelegenheiten zu streichen, es zu entwickeln, ist keine gute Nachwuchsplanung.
+Meine Arbeit beginnt mit konkreten Fragen: Welche Daten dürfen den Server verlassen? Welche Werkzeuge nutzen wir bereits? Was soll die Person im Schulsekretariat sehen? Ein Agent kann das umsetzen. Eine Anforderung, die ich nicht durchdacht habe, rettet er mir nicht.
 
-<h2 id="five-responsibilities">Wie sich die Arbeit verändert</h2>
+Zu wissen, was „fertig“ bedeutet, hilft mir im Alltag mehr, als Befehle auswendig zu kennen. Kann die richtige Person das Werkzeug nutzen? Kommt auch die falsche hinein? Passt es dazu, wie die Organisation tatsächlich arbeitet?
 
-In meiner eigenen Arbeit hilft mir die Unterscheidung zwischen fünf Verantwortungsbereichen: **Bauen**, **Pflegen**, **Prüfen**, **Gestalten** und **Betreiben**. Das sind vertraute Bestandteile der IT-Arbeit, keine fünf neuen Berufe. Meine These ist, dass sich ihr Verhältnis verschiebt, wenn wir die Umsetzung delegieren. Gleichzeitig helfen uns die Grenzen zwischen Berufsbezeichnungen immer weniger dabei, die tatsächliche Arbeit zu beschreiben.
+Das ist auch für Menschen nützlich, die Software beauftragen. Mit einer klaren Problembeschreibung können Entwickler\*innen deutlich mehr anfangen als mit einer Liste angesagter Funktionen.
 
-So ordne ich heutige Berufe diesen Bereichen zu. Dass mehrere Wege offenstehen, ist beabsichtigt. Ein Titel verrät nicht, wo jemand den größten Beitrag leisten kann.
+<h2 id="the-maintainer">02 / Pflegen</h2>
+
+Jemand muss die Software noch verstehen, wenn die aufregende Demo sechs Monate her ist.
+
+Bei mir sind das ein WordPress-Shop, eine Lernplattform und mehrere Anwendungen auf gemeinsamer Infrastruktur. Eine Änderung an einer Stelle kann eine andere lahmlegen. Ein Agent kann ein Update vorschlagen. Zu wissen, was davon abhängt, ist der schwierige Teil.
+
+Diese Abhängigkeiten müssen sichtbar werden: Was muss weiter funktionieren? Wie prüfen wir das? Wie kommen wir zurück, wenn die Änderung scheitert? Dieses Wissen darf nicht verschwinden, sobald die Person geht, die es zufällig im Kopf hat.
+
+Wer das Budget verantwortet, sollte fragen, wie die Software nach dem Start am Laufen bleibt. Die erste Version ist erst der Anfang der Rechnung.
+
+<h2 id="the-scanner">03 / Prüfen</h2>
+
+Beim Prüfen geht es darum, ob ein Ergebnis Vertrauen verdient. Tester\*innen, Sicherheitsfachleute und Forschende tun das bereits.
+
+In Sonars Befragung vom Januar 2026 vertrauten 96 Prozent der befragten Entwickler\*innen nicht vollständig darauf, dass KI-generierter Code korrekt funktioniert. Nur 48 Prozent gaben an, ihn vor der Übernahme immer zu prüfen. Das sind Angaben zum eigenen Verhalten.<sup id="cite-3-1"><a href="#source-3" aria-label="Quelle 3">[3]</a></sup> Trotzdem: Zwischen Misstrauen und Handeln liegt offenbar noch etwas Platz.
+
+Ich will die Aufmerksamkeit nach den möglichen Folgen verteilen. Eine neue Farbe braucht einen kurzen Blick. Änderungen an Anmeldung, Zahlungen oder persönlichen Daten brauchen jemanden, der prüft, was im Fehlerfall passiert.
+
+Eine selbstsichere Antwort bekommt man schnell. Festzustellen, ob sie stimmt, kostet Arbeit.
+
+<h2 id="the-idea-shaper">04 / Gestalten</h2>
+
+Wenn sich Prototypen leichter bauen lassen, können auch Menschen außerhalb der Entwicklung zeigen, was sie meinen. Das hilft: Wer die Arbeit macht, weiß oft genau, wo der Ablauf hakt.
+
+Die schwierigeren Fragen bleiben. Wer braucht das? Was darf es niemals tun? Wer übernimmt die Verantwortung? Würde ein besserer Ablauf die neue App überflüssig machen?
+
+Wenn man das Werkzeug einfach generieren kann, wird die letzte Frage unbequem. Ich würde sie trotzdem stellen, bevor eine Organisation noch ein System zu betreuen hat.
+
+<h2 id="the-operator">05 / Betreiben</h2>
+
+Wenn sich eine Lehrkraft am Morgen einer Fortbildung nicht anmelden kann, muss jemand den Dienst wieder zum Laufen bringen. Und entscheiden, was gestoppt und wer informiert wird.
+
+Ich betreibe die Server. Agenten können Protokolle auswerten, Lösungen vorschlagen und Updates einspielen. Die Erlaubnis, ein Problem zu untersuchen, ist aber etwas anderes als die Erlaubnis, einen laufenden Dienst zu verändern. Diese Grenzen müssen vor einem Vorfall stehen.
+
+Wer kann die Automatisierung stoppen? Wo ist das Backup? Lässt es sich wiederherstellen? Diese Fragen sind weniger spannend als die Demo. Während eines Ausfalls werden sie deutlich interessanter.
+
+<figure className="article-illustration">
+<img src="/images/blog/faster-than-the-forecast/02-today-and-tomorrow.webp" alt="Zwei Bilder im Stil eines Zeitungscomics: Eine Person stellt den Betrieb eines Systems wieder her, während eine Kollegin oder ein Kollege das Bauteil hinter den wiederholten Ausfällen repariert." width={1672} height={836} loading="lazy" decoding="async" />
+<figcaption>Der Betrieb löst den Ausfall von heute. Die Pflege behebt die Ursache für den Ausfall von morgen. Illustration mit KI erstellt.</figcaption>
+</figure>
+
+<h2 id="what-i-am-doing">Worauf ich mich konzentrieren würde</h2>
+
+Ich würde bei einem Teil der Arbeit ansetzen, den ich beurteilen kann: warum ein System ausfällt, was eine Abteilung braucht oder ob eine Änderung sicher veröffentlicht werden kann. Dann würde ich genug von den angrenzenden Aufgaben lernen, um eine nützliche Idee weiterzubringen.
+
+Und ich würde messen, ob die Werkzeuge helfen. In METRs randomisierter Studie brauchten 16 erfahrene Open-Source-Entwickler\*innen mit KI-Werkzeugen von Anfang 2025 für Aufgaben in vertrauten Projekten 19 Prozent länger. Sie hielten sich trotzdem für schneller.<sup id="cite-4-1"><a href="#source-4" aria-label="Quelle 4">[4]</a></sup> Die Folgeuntersuchung vom Februar 2026 lieferte keine belastbare Schätzung für neuere Werkzeuge: Die Auswahl der Teilnehmenden und Aufgaben sowie unzuverlässige Zeiterfassung erschwerten die Messung.<sup id="cite-5-1"><a href="#source-5" aria-label="Quelle 5">[5]</a></sup> Das Ergebnis hängt vom Arbeitsumfeld ab. Mein Gefühl von Geschwindigkeit ist eine schlechte Stoppuhr.
+
+Für mich heißt das vorerst:
+
+- **Festlegen, was fertig bedeutet.** Ergebnis und Prüfungen aufschreiben, bevor ein Agent loslegt.
+- **Es selbst reparieren können.** Das Ergebnis verstehen, die Backups kennen und wissen, wie man es stoppt.
+- **Mit den Menschen sprechen, die es nutzen.** Erst das Problem finden, dann das Werkzeug wählen.
+- **Menschen lernen lassen.** Berufseinsteiger\*innen Übung, Rückmeldung und echte Verantwortung geben.
+
+<figure className="article-illustration">
+<img src="/images/blog/faster-than-the-forecast/03-work-continues.webp" alt="Drei Bilder im Stil eines Zeitungscomics begleiten Kolleg*innen vom Gespräch über ein Problem über den Bau eines Werkzeugs bis zu dessen weiterer Betreuung." width={1672} height={697} loading="lazy" decoding="async" />
+<figcaption>Verstehen, bauen und sich um das kümmern, was danach kommt. Die Arbeit geht nach der Demo weiter. Illustration mit KI erstellt.</figcaption>
+</figure>
+
+Wer außerhalb der IT arbeitet, sollte vor dem nächsten beeindruckenden Werkzeug eine Frage stellen: **Wer versteht es gut genug, um die Verantwortung zu übernehmen, wenn es ausfällt?** Eine überzeugende Antwort sollte eine Person und einen Plan enthalten.
+
+<details className="article-contents" id="career-map">
+<summary>Wo heutige IT-Berufe hineinpassen – Tabelle aufklappen</summary>
 
 <div className="article-table" role="region" tabIndex={0} aria-label="Wie heutige IT-Berufe zu fünf Verantwortungsbereichen passen">
 <table>
@@ -92,106 +154,14 @@ So ordne ich heutige Berufe diesen Bereichen zu. Dass mehrere Wege offenstehen, 
 </table>
 </div>
 
-<h2 id="the-builder">01 / Bauen</h2>
-
-**Wohin sich die Arbeit von Entwickler\*innen sowie Integrations- und Automatisierungsfachleuten bewegt.**
-
-Wer baut, führt eine grobe Anforderung bis zu einem funktionierenden, eingebundenen Dienst. Wenn Agenten mehr von der Umsetzung übernehmen, kann eine Person möglicherweise einen größeren Teil dieses Weges abdecken. Im Februar 2026 beschrieb OpenAI ein Experiment, in dem innerhalb von fünf Monaten ungefähr eine Million Zeilen und 1.500 zusammengeführte Pull Requests entstanden. Die Zeilen umfassten Anwendungscode, Infrastruktur, Werkzeuge und Dokumentation. Anfangs arbeiteten drei Engineers daran, später wuchs das Team auf sieben. Den Code schrieben Agenten; die Menschen konzentrierten sich auf die Arbeitsumgebung, Anweisungen und Rückmeldungen, die das ermöglichten.<sup id="cite-11-1"><a href="#source-11" aria-label="Quelle 11">[11]</a></sup> Das ist der Bericht eines einzelnen Teams unter besonderen Bedingungen. Die Verschiebung der Arbeit erkenne ich trotzdem wieder.
-
-So sieht auch meine Woche aus. Ich schreibe die Spezifikation, die Abnahmekriterien und die Grenzen auf: Welche Daten dürfen den Server verlassen? Welche Bibliothek nutzen wir bereits? Was sieht die Person im Schulsekretariat tatsächlich? Der Agent schreibt die Umsetzung. Ich lese sie. Wertvoller geworden ist die Fähigkeit, zu erkennen, was „fertig“ für eine echte Organisation bedeutet. Weniger wertvoll geworden ist es, Syntax auswendig zu kennen.
-
-Die nützliche Frage beim Bauen lautet, wie viel vom Ergebnis man verstehen und überprüfen kann. Eine funktionierende Oberfläche ist ein Anfang. Sie muss auch zu den Daten, Berechtigungen, vorhandenen Systemen und tatsächlichen Gewohnheiten der Organisation passen. Schnellere Umsetzung schafft mehr Raum für diese Entscheidungen. Sie macht es aber auch leichter, darüber hinwegzugehen.
-
-<h2 id="the-maintainer">02 / Pflegen</h2>
-
-**Wohin sich die Arbeit von Legacy-Entwickler\*innen, Datenbankadministrator\*innen, ERP-Fachleuten und erfahrenen Systemadministrator\*innen bewegt.**
-
-Software kann die Menschen und Agenten überdauern, die sie geschrieben haben. Jemand muss dafür sorgen, dass sie verständlich bleibt. Das ist die Aufgabe derjenigen, die sie pflegen. KI schafft dabei zusätzliche Arbeit und neue Möglichkeiten, sie zu bewältigen.
-
-Die Schwierigkeit liegt darin, dass plausibel aussehender Code schneller wachsen kann als das Verständnis dafür. Veracodes Aktualisierung vom Frühjahr 2026 berichtet, dass rund 55 Prozent der Codegenerierungstests die Sicherheitsprüfung bestanden. Bei einigen Reasoning-Modellen lag die Quote bei 70 bis 72 Prozent.<sup id="cite-12-1"><a href="#source-12" aria-label="Quelle 12">[12]</a></sup> Das sind Ergebnisse eines bestimmten Sicherheitstests, kein Maß dafür, welcher Anteil sämtlichen KI-Codes sicher ist. Sie geben trotzdem Anlass, eine funktionierende Demo nicht als Beleg dafür zu nehmen, dass sich das System langfristig gut betreuen lässt.
-
-Dieselben Werkzeuge können bei Migrationen und Aktualisierungen von Abhängigkeiten helfen. Googles Erfahrungsbericht zu internen Codemigrationen beschreibt den umfangreichen Einsatz KI-generierter Änderungen in Verbindung mit menschlicher Prüfung.<sup id="cite-13-1"><a href="#source-13" aria-label="Quelle 13">[13]</a></sup> Für eine Organisation mit WordPress-Shop, Moodle-Server und Django-Anwendung ist Unterstützung dabei wertvoll. Der Nutzen hängt davon ab, dass jemand weiß, was nach der Änderung weiterhin funktionieren muss.
-
-Der Vorteil der Menschen, die ein System pflegen, liegt in ihrem Wissen darüber, was wovon abhängt. Neu ist die Aufgabe, dieses Wissen so festzuhalten, dass Agenten sicher damit arbeiten können: als Übersicht der Abhängigkeiten, als Regressionstests und als schriftliche Regeln darüber, was sich niemals ändern darf.
-
-<h2 id="the-scanner">03 / Prüfen</h2>
-
-**Wohin sich die Arbeit von Tester\*innen, Sicherheitsanalyst\*innen und allen bewegt, die Technik auf den Prüfstand stellen.**
-
-Wer prüft, untersucht ein System, eine Behauptung oder einen Vorschlag und liefert Belege, auf denen eine Entscheidung aufbauen kann. Diese Arbeit leisten bereits heute Tester\*innen, Sicherheitsanalyst\*innen und Forschende. Je mehr Ergebnisse generiert werden, desto wichtiger dürfte diese Verantwortung werden.
-
-Sonars Befragung vom Januar 2026 zeigt eine aufschlussreiche Lücke: 96 Prozent der befragten Entwickler\*innen vertrauten nicht vollständig darauf, dass KI-generierter Code funktional korrekt ist. Aber nur 48 Prozent gaben an, ihn vor einem Commit immer zu prüfen.<sup id="cite-14-1"><a href="#source-14" aria-label="Quelle 14">[14]</a></sup> Das ist die Befragung eines Anbieters über selbst berichtetes Verhalten, keine Prüfung von Repositories. Die Spannung dahinter ist vertraut: Eine Antwort zu akzeptieren kostet weniger Mühe, als festzustellen, ob sie stimmt.
-
-Prüfen braucht eigene Kapazitäten. Mehr Änderungen zu erzeugen schafft nicht automatisch mehr Zeit für ihre Kontrolle, auch wenn Agenten beim Testen helfen. Testingenieur\*innen, die einen Dienst mit wechselnden Antworten bewerten, Sicherheitsanalyst\*innen, die Berechtigungen und Aktionen eines Agenten prüfen, und Forschende, die die Versprechen einer Demo untersuchen: Sie alle helfen zu entscheiden, was Vertrauen verdient.
-
-Mein Anspruch an die eigene Arbeit ist, bewusst zu prüfen. Änderungen an Anmeldung, Zahlungen oder personenbezogenen Daten verdienen genaue Durchsicht und Tests der Fehlerfälle. Auch andere Änderungen brauchen Prüfungen, deren Umfang zu den möglichen Folgen passt. Einen Diff zu lesen gehört zur Softwareentwicklung. Herauszufinden, ob sich das System wie erwartet verhält, ebenso.
-
-<h2 id="the-idea-shaper">04 / Gestalten</h2>
-
-**Wohin sich die Arbeit von Produktmanager\*innen, Business-Analyst\*innen, UX-Researcher\*innen und Fachleuten aus der Praxis bewegt.**
-
-Wenn sich ein funktionierender Prototyp leichter bauen lässt, können mehr Menschen an seiner Gestaltung mitwirken. Eine Fachperson kann einen Ablauf zeigen und beim Ausprobieren dessen Lücken entdecken. Das erweitert das Gespräch über den Kreis der Menschen hinaus, die das verwendete Framework beherrschen.
-
-Wer gestaltet, bekommt damit die Chance, Annahmen früher zu prüfen. Die schwierigen Fragen bleiben: Was soll es geben? Was darf nicht passieren? Wer trägt nach dem Start die Verantwortung? Und fehlt tatsächlich ein Werkzeug, oder fehlt ein klarer Prozess? Ein Prototyp kann helfen, diese Fragen zu beantworten. Er kann niemandem die Verantwortung zuweisen. Zwischen einer vielversprechenden Vorführung und etwas, auf das sich Menschen verlassen können, liegt eine Strecke. Ich erwarte, dass dort künftig mehr Arbeit anfällt.
-
-<h2 id="the-operator">05 / Betreiben</h2>
-
-**Wohin sich die Arbeit von Fachleuten im IT-Support, Cloud-Betrieb, DevOps, SRE und MLOps bewegt.**
-
-Wer den Betrieb verantwortet, hält laufende Dienste nutzbar und steht für sie ein, wenn sie ausfallen. Im Jahr 2026 gehören Agenten zu diesen Diensten. Gleichzeitig beginnen Agenten, die Dienste selbst zu betreiben.
-
-Die Versuchung besteht darin, sowohl die Routinearbeit als auch die nötigen Entscheidungen abzugeben. Eine Warnung zu untersuchen, eine Lösung vorzuschlagen, sie anzuwenden und festzustellen, ob der Dienst wieder funktioniert, sind aber unterschiedliche Befugnisse. Für jede braucht es eine klare Grenze. Ein Agent, der einen Logeintrag erklären kann, sollte nicht allein deshalb Zugriff auf die Produktivumgebung erhalten, weil das den nächsten Schritt bequemer macht.
-
-Ich betreibe die Server. Agenten können bei Patches, Loganalysen und Betriebsanleitungen helfen. Wenn sich eine Lehrkraft am Morgen einer Fortbildung nicht anmelden kann, muss trotzdem jemand entscheiden, was wiederhergestellt, was gestoppt und wer informiert wird. Jemand muss die Automatisierung unterbrechen können. Diese Befugnis muss vor dem Vorfall geklärt sein.
-
-<figure className="article-illustration">
-<img src="/images/blog/faster-than-the-forecast/02-today-and-tomorrow.webp" alt="Zwei Bilder im Stil eines Zeitungscomics: Eine Person stellt den Betrieb eines Systems wieder her, während eine Kollegin oder ein Kollege das Bauteil hinter den wiederholten Ausfällen repariert." width={1672} height={836} loading="lazy" decoding="async" />
-<figcaption>Der Betrieb löst den Ausfall von heute. Die Pflege behebt die Ursache für den Ausfall von morgen. Illustration mit KI erstellt.</figcaption>
-</figure>
-
-<h2 id="what-i-am-doing">Was ich daraus mache</h2>
-
-Ich weiß nicht, wie weit das geht. Selbst die Wirkung auf die Produktivität hängt vom Arbeitsumfeld ab. In METRs randomisierter Studie brauchten 16 erfahrene Open-Source-Entwickler\*innen in vertrauten Repositories mit KI-Werkzeugen vom Anfang des Jahres 2025 rund 19 Prozent länger. Trotzdem glaubten sie, die Werkzeuge hätten ihnen geholfen.<sup id="cite-15-1"><a href="#source-15" aria-label="Quelle 15">[15]</a></sup> Die Folgeuntersuchung vom Februar 2026 konnte wegen Selektionseffekten und unzuverlässiger Zeiterfassung keine belastbare Schätzung der Wirkung neuerer Werkzeuge liefern.<sup id="cite-16-1"><a href="#source-16" aria-label="Quelle 16">[16]</a></sup> Das spricht dafür, Ergebnisse an der konkreten Arbeit zu messen, statt pauschal einen Geschwindigkeitsgewinn oder einen dauerhaften Rückschritt anzunehmen.
-
-Für meine eigene Arbeit will ich sechs Gewohnheiten beibehalten:
-
-- **Festlegen, was fertig bedeutet.** Das gewünschte Ergebnis und die Abnahmekriterien aufschreiben, bevor ich einen Agenten mit der Umsetzung beauftrage.
-- **Nach möglichen Folgen prüfen.** Sensible Änderungen genau ansehen und die Fehlerfälle testen, die den Menschen schaden würden, die das System nutzen.
-- **Die Arbeitsumgebung verbessern.** Klare Anweisungen im Repository, nützliche Prüfungen und dokumentierte Grenzen helfen bei vielen Aufgaben zugleich.
-- **Das Ergebnis selbst betreiben können.** Wissen, wo die Backups liegen, wie man sie wiederherstellt und wie sich eine Automatisierung stoppen lässt.
-- **Zeit mit den Menschen verbringen, für die ich arbeite.** Ein Gespräch vor dem Bauen kann ein Werkzeug verhindern, das niemand gebraucht hätte.
-- **Raum zum Lernen schaffen.** Wenn Urteilsvermögen wichtiger wird, brauchen Berufseinsteiger\*innen Übung, Rückmeldung und schrittweise mehr Verantwortung.
-
-<figure className="article-illustration">
-<img src="/images/blog/faster-than-the-forecast/03-work-continues.webp" alt="Drei Bilder im Stil eines Zeitungscomics begleiten Kolleg*innen vom Gespräch über ein Problem über den Bau eines Werkzeugs bis zu dessen weiterer Betreuung." width={1672} height={697} loading="lazy" decoding="async" />
-<figcaption>Verstehen, bauen und sich um das kümmern, was danach kommt. Die Arbeit geht nach der Demo weiter. Illustration mit KI erstellt.</figcaption>
-</figure>
-
-Wer in einem der Berufe aus der Tabelle arbeitet, könnte bei dem Teil der Arbeit anfangen, den er oder sie besonders gut versteht: warum sich ein altes System so verhält, wo eine Teststrategie blinde Flecken hat, was eine Abteilung wirklich braucht oder wie sich ein ausgefallener Dienst wiederherstellen lässt. Die nächste Frage ist, welche benachbarten Fähigkeiten es ermöglichen, für einen größeren Teil des Ergebnisses Verantwortung zu übernehmen. Diese Werkzeuge verändern, was wir delegieren können. Wir müssen weiterhin entscheiden, wofür wir einstehen wollen.
-
-Vor neunzehn Monaten habe ich den Großteil meines Codes selbst getippt. Heute lese ich ihn, hinterfrage ihn und entscheide, ob er veröffentlicht wird. Die Stellenbezeichnung ist gleich geblieben. Die Arbeit dahinter hat sich verändert.
-
----
-
-*Redaktioneller Hinweis: Dieser Essay beschreibt meinen Stand im September 2026 und stützt sich auf bis dahin veröffentlichte Quellen. Befragungen, Benchmarks und Unternehmensberichte messen unterschiedliche Dinge. Keine dieser Quellen allein belegt die Wirkung von KI auf Beschäftigung oder Produktivität. Die fünf Verantwortungsbereiche und die Zuordnung der Berufe sind meine Interpretation. Die Illustrationen wurden mit KI erstellt.*
+</details>
 
 <h2 id="sources">Quellen</h2>
 
 <ol className="article-sources">
-<li id="source-1">METR, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">Measuring AI Ability to Complete Long Software Tasks</a>, 19. März 2025. <a href="#cite-1-1" aria-label="Zurück zu Quellenverweis 1">↩</a></li>
-<li id="source-2">METR, <a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/">Time Horizon 1.1</a>, 29. Januar 2026. <a href="#cite-2-1" aria-label="Zurück zu Quellenverweis 2">↩</a></li>
-<li id="source-3">METR, <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">Frontier Risk Report</a>, 19. Mai 2026. Momentaufnahme vom Februar und März 2026: geschätzter 50-Prozent-Zeithorizont der leistungsfähigsten öffentlich verfügbaren Modelle von rund zwölf Stunden, mit einem Unsicherheitsintervall von fünf bis 61 Stunden. Messungen oberhalb von 16 Stunden sind mit der verwendeten Aufgabensammlung unzuverlässig. <a href="#cite-3-1" aria-label="Zurück zu Quellenverweis 3">↩</a></li>
-<li id="source-4">METR, <a href="https://metr.org/notes/2026-01-22-time-horizon-limitations/">Limitations of the time horizon metric</a>, 22. Januar 2026. <a href="#cite-4-1" aria-label="Zurück zu Quellenverweis 4">↩</a></li>
-<li id="source-5">Anthropic Institute, <a href="https://www.anthropic.com/institute/recursive-self-improvement">When AI builds itself</a>, 4. Juni 2026. <a href="#cite-5-1" aria-label="Zurück zu Quellenverweis 5">↩</a></li>
-<li id="source-6">JetBrains, <a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/">AI coding agent adoption 2026</a>, August 2026. <a href="#cite-6-1" aria-label="Zurück zu Quellenverweis 6">↩</a></li>
-<li id="source-7">Humlum und Vestergaard, <a href="https://bfi.uchicago.edu/wp-content/uploads/2025/04/BFI_WP_2025-56.pdf">Large Language Models, Small Labor Market Effects</a>, Becker Friedman Institute Working Paper 2025-56, 14. April 2025. Diese Fassung nutzt Verwaltungsdaten bis Juni 2024. <a href="#cite-7-1" aria-label="Zurück zu Quellenverweis 7">↩</a></li>
-<li id="source-8">Brynjolfsson, Chandar und Chen, <a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Canaries in the Coal Mine, August 2026 update</a>, Stanford Digital Economy Lab, 12. August 2026. <a href="#cite-8-1" aria-label="Zurück zu Quellenverweis 8">↩</a></li>
-<li id="source-9">US Bureau of Labor Statistics, <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">Occupational Outlook Handbook: Software Developers, Quality Assurance Analysts, and Testers</a>, Prognosen für 2025–2035, zuletzt aktualisiert am 27. August 2026. <a href="#cite-9-1" aria-label="Zurück zu Quellenverweis 9">↩</a></li>
-<li id="source-10">Bitkom, <a href="https://www.bitkom.org/Presse/Presseinformation/IT-Fachkraeftemangel-in-den-letzten-drei-Jahren-halbiert">IT-Fachkräftemangel in den letzten drei Jahren halbiert</a>, 3. September 2026. <a href="#cite-10-1" aria-label="Zurück zu Quellenverweis 10">↩</a></li>
-<li id="source-11">OpenAI, <a href="https://openai.com/index/harness-engineering/">Harness engineering</a>, 11. Februar 2026. <a href="#cite-11-1" aria-label="Zurück zu Quellenverweis 11">↩</a></li>
-<li id="source-12">Veracode, <a href="https://www.veracode.com/blog/spring-2026-genai-code-security/">Spring 2026 GenAI Code Security Update</a>, Frühjahr 2026. <a href="#cite-12-1" aria-label="Zurück zu Quellenverweis 12">↩</a></li>
-<li id="source-13">Nikolov et al., <a href="https://arxiv.org/html/2501.06972v1">How is Google using AI for internal code migrations?</a>, 12. Januar 2025. <a href="#cite-13-1" aria-label="Zurück zu Quellenverweis 13">↩</a></li>
-<li id="source-14">Sonar, <a href="https://www.sonarsource.com/company/press-releases/sonar-data-reveals-critical-verification-gap-in-ai-coding/">State of Code 2026: the verification gap</a>, 8. Januar 2026. <a href="#cite-14-1" aria-label="Zurück zu Quellenverweis 14">↩</a></li>
-<li id="source-15">METR, <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</a>, 10. Juli 2025. <a href="#cite-15-1" aria-label="Zurück zu Quellenverweis 15">↩</a></li>
-<li id="source-16">METR, <a href="https://metr.org/blog/2026-02-24-uplift-update/">We are Changing our Developer Productivity Experiment Design</a>, 24. Februar 2026. <a href="#cite-16-1" aria-label="Zurück zu Quellenverweis 16">↩</a></li>
+<li id="source-1">JetBrains, <a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/">AI coding agent adoption 2026</a>, August 2026. <a href="#cite-1-1" aria-label="Zurück zu Quellenverweis 1">↩</a></li>
+<li id="source-2">Brynjolfsson, Chandar und Chen, <a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Canaries in the Coal Mine, August 2026 update</a>, Stanford Digital Economy Lab, 12. August 2026. <a href="#cite-2-1" aria-label="Zurück zu Quellenverweis 2">↩</a></li>
+<li id="source-3">Sonar, <a href="https://www.sonarsource.com/company/press-releases/sonar-data-reveals-critical-verification-gap-in-ai-coding/">State of Code 2026: the verification gap</a>, 8. Januar 2026. <a href="#cite-3-1" aria-label="Zurück zu Quellenverweis 3">↩</a></li>
+<li id="source-4">METR, <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</a>, 10. Juli 2025. <a href="#cite-4-1" aria-label="Zurück zu Quellenverweis 4">↩</a></li>
+<li id="source-5">METR, <a href="https://metr.org/blog/2026-02-24-uplift-update/">We are Changing our Developer Productivity Experiment Design</a>, 24. Februar 2026. <a href="#cite-5-1" aria-label="Zurück zu Quellenverweis 5">↩</a></li>
 </ol>
