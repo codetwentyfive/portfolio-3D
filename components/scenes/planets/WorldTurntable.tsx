@@ -178,7 +178,7 @@ export default function WorldTurntable({
 
   useFrame((_, delta) => {
     if (!group.current) return;
-    advance(state.current, delta, motion && planets[index].kind !== "denkpause");
+    advance(state.current, delta, motion);
     if (motion && planets[index].kind !== "denkpause" && state.current.pointer === null)
       time.current += Math.min(delta, 0.05);
     group.current.rotation.set(

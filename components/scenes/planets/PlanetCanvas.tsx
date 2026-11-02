@@ -241,7 +241,7 @@ export default function PlanetCanvas({
     <Canvas
       shadows={planets[index].kind === "denkpause" ? "percentage" : "soft"}
       dpr={[1, 1.5]}
-      frameloop={motion && planets[index].kind !== "denkpause" ? "always" : "demand"}
+      frameloop={motion ? "always" : "demand"}
       camera={{ position: [5.8, 4.3, 8.7], fov: 38, near: 0.1, far: 70 }}
       gl={{
         antialias: true,
